@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — المخزون</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;--border2:#222B40;--primary:#F59E0B;--pdim:rgba(245,158,11,.12);--pdark:#B45309;--success:#10B981;--sdim:rgba(16,185,129,.12);--danger:#EF4444;--ddim:rgba(239,68,68,.12);--info:#3B82F6;--idim:rgba(59,130,246,.12);--text:#F1F5F9;--text2:#94A3B8;--text3:#475569;--sw:240px}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+.sidebar{width:var(--sw);min-height:100vh;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:100}
+.sb-brand{padding:22px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-icon{width:38px;height:38px;background:linear-gradient(135deg,#F59E0B,#B45309);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sb-brand h2{font-size:14px;font-weight:900}.sb-brand p{font-size:11px;color:var(--text2)}
+.sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
+.nav-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:8px 8px 5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--text2);font-size:14px;font-weight:500;text-decoration:none;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}.nav-item.active{background:var(--pdim);color:var(--primary)}
+.sb-user{padding:14px 18px;border-top:1px solid var(--border)}
+.sb-user-info{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--pdim);border:1px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sb-user-name{font-size:13px;font-weight:700}.sb-user-role{font-size:11px;color:var(--text2)}
+.logout-btn{width:100%;padding:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;color:#EF4444;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.logout-btn:hover{background:rgba(239,68,68,.15)}
+.main{margin-right:var(--sw);flex:1;padding:28px;min-height:100vh}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-header h1{font-size:20px;font-weight:800}.page-header p{color:var(--text2);font-size:13px;margin-top:3px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden;transition:.2s}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 14px 14px 0}
+.c-yellow::before{background:var(--primary)}.c-red::before{background:var(--danger)}.c-orange::before{background:#F97316}.c-green::before{background:var(--success)}
+.stat-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+.stat-val{font-size:26px;font-weight:900}.stat-sub{font-size:12px;color:var(--text2);margin-top:3px}
+.stat-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.12}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-size:16px;font-weight:700}
+.alert-banner{background:var(--ddim);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:none;font-size:13px;color:var(--danger);font-weight:600}
+.filters-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:9px 36px 9px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:.2s}
+.search-wrap input:focus{border-color:var(--primary)}.search-wrap span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
+.cat-select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none}
+.cat-select option{background:var(--surface2)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:right;padding:9px 12px;color:var(--text2);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+td{padding:11px 12px;border-bottom:1px solid rgba(26,34,53,.5);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.02)}tr:last-child td{border-bottom:none}
+.qty-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.qty-ok{background:var(--sdim);color:var(--success)}.qty-warn{background:rgba(249,115,22,.12);color:#F97316}.qty-empty{background:var(--ddim);color:var(--danger)}
+.btn{padding:8px 16px;border:none;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#000}
+.btn-primary:hover{box-shadow:0 4px 14px rgba(245,158,11,.3);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--pdim)}
+.btn-sm{padding:5px 10px;font-size:12px}.btn-danger{background:var(--ddim);border:1px solid rgba(239,68,68,.25);color:var(--danger)}
+.btn-success{background:var(--sdim);border:1px solid rgba(16,185,129,.25);color:var(--success)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:20px}
+.overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:mIn .25s ease}
+@keyframes mIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-size:17px;font-weight:800}
+.close-x{background:rgba(255,255,255,.06);border:none;color:var(--text2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:17px;transition:.2s}
+.close-x:hover{background:rgba(255,255,255,.12);color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.full{grid-template-columns:1fr}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:12px;font-weight:700;color:var(--text2)}
+.f input,.f select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:.2s}
+.f input:focus,.f select:focus{border-color:var(--primary);background:var(--pdim)}.f select option{background:var(--surface2)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:12px;padding:12px 24px;font-size:14px;font-weight:600;z-index:9999;transition:.3s;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.profit-pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px}
+.profit-pos{background:var(--sdim);color:var(--success)}.profit-neg{background:var(--ddim);color:var(--danger)}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-icon">💻</div>
+    <div><h2>Lawrence For PC</h2><p>إدارة المخزون</p></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-section">الرئيسية</div>
+    <a class="nav-item" href="admin.html"><span>🏠</span> لوحة التحكم</a>
+    <a class="nav-item" href="admin.html"><span>🎫</span> طلبات الصيانة</a>
+    <div class="nav-section">الإدارة</div>
+    <a class="nav-item active" href="inventory.html"><span>📦</span> المخزون</a>
+    <a class="nav-item" href="reports.html"><span>📊</span> التقارير</a>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-user-info">
+      <div class="sb-avatar">👑</div>
+      <div><div class="sb-user-name" id="sbName">—</div><div class="sb-user-role">مدير النظام</div></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">تسجيل الخروج 🚪</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <div><h1>📦 إدارة المخزون</h1><p>قطع الغيار والمواد المستهلكة</p></div>
+    <button class="btn btn-primary" onclick="openAdd()">+ إضافة قطعة</button>
+  </div>
+  <div class="stats" id="invStats"></div>
+  <div class="alert-banner" id="alertBanner"></div>
+  <div class="card">
+    <div class="filters-row">
+      <div class="search-wrap"><span>🔎</span><input type="text" id="invSearch" placeholder="بحث..." oninput="renderTable()"></div>
+      <select class="cat-select" id="catFilter" onchange="renderTable()">
+        <option value="">كل الفئات</option>
+        <option>شاشات</option><option>باورد</option><option>ذاكرة</option>
+        <option>تخزين</option><option>لوحة مفاتيح</option><option>شواحن</option>
+        <option>تبريد</option><option>بطاريات</option><option>أخرى</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>اسم القطعة</th><th>الفئة</th><th>الكمية</th><th>الحد الأدنى</th><th>سعر الشراء</th><th>سعر البيع</th><th>الربح</th><th>إجراء</th></tr></thead>
+        <tbody id="invBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="overlay" id="m-item">
+<div class="modal">
+  <div class="modal-head"><div class="modal-title" id="itemModalTitle">➕ إضافة قطعة</div><button class="close-x" onclick="closeModal('m-item')">✕</button></div>
+  <div class="form-row full"><div class="f"><label>اسم القطعة *</label><input id="it-name" placeholder="مثال: شاشة لابتوب 15.6"></div></div>
+  <div class="form-row"><div class="f"><label>الفئة</label><select id="it-cat"><option>شاشات</option><option>باورد</option><option>ذاكرة</option><option>تخزين</option><option>لوحة مفاتيح</option><option>شواحن</option><option>تبريد</option><option>بطاريات</option><option>أخرى</option></select></div><div class="f"><label>الكمية المتاحة</label><input id="it-qty" type="number" min="0" placeholder="0"></div></div>
+  <div class="form-row"><div class="f"><label>الحد الأدنى للتنبيه</label><input id="it-min" type="number" min="0" placeholder="2"></div><div class="f"><label>سعر الشراء (JOD)</label><input id="it-buy" type="number" min="0" step="0.01" placeholder="0.00"></div></div>
+  <div class="form-row"><div class="f"><label>سعر البيع (JOD)</label><input id="it-sell" type="number" min="0" step="0.01" placeholder="0.00"></div></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+    <button class="btn btn-outline" onclick="closeModal('m-item')">إلغاء</button>
+    <button class="btn btn-primary" id="itemSaveBtn" onclick="saveItem()">حفظ ✓</button>
+  </div>
+</div>
+</div>
+
+<!-- ADD STOCK MODAL -->
+<div class="overlay" id="m-addStock">
+<div class="modal" style="max-width:380px">
+  <div class="modal-head"><div class="modal-title">📥 إضافة كمية</div><button class="close-x" onclick="closeModal('m-addStock')">✕</button></div>
+  <p id="addStockName" style="color:var(--text2);font-size:14px;margin-bottom:16px"></p>
+  <div class="f"><label>الكمية المضافة</label><input id="as-qty" type="number" min="1" placeholder="0"></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+    <button class="btn btn-outline" onclick="closeModal('m-addStock')">إلغاء</button>
+    <button class="btn btn-success" onclick="doAddStock()">إضافة للمخزون ✓</button>
+  </div>
+</div>
+</div>
+
+<!-- CONFIRM -->
+<div class="overlay" id="m-confirm">
+<div class="modal" style="max-width:380px">
+  <div class="modal-head"><div class="modal-title">⚠️ تأكيد الحذف</div><button class="close-x" onclick="closeModal('m-confirm')">✕</button></div>
+  <p id="confirmMsg" style="color:var(--text2);font-size:14px;margin-bottom:20px"></p>
+  <div style="display:flex;gap:10px;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="closeModal('m-confirm')">إلغاء</button>
+    <button class="btn btn-danger" id="confirmOkBtn">حذف</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp }                from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
+const app=initializeApp(CFG);const auth=getAuth(app);const db=getFirestore(app);
+
+let CU=null,allItems=[],editingId=null,stockTargetId=null;
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){location.href='index.html';return}
+  CU=JSON.parse(sessionStorage.getItem('lpc_user')||'null');
+  if(!CU){const s=await getDoc(doc(db,'users',user.uid));CU={uid:user.uid,...s.data()};sessionStorage.setItem('lpc_user',JSON.stringify(CU))}
+  if(!CU.permissions?.inventory&&CU.role!=='admin'){document.querySelector('.main').innerHTML='<div style="text-align:center;padding:80px;color:#94A3B8"><div style="font-size:48px;margin-bottom:16px">🔒</div><h2 style="color:#EF4444">الوصول مقيد</h2></div>';return}
+  document.getElementById('sbName').textContent=CU.displayName;
+  onSnapshot(query(collection(db,'inventory'),orderBy('name')),snap=>{
+    allItems=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderStats();renderTable();
+  });
+});
+
+function renderStats(){
+  const total=allItems.length;
+  const empty=allItems.filter(i=>(i.qty||0)===0).length;
+  const low=allItems.filter(i=>(i.qty||0)>0&&(i.qty||0)<=(i.minQty||2)).length;
+  const val=allItems.reduce((s,i)=>s+(i.qty||0)*(i.buyPrice||0),0);
+  document.getElementById('invStats').innerHTML=`
+    <div class="stat-card c-yellow"><div class="stat-label">إجمالي القطع</div><div class="stat-val">${total}</div><div class="stat-icon">📦</div></div>
+    <div class="stat-card c-red"><div class="stat-label">نفد المخزون</div><div class="stat-val" style="color:var(--danger)">${empty}</div><div class="stat-icon">❌</div></div>
+    <div class="stat-card c-orange"><div class="stat-label">مخزون منخفض</div><div class="stat-val" style="color:#F97316">${low}</div><div class="stat-icon">⚠️</div></div>
+    <div class="stat-card c-green"><div class="stat-label">قيمة المخزون</div><div class="stat-val" style="color:var(--success);font-size:20px">${val.toFixed(2)}</div><div class="stat-sub">دينار أردني</div></div>
+  `;
+  const alerts=allItems.filter(i=>(i.qty||0)<=(i.minQty||2));
+  const banner=document.getElementById('alertBanner');
+  if(alerts.length){banner.style.display='block';banner.textContent=`⚠️ ${alerts.length} قطعة بمخزون منخفض أو نافد: ${alerts.map(i=>i.name).join('، ')}`}
+  else banner.style.display='none';
+}
+
+function renderTable(){
+  const q=document.getElementById('invSearch').value.toLowerCase();
+  const cat=document.getElementById('catFilter').value;
+  let rows=allItems;
+  if(q) rows=rows.filter(i=>i.name?.toLowerCase().includes(q)||i.category?.toLowerCase().includes(q));
+  if(cat) rows=rows.filter(i=>i.category===cat);
+  document.getElementById('invBody').innerHTML=rows.length?rows.map(i=>{
+    const qty=i.qty||0,min=i.minQty||2;
+    const qClass=qty===0?'qty-empty':qty<=min?'qty-warn':'qty-ok';
+    const profit=((i.sellPrice||0)-(i.buyPrice||0));
+    const isAdmin=CU.role==='admin';
+    return `<tr>
+      <td><strong>${i.name}</strong></td>
+      <td style="font-size:12px;color:var(--text2)">${i.category||'—'}</td>
+      <td><span class="qty-badge ${qClass}">${qty}</span></td>
+      <td style="color:var(--text2);font-size:12px">${min}</td>
+      <td>${(i.buyPrice||0).toFixed(2)} د.أ</td>
+      <td>${(i.sellPrice||0).toFixed(2)} د.أ</td>
+      <td><span class="profit-pill ${profit>=0?'profit-pos':'profit-neg'}">${profit>=0?'+':''}${profit.toFixed(2)}</span></td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-success btn-sm" onclick="openAddStock('${i.id}')">+كمية</button>
+        ${isAdmin?`<button class="btn btn-outline btn-sm" onclick="openEdit('${i.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDel('${i.id}','${i.name.replace(/'/g,"\\'")}')">🗑️</button>`:''}
+      </td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--text2);padding:30px">لا توجد نتائج</td></tr>';
+}
+
+window.openAdd=function(){editingId=null;['it-name','it-qty','it-min','it-buy','it-sell'].forEach(id=>document.getElementById(id).value='');document.getElementById('itemModalTitle').textContent='➕ إضافة قطعة';document.getElementById('itemSaveBtn').textContent='حفظ ✓';openModal('m-item')};
+window.openEdit=function(id){editingId=id;const i=allItems.find(x=>x.id===id);if(!i)return;document.getElementById('it-name').value=i.name||'';document.getElementById('it-qty').value=i.qty||0;document.getElementById('it-min').value=i.minQty||2;document.getElementById('it-buy').value=i.buyPrice||0;document.getElementById('it-sell').value=i.sellPrice||0;document.getElementById('it-cat').value=i.category||'أخرى';document.getElementById('itemModalTitle').textContent='✏️ تعديل قطعة';openModal('m-item')};
+window.saveItem=async function(){
+  const name=document.getElementById('it-name').value.trim();if(!name){toast('⚠️ أدخل اسم القطعة');return}
+  const data={name,category:document.getElementById('it-cat').value,qty:parseInt(document.getElementById('it-qty').value)||0,minQty:parseInt(document.getElementById('it-min').value)||2,buyPrice:parseFloat(document.getElementById('it-buy').value)||0,sellPrice:parseFloat(document.getElementById('it-sell').value)||0,used:0};
+  if(editingId){await updateDoc(doc(db,'inventory',editingId),data);toast('✅ تم تعديل القطعة')}
+  else{await addDoc(collection(db,'inventory'),data);toast('✅ تمت الإضافة')}
+  closeModal('m-item');
+};
+window.openAddStock=function(id){stockTargetId=id;const i=allItems.find(x=>x.id===id);document.getElementById('addStockName').textContent=`القطعة: ${i?.name}`;document.getElementById('as-qty').value='';openModal('m-addStock')};
+window.doAddStock=async function(){const n=parseInt(document.getElementById('as-qty').value)||0;if(n<=0){toast('⚠️ أدخل كمية صحيحة');return}const i=allItems.find(x=>x.id===stockTargetId);await updateDoc(doc(db,'inventory',stockTargetId),{qty:(i.qty||0)+n});closeModal('m-addStock');toast(`✅ تمت إضافة ${n} وحدة`)};
+window.confirmDel=function(id,name){document.getElementById('confirmMsg').textContent=`حذف القطعة "${name}"؟`;document.getElementById('confirmOkBtn').onclick=async()=>{await deleteDoc(doc(db,'inventory',id));closeModal('m-confirm');toast('🗑️ تم الحذف')};openModal('m-confirm')};
+
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+window.closeModal=closeModal;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000)}
+window.doLogout=async function(){await signOut(auth);sessionStorage.removeItem('lpc_user');location.href='index.html'};
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show')}));
+</script>
+</body>
+</html>
