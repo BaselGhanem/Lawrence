@@ -110,18 +110,55 @@ const app=initializeApp(CFG); const db=getFirestore(app);
 
 let inventory=[], cart=[], isReturnMode=false;
 
+// استماع لتحديثات المخزون
 onSnapshot(collection(db,'inventory'), snap => {
   inventory = snap.docs.map(d=>({id:d.id, ...d.data()}));
-  renderItems();
+  // بعد تحديث المخزون نعيد تطبيق البحث الحالي
+  searchItems();
 });
 
-function renderItems() {
-  document.getElementById('itemsGrid').innerHTML = inventory.map(i => `
+// دالة عرض الأصناف (مع دعم التصفية)
+function renderItems(itemsToRender = null) {
+  const container = document.getElementById('itemsGrid');
+  const items = itemsToRender || inventory;
+  if (!items.length) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2)">لا توجد أصناف تطابق البحث</div>';
+    return;
+  }
+  container.innerHTML = items.map(i => `
     <div style="background:var(--surface2);padding:10px;border-radius:8px;cursor:pointer;text-align:center" onclick="addToCart('${i.id}')">
-      <div style="font-size:12px;font-weight:700">${i.name}</div>
-      <div style="color:var(--primary);font-size:13px">${i.price.toFixed(2)}</div>
+      <div style="font-size:12px;font-weight:700">${escapeHtml(i.name)}</div>
+      <div style="color:var(--primary);font-size:13px">${(i.price||0).toFixed(2)} د.أ</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:4px">${i.code || ''}</div>
     </div>
   `).join('');
+}
+
+// دالة البحث الرئيسية
+window.searchItems = function() {
+  const query = document.getElementById('posSearch').value.trim().toLowerCase();
+  if (!query) {
+    // إذا كان الحقل فارغاً نعرض الكل
+    renderItems(inventory);
+    return;
+  }
+  const filtered = inventory.filter(item => 
+    (item.name && item.name.toLowerCase().includes(query)) ||
+    (item.code && item.code.toLowerCase().includes(query)) ||
+    (item.cat && item.cat.toLowerCase().includes(query))
+  );
+  renderItems(filtered);
+};
+
+// دالة مساعدة لمنع حقن HTML
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
 }
 
 window.setMode = (m) => {
@@ -136,9 +173,17 @@ window.addToCart = function(id) {
   if(!item) return;
   const existing = cart.find(x => x.id === id);
   if(existing) {
-    if(!isReturnMode && existing.cartQty >= item.qty) { toast('❌ الكمية غير متوفرة'); return; }
+    // التحقق الصحيح من الكمية
+    if(!isReturnMode && existing.cartQty + 1 > (item.qty || 0)) { 
+      toast('❌ الكمية غير متوفرة في المخزون'); 
+      return; 
+    }
     existing.cartQty++;
   } else {
+    if(!isReturnMode && 1 > (item.qty || 0)) {
+      toast('❌ الكمية غير متوفرة');
+      return;
+    }
     cart.push({...item, cartQty: 1});
   }
   updateCart();
@@ -149,7 +194,12 @@ window.updateCart = function() {
   document.getElementById('cartBody').innerHTML = cart.map((i, idx) => {
     const itemTotal = i.price * i.cartQty;
     total += itemTotal;
-    return `<tr><td>${i.name}</td><td>${i.cartQty}</td><td>${i.price.toFixed(2)}</td><td><button onclick="rem(${idx})" style="background:none;border:none;color:var(--danger);cursor:pointer">✕</button></td></tr>`;
+    return `<tr>
+      <td>${escapeHtml(i.name)}</td>
+      <td>${i.cartQty}</td>
+      <td>${i.price.toFixed(2)}</td>
+      <td><button onclick="rem(${idx})" style="background:none;border:none;color:var(--danger);cursor:pointer">✕</button></td>
+    </table>`;
   }).join('');
   document.getElementById('totalSum').textContent = (isReturnMode ? -total : total).toFixed(2) + ' د.أ';
 };
@@ -158,9 +208,22 @@ window.rem = (idx) => { cart.splice(idx,1); updateCart(); };
 window.clearCart = () => { cart=[]; updateCart(); };
 
 window.completeSale = async function() {
-  if(cart.length === 0) return;
+  if(cart.length === 0) { toast('⚠️ السلة فارغة'); return; }
+  
+  // التأكد النهائي من توفر الكميات قبل التنفيذ (للبيع فقط)
+  if(!isReturnMode) {
+    for(const item of cart) {
+      const original = inventory.find(i => i.id === item.id);
+      if(!original || (original.qty || 0) < item.cartQty) {
+        toast(`❌ الكمية غير كافية للصنف: ${item.name}`);
+        return;
+      }
+    }
+  }
+  
   const total = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
   
+  // تحديث المخزون لكل صنف
   for(const item of cart) {
     await updateDoc(doc(db, 'inventory', item.id), {
       qty: increment(isReturnMode ? item.cartQty : -item.cartQty)
@@ -168,7 +231,7 @@ window.completeSale = async function() {
   }
   
   await addDoc(collection(db,'sales'), {
-    cart, 
+    cart: cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.cartQty })),
     total: isReturnMode ? -total : total,
     type: isReturnMode ? 'مرتجع' : 'بيع',
     createdAt: serverTimestamp()
@@ -184,20 +247,35 @@ function toast(msg) {
   setTimeout(()=>el.classList.remove('show'), 3000);
 }
 
-// Global Scanner
+// باركود سكانر عالمي: يعبئ حقل البحث ويبحث ثم يضيف للعربة (إذا وجد)
 let _sbuf='', _stimer=null;
 document.addEventListener('keydown', e => {
-  if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
-  if(e.key==='Enter') {
-    const code = _sbuf.trim();
-    const item = inventory.find(x => x.code === code);
-    if(item) addToCart(item.id);
-    else toast('❌ الصنف غير موجود');
-    _sbuf='';
-  } else if(e.key.length===1) {
+  const tag = document.activeElement?.tagName;
+  if(['INPUT','TEXTAREA'].includes(tag)) return;
+  
+  if(e.key === 'Enter') {
+    clearTimeout(_stimer);
+    if(_sbuf.length >= 3) {
+      const code = _sbuf.trim();
+      const searchInput = document.getElementById('posSearch');
+      if(searchInput) {
+        searchInput.value = code;
+        searchItems(); // تحديث قائمة الأصناف بناءً على الباركود
+      }
+      // إضافة الصنف مباشرة إلى السلة إن وجد
+      const item = inventory.find(x => x.code === code);
+      if(item) addToCart(item.id);
+      else toast('❌ الصنف غير موجود');
+      _sbuf = '';
+    } else {
+      _sbuf = '';
+    }
+    return;
+  }
+  if(e.key.length === 1) {
     _sbuf += e.key;
     clearTimeout(_stimer);
-    _stimer = setTimeout(()=>{_sbuf=''}, 200);
+    _stimer = setTimeout(() => { _sbuf = ''; }, 200);
   }
 });
 </script>
