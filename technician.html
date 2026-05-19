@@ -2,8 +2,13 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lawrence For PC — الفني</title>
+<title>Lawrence For PC — لوحة الفني</title>
+<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<script>
+  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -15,18 +20,34 @@
   --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;
   --sw:240px;
 }
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+[data-theme="light"]{
+  --bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--border2:#CBD5E1;
+  --text:#0F172A;--text2:#475569;--text3:#94A3B8;
+  --pdim:rgba(245,158,11,.1);--sdim:rgba(16,185,129,.1);--ddim:rgba(239,68,68,.08);--idim:rgba(59,130,246,.1)
+}
+[data-theme="light"] .f input, [data-theme="light"] .f textarea {background:#F8FAFC;color:var(--text);border-color:var(--border)}
+[data-theme="light"] .toast{background:#fff;color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.15)}
+[data-theme="light"] .nav-item:hover{background:rgba(0,0,0,.04)}
+[data-theme="light"] .stat-card, [data-theme="light"] .sidebar, [data-theme="light"] .modal, [data-theme="light"] .ticket-card{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+[data-theme="light"] .sla-bar{background:rgba(0,0,0,.06)}
+
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
 
 .sidebar{width:var(--sw);min-height:100vh;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:100}
-.sb-brand{padding:22px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-icon{width:38px;height:38px;background:linear-gradient(135deg,#F59E0B,#B45309);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sb-brand{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-icon{width:38px;height:38px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-icon img{width:100%;height:100%;object-fit:cover}
 .sb-brand h2{font-size:14px;font-weight:900}
 .sb-brand p{font-size:11px;color:var(--text2)}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;padding:5px 8px;color:var(--text2);transition:.2s;flex-shrink:0}
+.theme-btn:hover{background:var(--pdim);border-color:var(--primary)}
+
 .sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
 .nav-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:8px 8px 5px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .2s;color:var(--text2);font-size:14px;font-weight:500;text-decoration:none;margin-bottom:2px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
 .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
 .nav-item.active{background:var(--pdim);color:var(--primary)}
+
 .sb-user{padding:14px 18px;border-top:1px solid var(--border)}
 .sb-user-info{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--idim);border:1px solid var(--info);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
@@ -62,7 +83,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);dis
 .sla-label{font-size:11px;font-weight:600}
 .tc-actions{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
 .btn{padding:7px 14px;border:none;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
-.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#000}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#fff}
 .btn-primary:hover{box-shadow:0 4px 14px rgba(245,158,11,.3)}
 .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
 .btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--pdim)}
@@ -112,12 +133,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);dis
 .log-meta{font-size:11px;color:var(--text2)}
 .f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .f label{font-size:13px;font-weight:600;color:var(--text2)}
-.f textarea{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;resize:none;transition:.2s}
-.f textarea:focus{border-color:var(--primary);background:var(--pdim)}
-
-/* CHANGE PASSWORD */
-.f input{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:.2s}
-.f input:focus{border-color:var(--primary);background:var(--pdim)}
+.f input, .f textarea{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:.2s}
+.f input:focus, .f textarea:focus{border-color:var(--primary);background:var(--pdim)}
+input[type="tel"] { direction: ltr; text-align: left; }
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:12px;padding:12px 24px;font-size:14px;font-weight:600;z-index:9999;transition:.3s;pointer-events:none;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
@@ -130,8 +148,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);dis
 
 <div class="sidebar">
   <div class="sb-brand">
-    <div class="sb-icon">💻</div>
+    <div class="sb-icon"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Logo"></div>
     <div><h2>Lawrence For PC</h2><p>لوحة الفني</p></div>
+    <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="تبديل المظهر">🌙</button>
   </div>
   <nav class="sb-nav">
     <div class="nav-section">أجهزتي</div>
@@ -151,8 +170,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);dis
 </div>
 
 <div class="main">
-
-  <!-- MY TICKETS -->
   <div class="section active" id="sec-mine">
     <div class="page-header">
       <div><h1>أجهزتي المعينة</h1><p id="mineSubtitle">—</p></div>
@@ -165,17 +182,14 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);dis
     <div class="tickets-grid" id="myTickets"></div>
   </div>
 
-  <!-- ALL TICKETS (read-only) -->
   <div class="section" id="sec-all">
     <div class="page-header">
       <div><h1>جميع الطلبات</h1><p>للاطلاع فقط</p></div>
     </div>
     <div class="tickets-grid" id="allTickets"></div>
   </div>
-
 </div>
 
-<!-- DETAIL MODAL -->
 <div class="overlay" id="m-detail">
 <div class="modal">
   <div class="modal-head">
@@ -206,7 +220,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);dis
 </div>
 </div>
 
-<!-- CHANGE PASSWORD -->
 <div class="overlay" id="m-changePwd">
 <div class="modal" style="max-width:420px">
   <div class="modal-head"><div class="modal-title">🔑 تغيير كلمة المرور</div><button class="close-x" onclick="closeModal('m-changePwd')">✕</button></div>
@@ -305,8 +318,8 @@ function renderCard(t, isEditable) {
         <span class="tc-badge b-${t.status}">${statusLabel(t.status)}</span>
       </div>
       <div class="tc-row">👤 <strong>${t.customerName}</strong></div>
-      <div class="tc-row">💻 <strong>${t.device}</strong></div>
-      <div class="tc-row">🔩 ${t.issue}</div>
+      <div class="tc-row">💻 <strong>${t.device} ${t.brand ? '('+t.brand+')' : ''}</strong></div>
+      <div class="tc-row">🔩 ${t.issue?.substring(0,30) || '—'}</div>
       <div class="sla-bar"><div class="sla-fill" style="width:${barWidth}%;background:${barColor}"></div></div>
       <div class="sla-label" style="color:${barColor}">${h} ساعة منذ الإنشاء</div>
       ${isEditable ? `<div class="tc-actions">
@@ -330,7 +343,7 @@ window.openDetail = function(id, editable) {
   document.getElementById('dt-grid').innerHTML = `
     <div class="detail-item"><div class="di-label">العميل</div><div class="di-val">${t.customerName}</div></div>
     <div class="detail-item"><div class="di-label">الهاتف</div><div class="di-val" dir="ltr">${t.phone}</div></div>
-    <div class="detail-item"><div class="di-label">الجهاز</div><div class="di-val">${t.device}</div></div>
+    <div class="detail-item"><div class="di-label">الجهاز</div><div class="di-val">${t.device} ${t.brand?' - '+t.brand:''}</div></div>
     <div class="detail-item"><div class="di-label">العطل</div><div class="di-val">${t.issue}</div></div>
   `;
 
@@ -406,25 +419,49 @@ window.doChangePwd = async function() {
   if (!user) { toast('❌ الجلسة منتهية'); return; }
 
   try {
-    // Re-authenticate
     const { signInWithEmailAndPassword: siwp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
     await signInWithEmailAndPassword(auth, user.email, oldPwd);
     await updatePassword(user, newPwd);
-
-    // Update stored pwd in Firestore
     const { doc: d, updateDoc: upd } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     await updateDoc(doc(db,'users',CU.uid), { pwd: newPwd });
 
     closeModal('m-changePwd');
     toast('✅ تم تغيير كلمة المرور بنجاح');
   } catch(e) {
-    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
-      toast('❌ كلمة المرور الحالية غير صحيحة');
-    } else {
-      toast('❌ خطأ: ' + e.message);
-    }
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') toast('❌ كلمة المرور الحالية غير صحيحة');
+    else toast('❌ خطأ: ' + e.message);
   }
 };
+
+// ── BARCODE SCANNER GLOBAL LISTENER ──
+let _sbuf='', _stimer=null;
+document.addEventListener('keydown', function(e) {
+  const tag = document.activeElement?.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  
+  if(e.key === 'Enter') {
+    clearTimeout(_stimer);
+    if(_sbuf.length >= 3) {
+      const code = _sbuf.trim().toUpperCase();
+      _sbuf = '';
+      const foundTicket = allTickets.find(t => t.ticketId.toUpperCase() === code);
+      if(foundTicket) {
+        // إذا كان الطلب مُسنداً للفني، يفتح نافذة التعديل، وإلا يفتحه للقراءة فقط
+        openDetail(foundTicket.id, foundTicket.assignedTo === CU.uid);
+        toast('📡 تم التقاط الطلب');
+      } else {
+        toast('⚠️ لم يتم العثور على طلب بهذا الرقم');
+      }
+    }
+    _sbuf = '';
+    return;
+  }
+  if(e.key.length === 1) {
+    _sbuf += e.key;
+    clearTimeout(_stimer);
+    _stimer = setTimeout(()=>{ _sbuf = '' }, 200);
+  }
+});
 
 // ─── HELPERS ────────────────────────────────────
 function statusLabel(s) {
@@ -458,9 +495,9 @@ window.doLogout = async function() {
   location.href = 'index.html';
 };
 
-document.querySelectorAll('.overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
-});
+// ── THEME ────────────────────────────────────────────────
+;(function(){const t=localStorage.getItem('lpc_theme')||'light';document.documentElement.setAttribute('data-theme',t);const b=document.getElementById('themeToggle');if(b)b.textContent=t==='dark'?'☀️':'🌙'})();
+window.toggleTheme=function(){const c=document.documentElement.getAttribute('data-theme');const n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('lpc_theme',n);const b=document.getElementById('themeToggle');if(b)b.textContent=n==='dark'?'☀️':'🌙'};
 </script>
 </body>
 </html>
