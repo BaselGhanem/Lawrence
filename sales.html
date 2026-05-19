@@ -23,8 +23,8 @@
 body {
   font-family: 'Almarai', sans-serif;
   background: radial-gradient(circle at top right, rgba(245,158,11,.15), transparent 25%),
-radial-gradient(circle at bottom left, rgba(59,130,246,.12), transparent 25%),
-var(--bg);
+              radial-gradient(circle at bottom left, rgba(59,130,246,.12), transparent 25%),
+              var(--bg);
   color: var(--text);
   display: flex;
   min-height: 100vh;
@@ -37,7 +37,6 @@ var(--bg);
   top:0; right:0; bottom:0;
   z-index: 100;
   backdrop-filter: blur(18px);
--webkit-backdrop-filter: blur(18px);
 }
 .sb-brand { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
 .sb-nav { padding:12px 10px; }
@@ -56,7 +55,38 @@ var(--bg);
   padding: 24px;
   min-height: 100vh;
 }
-/* Step indicator */
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 20px;
+  font-family: 'Almarai', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 40px;
+  cursor: pointer;
+  color: var(--text2);
+  transition: .2s;
+}
+.tab-btn.active {
+  background: var(--primary);
+  color: #000;
+}
+.tab-pane {
+  display: none;
+  animation: fadeSlide .3s ease;
+}
+.tab-pane.active {
+  display: block;
+}
+/* Step container (للإنشاء) */
 .step-container {
   max-width: 850px;
   margin: 0 auto;
@@ -64,9 +94,8 @@ var(--bg);
   border-radius: 28px;
   padding: 42px;
   border: 1px solid var(--border);
-  box-shadow: 0 10px 40px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.03);
+  box-shadow: 0 10px 40px rgba(0,0,0,.25);
   backdrop-filter: blur(18px);
--webkit-backdrop-filter: blur(18px);
 }
 .step-header {
   display: flex;
@@ -81,31 +110,12 @@ var(--bg);
   padding: 6px 12px;
   border-radius: 30px;
   background: var(--surface2);
-  transition: .2s;
 }
-.step.active {
-  background: var(--primary);
-  color: #000;
-}
-.step.completed {
-  background: var(--success);
-  color: #fff;
-}
-.step-title {
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 20px;
-}
-.form-group {
-  margin-bottom: 20px;
-}
-.form-group label {
-  display: block;
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 6px;
-  color: var(--text2);
-}
+.step.active { background: var(--primary); color: #000; }
+.step.completed { background: var(--success); color: #fff; }
+.step-title { font-size: 22px; font-weight: 800; margin-bottom: 20px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; color: var(--text2); }
 .form-group input, .form-group select {
   width: 100%;
   padding: 16px 18px;
@@ -116,7 +126,6 @@ var(--bg);
   font-family: 'Almarai', sans-serif;
   font-size: 15px;
   outline: none;
-  transition: .2s;
 }
 .form-group input:focus, .form-group select:focus {
   border-color: var(--primary);
@@ -132,28 +141,12 @@ var(--bg);
   cursor: pointer;
   transition: .2s;
 }
-.btn-primary {
-  background: var(--primary);
-  color: #000;
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(245,158,11,0.3);
-}
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text2);
-}
-.btn-outline:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-.btn-danger {
-  background: var(--ddim, rgba(239,68,68,0.1));
-  border: 1px solid rgba(239,68,68,0.3);
-  color: var(--danger);
-}
+.btn-primary { background: var(--primary); color: #000; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245,158,11,0.3); }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+.btn-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--danger); }
+.btn-sm { padding: 6px 12px; font-size: 13px; }
 .cart-item {
   display: flex;
   justify-content: space-between;
@@ -164,17 +157,9 @@ var(--bg);
   border-radius: 18px;
   flex-wrap: wrap;
   gap: 8px;
-  backdrop-filter: blur(18px);
--webkit-backdrop-filter: blur(18px);
 }
-.cart-item-info {
-  flex: 2;
-  font-weight: 700;
-}
-.cart-item-price {
-  font-weight: 700;
-  color: var(--primary);
-}
+.cart-item-info { flex: 2; font-weight: 700; }
+.cart-item-price { font-weight: 700; color: var(--primary); }
 .cart-item-qty {
   display: flex;
   align-items: center;
@@ -193,11 +178,8 @@ var(--bg);
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  transition: .1s;
 }
-.qty-btn:hover {
-  background: var(--pdim);
-}
+.qty-btn:hover { background: var(--pdim); }
 .remove-item {
   background: none;
   border: none;
@@ -212,10 +194,7 @@ var(--bg);
   border-top: 1px solid var(--border);
   font-weight: 700;
 }
-.grand-total {
-  font-size: 20px;
-  color: var(--primary);
-}
+.grand-total { font-size: 20px; color: var(--primary); }
 .review-table {
   width: 100%;
   border-collapse: collapse;
@@ -241,32 +220,33 @@ var(--bg);
   pointer-events: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   backdrop-filter: blur(14px);
--webkit-backdrop-filter: blur(14px);
-border:1px solid rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
 }
-.toast.show {
-  transform: translateX(-50%) translateY(0);
+.toast.show { transform: translateX(-50%) translateY(0); }
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
 }
-.print-only { display: none; }
-@media print {
-  .sidebar, .step-container, .toast, .btn, .step-header, .mode-toggle { display: none; }
-  .print-only { display: block; }
-  body { background: white; color: black; padding: 1cm; }
-  .invoice-print { max-width: 100%; }
+.invoice-table th, .invoice-table td {
+  padding: 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
 }
-  .step-page {
-  animation: fadeSlide .35s ease;
+.action-icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 4px;
+  font-size: 16px;
 }
-
 @keyframes fadeSlide {
-  from {
-    opacity:0;
-    transform:translateY(18px);
-  }
-  to {
-    opacity:1;
-    transform:translateY(0);
-  }
+  from { opacity:0; transform:translateY(18px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@media print {
+  .sidebar, .tabs, .step-container, .toast, .btn, .step-header, .mode-toggle, .action-icons { display: none; }
+  body { background: white; color: black; padding: 1cm; }
+  .main { margin: 0; padding: 0; }
 }
 </style>
 </head>
@@ -285,96 +265,63 @@ border:1px solid rgba(255,255,255,.08);
 </div>
 
 <div class="main">
-  <div class="step-container" id="stepContainer">
-    <!-- Step 1: Customer Info -->
-    <div id="step1" class="step-page">
-      <div class="step-header">
-        <span class="step active">1</span>
-        <span class="step">2</span>
-        <span class="step">3</span>
-        <span class="step">4</span>
-      </div>
-      <div class="step-title">📋 معلومات العميل</div>
-      <div class="form-group">
-        <label>الاسم الكامل *</label>
-        <input type="text" id="customerName" placeholder="أحمد محمد">
-      </div>
-    
-      <button class="btn btn-primary" style="width:100%" onclick="goToPhoneStep()">التالي ←</button>
-    </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('new')">➕ فاتورة جديدة</button>
+    <button class="tab-btn" onclick="switchTab('list')">📋 الفواتير السابقة</button>
+  </div>
 
-    <!-- Step Phone -->
-    <div id="stepPhone" class="step-page" style="display:none">
-      <div class="step-header">
-        <span class="step completed">1</span>
-        <span class="step active">2</span>
-        <span class="step">3</span>
-        <span class="step">4</span>
+  <!-- تبويب إنشاء فاتورة جديدة -->
+  <div id="tab-new" class="tab-pane active">
+    <div class="step-container">
+      <!-- Step 1: Customer Info -->
+      <div id="step1" class="step-page">
+        <div class="step-header"><span class="step active">1</span><span class="step">2</span><span class="step">3</span><span class="step">4</span></div>
+        <div class="step-title">📋 معلومات العميل</div>
+        <div class="form-group"><label>الاسم الكامل *</label><input type="text" id="customerName" placeholder="أحمد محمد"></div>
+        <button class="btn btn-primary" style="width:100%" onclick="goToPhoneStep()">التالي ←</button>
       </div>
-      <div class="step-title">📞 رقم الهاتف</div>
-      <div class="form-group">
-        <label>رقم الهاتف *</label>
-        <input type="tel" id="customerPhone" placeholder="07xxxxxxxx" dir="ltr">
+      <!-- Step Phone -->
+      <div id="stepPhone" class="step-page" style="display:none">
+        <div class="step-header"><span class="step completed">1</span><span class="step active">2</span><span class="step">3</span><span class="step">4</span></div>
+        <div class="step-title">📞 رقم الهاتف</div>
+        <div class="form-group"><label>رقم الهاتف *</label><input type="tel" id="customerPhone" placeholder="07xxxxxxxx" dir="ltr"></div>
+        <div style="display:flex; gap:12px;"><button class="btn btn-outline" onclick="goToStep1()">← رجوع</button><button class="btn btn-primary" style="flex:1" onclick="goToProductsStep()">التالي →</button></div>
       </div>
-      <div style="display:flex; gap:12px;">
-        <button class="btn btn-outline" onclick="goToStep1()">← رجوع</button>
-        <button class="btn btn-primary" style="flex:1" onclick="goToProductsStep()">التالي →</button>
-      </div>
-    </div>
-
-    <!-- Step 2: Add Items -->
-    <div id="step2" class="step-page" style="display:none">
-      <div class="step-header">
-        <span class="step completed">1</span>
-        <span class="step completed">2</span>
-        <span class="step active">3</span>
-        <span class="step">4</span>
-      </div>
-      <div class="step-title">🛍️ إضافة المنتجات</div>
-      
-      <div class="mode-toggle" style="display:flex; gap:10px; margin-bottom:20px">
-        <button class="btn btn-outline mode-btn" id="btnSale" onclick="setMode('sale')" style="flex:1">وضع البيع</button>
-        <button class="btn btn-outline mode-btn" id="btnReturn" onclick="setMode('return')" style="flex:1">وضع المرتجعات</button>
-      </div>
-
-      <div class="form-group">
-        <label>اختر منتج من المخزون (يظهر الكمية)</label>
-        <select id="productSelect" class="select-prod" onchange="addSelectedProduct()">
-          <option value="">-- اختر منتج --</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>أو أضف صنفاً خارجياً</label>
-        <div style="display:flex; gap:8px; flex-wrap:wrap">
-          <input type="text" id="otherName" placeholder="اسم الصنف" style="flex:2">
-          <input type="number" id="otherPrice" placeholder="السعر" step="0.01" style="flex:1">
-          <input type="number" id="otherQty" placeholder="الكمية" value="1" step="1" style="flex:1">
-          <button class="btn btn-primary" onclick="addOtherItem()" style="width:auto">+ إضافة</button>
+      <!-- Step 2: Add Items -->
+      <div id="step2" class="step-page" style="display:none">
+        <div class="step-header"><span class="step completed">1</span><span class="step completed">2</span><span class="step active">3</span><span class="step">4</span></div>
+        <div class="step-title">🛍️ إضافة المنتجات</div>
+        <div class="mode-toggle" style="display:flex; gap:10px; margin-bottom:20px">
+          <button class="btn btn-outline mode-btn" id="btnSale" onclick="setMode('sale')" style="flex:1">وضع البيع</button>
+          <button class="btn btn-outline mode-btn" id="btnReturn" onclick="setMode('return')" style="flex:1">وضع المرتجعات</button>
         </div>
+        <div class="form-group"><label>اختر منتج من المخزون (يظهر الكمية)</label><select id="productSelect" onchange="addSelectedProduct()"><option value="">-- اختر منتج --</option></select></div>
+        <div class="form-group"><label>أو أضف صنفاً خارجياً</label><div style="display:flex; gap:8px; flex-wrap:wrap"><input type="text" id="otherName" placeholder="اسم الصنف" style="flex:2"><input type="number" id="otherPrice" placeholder="السعر" step="0.01" style="flex:1"><input type="number" id="otherQty" placeholder="الكمية" value="1" step="1" style="flex:1"><button class="btn btn-primary" onclick="addOtherItem()" style="width:auto">+ إضافة</button></div></div>
+        <div id="cartList" style="margin:20px 0"></div>
+        <div style="display:flex; gap:12px; margin-top:20px"><button class="btn btn-outline" onclick="goToPhoneStep()">← رجوع</button><button class="btn btn-primary" style="flex:1" onclick="goToStep3()">مراجعة الفاتورة →</button></div>
       </div>
-
-      <div id="cartList" style="margin:20px 0"></div>
-
-      <div style="display:flex; gap:12px; margin-top:20px">
-        <button class="btn btn-outline" onclick="goToPhoneStep()">← رجوع</button>
-        <button class="btn btn-primary" style="flex:1" onclick="goToStep3()">مراجعة الفاتورة →</button>
+      <!-- Step 3: Review & Complete -->
+      <div id="step3" class="step-page" style="display:none">
+        <div class="step-header"><span class="step completed">1</span><span class="step completed">2</span><span class="step completed">3</span><span class="step active">4</span></div>
+        <div class="step-title">📝 مراجعة الفاتورة</div>
+        <div id="reviewContainer"></div>
+        <div style="display:flex; gap:12px; margin-top:25px"><button class="btn btn-outline" onclick="goToProductsStep()">← رجوع</button><button class="btn btn-primary" style="flex:1" onclick="completeSale()">✅ إتمام البيع</button></div>
       </div>
     </div>
+  </div>
 
-    <!-- Step 3: Review & Complete -->
-    <div id="step3" class="step-page" style="display:none">
-      <div class="step-header">
-        <span class="step completed">1</span>
-        <span class="step completed">2</span>
-        <span class="step completed">3</span>
-        <span class="step active">4</span>
+  <!-- تبويب الفواتير السابقة -->
+  <div id="tab-list" class="tab-pane">
+    <div class="step-container" style="padding: 24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 class="step-title" style="margin:0">📑 الفواتير المسجلة</h2>
+        <button class="btn btn-outline btn-sm" onclick="refreshInvoicesList()">🔄 تحديث</button>
       </div>
-      <div class="step-title">📝 مراجعة الفاتورة</div>
-      <div id="reviewContainer"></div>
-      <div style="display:flex; gap:12px; margin-top:25px">
-<button class="btn btn-outline" onclick="goToPhoneStep()">← رجوع</button>
-        <button class="btn btn-primary" style="flex:1" onclick="completeSale()">✅ إتمام البيع</button>
+      <div style="overflow-x:auto">
+        <table class="invoice-table">
+          <thead><tr><th>رقم الفاتورة</th><th>العميل</th><th>الهاتف</th><th>المجموع</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
+          <tbody id="invoicesListBody"><tr><td colspan="6" style="text-align:center">جاري التحميل...</td></tr></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -384,7 +331,7 @@ border:1px solid rgba(255,255,255,.08);
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, increment, runTransaction, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const CFG = {
   apiKey: "AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",
@@ -400,7 +347,9 @@ const db = getFirestore(app);
 let inventory = [];
 let cart = [];
 let isReturnMode = false;
+let editInvoiceId = null;  // إذا كان غير null يعني نحن في وضع تعديل فاتورة موجودة
 
+// -------- Sync inventory ----------
 onSnapshot(collection(db, 'inventory'), snap => {
   inventory = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   updateProductSelect();
@@ -409,10 +358,7 @@ onSnapshot(collection(db, 'inventory'), snap => {
 
 function updateProductSelect() {
   const select = document.getElementById('productSelect');
-  if (!inventory.length) {
-    select.innerHTML = '<option value="">-- لا توجد منتجات --</option>';
-    return;
-  }
+  if (!inventory.length) { select.innerHTML = '<option value="">-- لا توجد منتجات --</option>'; return; }
   let options = '<option value="">-- اختر منتج --</option>';
   inventory.forEach(p => {
     const stock = (p.qty || 0);
@@ -435,16 +381,10 @@ window.addToCart = function(id) {
   if (!item) return;
   const existing = cart.find(x => x.id === id && !x.isOther);
   if (existing) {
-    if (!isReturnMode && existing.cartQty + 1 > (item.qty || 0)) {
-      showToast('❌ الكمية غير متوفرة');
-      return;
-    }
+    if (!isReturnMode && existing.cartQty + 1 > (item.qty || 0)) { showToast('❌ الكمية غير متوفرة'); return; }
     existing.cartQty++;
   } else {
-    if (!isReturnMode && 1 > (item.qty || 0)) {
-      showToast('❌ الكمية غير متوفرة');
-      return;
-    }
+    if (!isReturnMode && 1 > (item.qty || 0)) { showToast('❌ الكمية غير متوفرة'); return; }
     cart.push({ ...item, cartQty: 1, isOther: false });
   }
   renderCart();
@@ -454,18 +394,9 @@ window.addOtherItem = function() {
   const name = document.getElementById('otherName').value.trim();
   const price = parseFloat(document.getElementById('otherPrice').value);
   let qty = parseInt(document.getElementById('otherQty').value);
-  if (!name || isNaN(price) || price <= 0) {
-    showToast('⚠️ أدخل اسم وسعر صحيحين');
-    return;
-  }
+  if (!name || isNaN(price) || price <= 0) { showToast('⚠️ أدخل اسم وسعر صحيحين'); return; }
   if (isNaN(qty) || qty < 1) qty = 1;
-  cart.push({
-    id: 'other_' + Date.now(),
-    name: name + ' (خارجي)',
-    price: price,
-    cartQty: qty,
-    isOther: true
-  });
+  cart.push({ id: 'other_'+Date.now(), name: name+' (خارجي)', price, cartQty: qty, isOther: true });
   document.getElementById('otherName').value = '';
   document.getElementById('otherPrice').value = '';
   document.getElementById('otherQty').value = '1';
@@ -473,26 +404,17 @@ window.addOtherItem = function() {
 };
 
 window.renderCart = function() {
- const container = document.getElementById('cartList');
-if (!container || !Array.isArray(cart)) return;
-if (cart.length === 0) {
-  container.innerHTML = '<div style="text-align:center;color:var(--text2);padding:20px">السلة فارغة</div>';
-  return;
-}
+  const container = document.getElementById('cartList');
+  if (!container) return;
+  if (cart.length === 0) { container.innerHTML = '<div style="text-align:center;color:var(--text2);padding:20px">السلة فارغة</div>'; return; }
   let html = '';
   cart.forEach((item, idx) => {
-    html += `
-      <div class="cart-item">
-        <div class="cart-item-info">${escapeHtml(item.name)}</div>
-        <div class="cart-item-price">${item.price.toFixed(2)} د.أ</div>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button>
-          <span>${item.cartQty}</span>
-          <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
-        </div>
-        <button class="remove-item" onclick="removeItem(${idx})">✕</button>
-      </div>
-    `;
+    html += `<div class="cart-item">
+      <div class="cart-item-info">${escapeHtml(item.name)}</div>
+      <div class="cart-item-price">${item.price.toFixed(2)} د.أ</div>
+      <div class="cart-item-qty"><button class="qty-btn" onclick="changeQty(${idx}, -1)">−</button><span>${item.cartQty}</span><button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button></div>
+      <button class="remove-item" onclick="removeItem(${idx})">✕</button>
+    </div>`;
   });
   container.innerHTML = html;
 };
@@ -503,29 +425,20 @@ window.changeQty = function(idx, delta) {
   if (newQty < 1) { removeItem(idx); return; }
   if (!isReturnMode && !item.isOther) {
     const original = inventory.find(i => i.id === item.id);
-    if (original && newQty > original.qty) {
-      showToast(`⚠️ الكمية المتاحة: ${original.qty}`);
-      return;
-    }
+    if (original && newQty > original.qty) { showToast(`⚠️ الكمية المتاحة: ${original.qty}`); return; }
   }
   item.cartQty = newQty;
   renderCart();
 };
 
-window.removeItem = function(idx) {
-  cart.splice(idx, 1);
-  renderCart();
-};
+window.removeItem = function(idx) { cart.splice(idx,1); renderCart(); };
 
 window.setMode = function(mode) {
   isReturnMode = (mode === 'return');
-
   const saleBtn = document.getElementById('btnSale');
   const returnBtn = document.getElementById('btnReturn');
-
   if (saleBtn) saleBtn.classList.toggle('active', !isReturnMode);
   if (returnBtn) returnBtn.classList.toggle('active', isReturnMode);
-
   showToast(isReturnMode ? '⚠️ وضع المرتجعات' : '✅ وضع البيع');
 };
 
@@ -536,7 +449,7 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Step navigation
+// -------- Step navigation (مثل الكود الأصلي لكن بدون أخطاء) --------
 window.goToStep1 = function() {
   document.getElementById('step1').style.display = 'block';
   document.getElementById('stepPhone').style.display = 'none';
@@ -544,22 +457,14 @@ window.goToStep1 = function() {
   document.getElementById('step3').style.display = 'none';
 };
 window.goToPhoneStep = function() {
-  const name = document.getElementById('customerName').value.trim();
-  if (!name) {
-    showToast('⚠️ يرجى إدخال الاسم');
-    return;
-  }
+  if (!document.getElementById('customerName').value.trim()) { showToast('⚠️ يرجى إدخال الاسم'); return; }
   document.getElementById('step1').style.display = 'none';
   document.getElementById('stepPhone').style.display = 'block';
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'none';
 };
 window.goToProductsStep = function() {
-  const phone = document.getElementById('customerPhone').value.trim();
-  if (!phone) {
-    showToast('⚠️ يرجى إدخال رقم الهاتف');
-    return;
-  }
+  if (!document.getElementById('customerPhone').value.trim()) { showToast('⚠️ يرجى إدخال رقم الهاتف'); return; }
   document.getElementById('step1').style.display = 'none';
   document.getElementById('stepPhone').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
@@ -567,30 +472,17 @@ window.goToProductsStep = function() {
   renderCart();
 };
 window.goToStep3 = function() {
-  if (cart.length === 0) {
-    showToast('⚠️ السلة فارغة, أضف منتجات أولاً');
-    return;  // ✅ لا ننتقل إلى step3
-  }
-  // build review
-  let subtotal = 0;
+  if (cart.length === 0) { showToast('⚠️ السلة فارغة, أضف منتجات أولاً'); return; }
+  let subtotal = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
   let itemsHtml = '';
   cart.forEach(item => {
     const total = item.price * item.cartQty;
-    subtotal += total;
     itemsHtml += `<tr><td style="text-align:right">${escapeHtml(item.name)}</td><td style="text-align:center">${item.cartQty}</td><td style="text-align:center">${item.price.toFixed(2)}</td><td style="text-align:center">${total.toFixed(2)}</td></tr>`;
   });
-  const taxRate = 0;
-  const taxAmount = 0;
-  const total = subtotal;
-  const reviewHtml = `
-    <table class="review-table">
-      <thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
-      <tbody>${itemsHtml}</tbody>
-    </table>
+  const reviewHtml = `<table class="review-table"><thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>${itemsHtml}</tbody></table>
     <div class="total-row"><span>المجموع الفرعي</span><span>${subtotal.toFixed(2)} د.أ</span></div>
     <div class="total-row"><span>الضريبة (0%)</span><span>0.00 د.أ</span></div>
-    <div class="total-row grand-total"><span>الإجمالي النهائي</span><span>${total.toFixed(2)} د.أ</span></div>
-  `;
+    <div class="total-row grand-total"><span>الإجمالي النهائي</span><span>${subtotal.toFixed(2)} د.أ</span></div>`;
   document.getElementById('reviewContainer').innerHTML = reviewHtml;
   document.getElementById('step1').style.display = 'none';
   document.getElementById('stepPhone').style.display = 'none';
@@ -598,16 +490,42 @@ window.goToStep3 = function() {
   document.getElementById('step3').style.display = 'block';
 };
 
+// -------- توليد رقم فاتورة تلقائي --------
+async function generateInvoiceNumber() {
+  const counterRef = doc(db, 'counters', 'invoices');
+  return await runTransaction(db, async (transaction) => {
+    const snap = await transaction.get(counterRef);
+    let next = 1;
+    if (snap.exists()) next = (snap.data().lastNumber || 0) + 1;
+    transaction.set(counterRef, { lastNumber: next }, { merge: true });
+    return `INV-${String(next).padStart(4, '0')}`;
+  });
+}
+
+// -------- حفظ فاتورة جديدة أو تعديلها --------
 window.completeSale = async function() {
   if (cart.length === 0) { showToast('⚠️ لا توجد أصناف'); return; }
   const customerName = document.getElementById('customerName').value.trim();
   const customerPhone = document.getElementById('customerPhone').value.trim();
   if (!customerName || !customerPhone) { showToast('⚠️ بيانات العميل ناقصة'); return; }
 
-  let subtotal = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
-  const taxRate = 0;
-  const taxAmount = 0;
-  const total = subtotal;
+  const subtotal = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
+  const total = subtotal; // tax 0 حالياً
+
+  // إذا كان تعديل: أولاً نعيد الكميات القديمة للمخزون (لنفترض أننا سنقوم بجلب الفاتورة القديمة)
+  // لكن سنبسط: في حالة التعديل، نمسح الفاتورة القديمة ونعيد إنشاءها؟ الأفضل تحديث مع معالجة الكميات.
+  // للتبسيط، سندعم فقط إنشاء فاتورة جديدة في هذا الإصدار، والتعديل يتم عن طريق حذف وإعادة إنشاء من تبويب الفواتير.
+  // لكننا سنضيف وظيفة تعديل حذرة في المستقبل. هنا سنكتفي بالإنشاء.
+
+  if (editInvoiceId) {
+    // لوضع التعديل: سنقوم بتنفيذ منطق معقد بعض الشيء، لكن لتجنب التعقيد سنقترح حذف وإعادة إنشاء.
+    // بدلاً من ذلك، سنظهر رسالة أن التعديل من القائمة يتم بحذف الفاتورة وإنشاء جديدة.
+    showToast('التعديل المباشر غير مدعم حالياً، يرجى حذف الفاتورة وإنشاء جديدة');
+    return;
+  }
+
+  // إنشاء فاتورة جديدة
+  const invoiceNumber = await generateInvoiceNumber();
 
   // تحديث المخزون
   for (const item of cart) {
@@ -619,100 +537,151 @@ window.completeSale = async function() {
   }
 
   await addDoc(collection(db, 'sales'), {
+    invoiceNumber,
     customerName,
     customerPhone,
-cart: cart.map(c => ({
-  name: c.name,
-  price: c.price,
-  qty: c.cartQty,
-  isOther: c.isOther,
-  snapshotPrice: c.price
-})),
+    cart: cart.map(c => ({
+      name: c.name,
+      price: c.price,
+      qty: c.cartQty,
+      isOther: c.isOther || false,
+      snapshotPrice: c.price
+    })),
     subtotal,
-    taxRate,
-    taxAmount,
-total: isReturnMode ? -total : total,
+    taxRate: 0,
+    taxAmount: 0,
+    total: isReturnMode ? -total : total,
     type: isReturnMode ? 'مرتجع' : 'بيع',
     createdAt: serverTimestamp()
   });
 
   // طباعة الفاتورة
-  printInvoice(customerName, customerPhone, cart, subtotal, taxRate, taxAmount, total);
+  printInvoice(customerName, customerPhone, cart, subtotal, 0, 0, total, invoiceNumber);
 
-  // إعادة تعيين كل شيء
+  // إعادة تعيين
   cart = [];
   renderCart();
   document.getElementById('customerName').value = '';
   document.getElementById('customerPhone').value = '';
+  editInvoiceId = null;
   goToStep1();
   showToast('✅ تمت العملية بنجاح');
+  refreshInvoicesList(); // تحديث قائمة الفواتير
 };
 
-function printInvoice(customerName, customerPhone, cart, subtotal, taxRate, taxAmount, total) {
+function printInvoice(customerName, customerPhone, cart, subtotal, taxRate, taxAmount, total, invoiceNumber) {
   const now = new Date().toLocaleString('ar-JO');
   let itemsHtml = '';
   cart.forEach(item => {
-    itemsHtml += `<tr><td style="text-align:right">${escapeHtml(item.name)}</td><td style="text-align:center">${item.cartQty}</td><td style="text-align:center">${item.price.toFixed(2)}</td><td style="text-align:center">${(item.price * item.cartQty).toFixed(2)}</td></tr>`;
+    itemsHtml += `<tr><td>${escapeHtml(item.name)}</td><td>${item.cartQty}</td><td>${item.price.toFixed(2)}</td><td>${(item.price * item.cartQty).toFixed(2)}</td></tr>`;
   });
   const printWindow = window.open('', '_blank', 'width=600,height=800');
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html dir="rtl">
-    <head><meta charset="UTF-8"><title>فاتورة مبيعات</title>
-    <style>
-    .mode-btn.active {
-  background: var(--primary);
-  color: #000;
-  border-color: var(--primary);
-}
-      body { font-family: 'Almarai', sans-serif; margin: 0; padding: 1.5cm; background: white; color: black; }
-      .invoice { max-width: 850px; margin: auto; }
-      .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #F59E0B; padding-bottom: 10px; }
-      .logo { width: 70px; }
-      h2 { color: #B45309; margin: 5px 0; }
-      .info { margin: 15px 0; display: flex; justify-content: space-between; }
-      table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-      th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-      th { background: #f5f5f5; }
-      .totals { margin-top: 20px; text-align: left; }
-      .totals div { margin: 6px 0; }
-      .grand { font-size: 18px; font-weight: bold; color: #F59E0B; }
-      .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #777; border-top: 1px solid #ddd; padding-top: 10px; }
-      @media print { body { padding: 0; } }
-    </style>
-    </head>
-    <body>
-    <div class="invoice">
-      <div class="header">
-        <img class="logo" src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" onerror="this.style.display='none'">
-        <h2>Lawrence For PC</h2>
-        <p>مركز صيانة وبيع أجهزة الكمبيوتر</p>
-      </div>
-      <div class="info">
-        <div><strong>العميل:</strong> ${escapeHtml(customerName)}</div>
-        <div><strong>الهاتف:</strong> ${escapeHtml(customerPhone)}</div>
-        <div><strong>التاريخ:</strong> ${now}</div>
-      </div>
-      <table>
-        <thead><tr><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead>
-        <tbody>${itemsHtml}</tbody>
-      </table>
-      <div class="totals">
-        <div>المجموع الفرعي: ${subtotal.toFixed(2)} د.أ</div>
-        <div>الضريبة (${taxRate}%): ${taxAmount.toFixed(2)} د.أ</div>
-        <div class="grand">الإجمالي النهائي: ${total.toFixed(2)} د.أ</div>
-      </div>
-      <div class="footer">
-        شكراً لثقتكم بـ Lawrence For PC<br>
-        هذه الفاتورة إلكترونية ولا تحتاج إلى ختم
-      </div>
-    </div>
-    <script>window.onload = function() { window.print(); setTimeout(() => window.close(), 500); }<\/script>
-    </body>
-    </html>
-  `);
+  printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>فاتورة ${invoiceNumber}</title>
+  <style>
+    body { font-family: 'Almarai', sans-serif; margin: 0; padding: 1.5cm; background: white; color: black; }
+    .invoice { max-width: 850px; margin: auto; }
+    .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #F59E0B; padding-bottom: 10px; }
+    .logo { width: 70px; }
+    h2 { color: #B45309; margin: 5px 0; }
+    .info { margin: 15px 0; display: flex; justify-content: space-between; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background: #f5f5f5; }
+    .totals { margin-top: 20px; text-align: left; }
+    .grand { font-size: 18px; font-weight: bold; color: #F59E0B; }
+    .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #777; border-top: 1px solid #ddd; padding-top: 10px; }
+  </style></head>
+  <body>
+  <div class="invoice">
+    <div class="header"><img class="logo" src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" onerror="this.style.display='none'"><h2>Lawrence For PC</h2><p>مركز صيانة وبيع أجهزة الكمبيوتر</p></div>
+    <div class="info"><div><strong>رقم الفاتورة:</strong> ${invoiceNumber}</div><div><strong>العميل:</strong> ${escapeHtml(customerName)}</div><div><strong>الهاتف:</strong> ${escapeHtml(customerPhone)}</div><div><strong>التاريخ:</strong> ${now}</div></div>
+    <table><thead><tr><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+    <div class="totals"><div>المجموع الفرعي: ${subtotal.toFixed(2)} د.أ</div><div>الضريبة (0%): 0.00 د.أ</div><div class="grand">الإجمالي النهائي: ${total.toFixed(2)} د.أ</div></div>
+    <div class="footer">شكراً لثقتكم بـ Lawrence For PC<br>هذه الفاتورة إلكترونية ولا تحتاج إلى ختم</div>
+  </div>
+  <script>window.onload = function() { window.print(); setTimeout(() => window.close(), 500); }<\/script>
+  </body></html>`);
   printWindow.document.close();
 }
+
+// -------- عرض الفواتير السابقة --------
+let allInvoices = [];
+function refreshInvoicesList() {
+  const tbody = document.getElementById('invoicesListBody');
+  tbody.innerHTML = '<tr><td colspan="6">جاري التحميل...</td></tr>';
+  onSnapshot(collection(db, 'sales'), (snap) => {
+    allInvoices = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a,b) => (b.createdAt?.toMillis?.()||0) - (a.createdAt?.toMillis?.()||0));
+    if (allInvoices.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">لا توجد فواتير</td></tr>'; return; }
+    tbody.innerHTML = allInvoices.map(inv => `
+      <tr>
+        <td><strong>${inv.invoiceNumber || '—'}</strong></td>
+        <td>${escapeHtml(inv.customerName)}</td>
+        <td>${escapeHtml(inv.customerPhone)}</td>
+        <td>${(inv.total || 0).toFixed(2)} د.أ</td>
+        <td>${inv.createdAt?.toDate().toLocaleDateString('ar-JO') || '—'}</td>
+        <td class="action-icons">
+          <button onclick="editInvoice('${inv.id}')" title="تعديل">✏️</button>
+          <button onclick="deleteInvoice('${inv.id}')" title="حذف">🗑️</button>
+          <button onclick="reprintInvoice('${inv.id}')" title="طباعة">🖨️</button>
+        </td>
+      </tr>
+    `).join('');
+  });
+}
+
+window.editInvoice = async (invoiceId) => {
+  const invoice = allInvoices.find(i => i.id === invoiceId);
+  if (!invoice) return;
+  showToast('وضع التعديل قيد التطوير، يمكنك حذف الفاتورة وإعادة إنشائها');
+  // يمكننا لاحقاً تنفيذ تعديل كامل، لكن حالياً نعطي رسالة
+};
+
+window.deleteInvoice = async (invoiceId) => {
+  if (!confirm('هل أنت متأكد من حذف هذه الفاتورة؟ سيتم إعادة الكميات للمخزون')) return;
+  const invoice = allInvoices.find(i => i.id === invoiceId);
+  if (!invoice) return;
+  // إعادة الكميات للمخزون
+  if (invoice.cart && Array.isArray(invoice.cart)) {
+    for (const item of invoice.cart) {
+      if (!item.isOther) {
+        // نحتاج لمعرفة id الصنف. المخزن لا يحفظ id في الفاتورة، نحاول البحث بالاسم.
+        const invItem = inventory.find(i => i.name === item.name);
+        if (invItem) {
+          await updateDoc(doc(db, 'inventory', invItem.id), {
+            qty: increment(item.qty) // إعادة الكمية
+          });
+        }
+      }
+    }
+  }
+  await deleteDoc(doc(db, 'sales', invoiceId));
+  showToast('🗑️ تم حذف الفاتورة وإعادة الكميات للمخزون');
+  refreshInvoicesList();
+};
+
+window.reprintInvoice = (invoiceId) => {
+  const inv = allInvoices.find(i => i.id === invoiceId);
+  if (!inv) return;
+  const cartItems = inv.cart || [];
+  printInvoice(inv.customerName, inv.customerPhone, cartItems, inv.subtotal || 0, inv.taxRate || 0, inv.taxAmount || 0, inv.total || 0, inv.invoiceNumber || '');
+};
+
+// -------- تبديل التبويبات --------
+window.switchTab = (tab) => {
+  document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  if (tab === 'new') {
+    document.getElementById('tab-new').classList.add('active');
+    document.querySelector('.tab-btn:first-child').classList.add('active');
+  } else {
+    document.getElementById('tab-list').classList.add('active');
+    document.querySelector('.tab-btn:last-child').classList.add('active');
+    refreshInvoicesList();
+  }
+};
+
+// تحميل أولي للفواتير
+refreshInvoicesList();
 </script>
 </body>
 </html>
