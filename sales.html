@@ -373,7 +373,7 @@ border:1px solid rgba(255,255,255,.08);
       <div class="step-title">📝 مراجعة الفاتورة</div>
       <div id="reviewContainer"></div>
       <div style="display:flex; gap:12px; margin-top:25px">
-        <button class="btn btn-outline" onclick="goToProductsStep()">← رجوع</button>
+<button class="btn btn-outline" onclick="goToPhoneStep()">← رجوع</button>
         <button class="btn btn-primary" style="flex:1" onclick="completeSale()">✅ إتمام البيع</button>
       </div>
     </div>
@@ -473,12 +473,12 @@ window.addOtherItem = function() {
 };
 
 window.renderCart = function() {
-  const container = document.getElementById('cartList');
-  if (!container) return;
-  if (cart.length === 0) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2)">السلة فارغة</div>';
-    return;
-  }
+ const container = document.getElementById('cartList');
+if (!container || !Array.isArray(cart)) return;
+if (cart.length === 0) {
+  container.innerHTML = '<div style="text-align:center;color:var(--text2);padding:20px">السلة فارغة</div>';
+  return;
+}
   let html = '';
   cart.forEach((item, idx) => {
     html += `
@@ -499,7 +499,7 @@ window.renderCart = function() {
 
 window.changeQty = function(idx, delta) {
   const item = cart[idx];
-  const newQty = item.cartQty + delta;
+  const newQty = (item.cartQty || 0) + delta;
   if (newQty < 1) { removeItem(idx); return; }
   if (!isReturnMode && !item.isOther) {
     const original = inventory.find(i => i.id === item.id);
@@ -519,10 +519,13 @@ window.removeItem = function(idx) {
 
 window.setMode = function(mode) {
   isReturnMode = (mode === 'return');
+
   const saleBtn = document.getElementById('btnSale');
   const returnBtn = document.getElementById('btnReturn');
-  if (saleBtn) saleBtn.style.background = isReturnMode ? 'transparent' : 'var(--primary)';
-  if (returnBtn) returnBtn.style.background = isReturnMode ? 'var(--primary)' : 'transparent';
+
+  if (saleBtn) saleBtn.classList.toggle('active', !isReturnMode);
+  if (returnBtn) returnBtn.classList.toggle('active', isReturnMode);
+
   showToast(isReturnMode ? '⚠️ وضع المرتجعات' : '✅ وضع البيع');
 };
 
@@ -618,11 +621,17 @@ window.completeSale = async function() {
   await addDoc(collection(db, 'sales'), {
     customerName,
     customerPhone,
-    cart: cart.map(c => ({ name: c.name, price: c.price, qty: c.cartQty, isOther: c.isOther })),
+cart: cart.map(c => ({
+  name: c.name,
+  price: c.price,
+  qty: c.cartQty,
+  isOther: c.isOther,
+  snapshotPrice: c.price
+})),
     subtotal,
     taxRate,
     taxAmount,
-    total: isReturnMode ? -total : total,
+total: isReturnMode ? -total : total,
     type: isReturnMode ? 'مرتجع' : 'بيع',
     createdAt: serverTimestamp()
   });
@@ -651,6 +660,11 @@ function printInvoice(customerName, customerPhone, cart, subtotal, taxRate, taxA
     <html dir="rtl">
     <head><meta charset="UTF-8"><title>فاتورة مبيعات</title>
     <style>
+    .mode-btn.active {
+  background: var(--primary);
+  color: #000;
+  border-color: var(--primary);
+}
       body { font-family: 'Almarai', sans-serif; margin: 0; padding: 1.5cm; background: white; color: black; }
       .invoice { max-width: 850px; margin: auto; }
       .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #F59E0B; padding-bottom: 10px; }
