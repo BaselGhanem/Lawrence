@@ -2,502 +2,204 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lawrence For PC — لوحة الفني</title>
+<title>Lawrence For PC — المبيعات (POS)</title>
 <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 <script>
   const savedTheme = localStorage.getItem('lpc_theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
 </script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;--border2:#222B40;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);
-  --success:#10B981;--sdim:rgba(16,185,129,.12);
-  --danger:#EF4444;--ddim:rgba(239,68,68,.12);
-  --info:#3B82F6;--idim:rgba(59,130,246,.12);
-  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;
-  --sw:240px;
+  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
+  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--success:#10B981;
+  --danger:#EF4444;--text:#F1F5F9;--text2:#94A3B8;--sw:240px;
 }
-[data-theme="light"]{
-  --bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--border2:#CBD5E1;
-  --text:#0F172A;--text2:#475569;--text3:#94A3B8;
-  --pdim:rgba(245,158,11,.1);--sdim:rgba(16,185,129,.1);--ddim:rgba(239,68,68,.08);--idim:rgba(59,130,246,.1)
-}
-[data-theme="light"] .f input, [data-theme="light"] .f textarea {background:#F8FAFC;color:var(--text);border-color:var(--border)}
-[data-theme="light"] .toast{background:#fff;color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-[data-theme="light"] .nav-item:hover{background:rgba(0,0,0,.04)}
-[data-theme="light"] .stat-card, [data-theme="light"] .sidebar, [data-theme="light"] .modal, [data-theme="light"] .ticket-card{box-shadow:0 2px 12px rgba(0,0,0,.08)}
-[data-theme="light"] .sla-bar{background:rgba(0,0,0,.06)}
+[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s}
 
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
-
-.sidebar{width:var(--sw);min-height:100vh;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:100}
+/* Sidebar */
+.sidebar{width:var(--sw);background:var(--surface);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;z-index:100}
 .sb-brand{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-icon{width:38px;height:38px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-icon img{width:100%;height:100%;object-fit:cover}
-.sb-brand h2{font-size:14px;font-weight:900}
-.sb-brand p{font-size:11px;color:var(--text2)}
-.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;padding:5px 8px;color:var(--text2);transition:.2s;flex-shrink:0}
-.theme-btn:hover{background:var(--pdim);border-color:var(--primary)}
-
-.sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
-.nav-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:8px 8px 5px}
+.sb-nav{padding:12px 10px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
 .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
 .nav-item.active{background:var(--pdim);color:var(--primary)}
 
-.sb-user{padding:14px 18px;border-top:1px solid var(--border)}
-.sb-user-info{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--idim);border:1px solid var(--info);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.sb-user-name{font-size:13px;font-weight:700}
-.sb-user-role{font-size:11px;color:var(--text2)}
-.logout-btn{width:100%;padding:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;color:#EF4444;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
-.logout-btn:hover{background:rgba(239,68,68,.15)}
+.main{margin-right:var(--sw);flex:1;padding:24px}
+.grid-pos{display:grid;grid-template-columns:1fr 380px;gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
 
-.main{margin-right:var(--sw);flex:1;padding:28px;min-height:100vh}
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.page-header h1{font-size:20px;font-weight:800}
-.page-header p{color:var(--text2);font-size:13px;margin-top:3px}
+/* Elements */
+.pos-input{width:100%;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:16px;margin-bottom:15px;outline:none}
+.pos-input:focus{border-color:var(--primary)}
+.cart-table{width:100%;border-collapse:collapse}
+.cart-table th{text-align:right;padding:10px;color:var(--text2);font-size:12px;border-bottom:1px solid var(--border)}
+.cart-table td{padding:12px 10px;border-bottom:1px solid var(--border)}
+.total-box{background:var(--surface2);padding:20px;border-radius:12px;margin-top:20px;text-align:center}
+.total-val{font-size:32px;font-weight:900;color:var(--primary);margin:10px 0}
+.btn{width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:15px;margin-top:10px}
+.btn-primary{background:var(--primary);color:#000}
+.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+.mode-toggle{display:flex;gap:5px;background:var(--surface2);padding:4px;border-radius:10px;margin-bottom:20px}
+.mode-btn{flex:1;padding:8px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+.mode-active{background:var(--primary);color:#000}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A2235;padding:12px 24px;border-radius:10px;z-index:9999;display:none}
+.toast.show{display:block}
 
-.section{display:none}.section.active{display:block}
-
-/* TICKET CARDS */
-.tickets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
-.ticket-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;transition:all .2s;cursor:pointer}
-.ticket-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,.1)}
-.tc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.tc-id{font-size:15px;font-weight:900;color:var(--primary)}
-.tc-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700}
-.tc-badge::before{content:'';width:6px;height:6px;border-radius:50%}
-.b-pending{background:rgba(245,158,11,.12);color:#F59E0B}.b-pending::before{background:#F59E0B}
-.b-inspecting{background:rgba(59,130,246,.12);color:#3B82F6}.b-inspecting::before{background:#3B82F6}
-.b-in_repair{background:rgba(249,115,22,.12);color:#F97316}.b-in_repair::before{background:#F97316}
-.b-ready{background:rgba(16,185,129,.12);color:#10B981}.b-ready::before{background:#10B981}
-.b-delivered{background:rgba(71,85,105,.12);color:#64748B}.b-delivered::before{background:#64748B}
-.tc-row{display:flex;gap:6px;align-items:center;font-size:13px;margin-bottom:7px;color:var(--text2)}
-.tc-row strong{color:var(--text)}
-.sla-bar{height:6px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden;margin:12px 0 6px}
-.sla-fill{height:100%;border-radius:20px;transition:width .4s}
-.sla-label{font-size:11px;font-weight:600}
-.tc-actions{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
-.btn{padding:7px 14px;border:none;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
-.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#fff}
-.btn-primary:hover{box-shadow:0 4px 14px rgba(245,158,11,.3)}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
-.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--pdim)}
-.btn-success{background:var(--sdim);border:1px solid rgba(16,185,129,.25);color:var(--success)}
-.btn-info{background:var(--idim);border:1px solid rgba(59,130,246,.25);color:var(--info)}
-
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden}
-.stat-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 14px 14px 0}
-.c-yellow::before{background:var(--primary)}
-.c-blue::before{background:var(--info)}
-.c-green::before{background:var(--success)}
-.stat-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
-.stat-val{font-size:26px;font-weight:900}
-.stat-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.12}
-
-/* MODAL */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:20px}
-.overlay.show{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;animation:mIn .25s ease}
-@keyframes mIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.modal-title{font-size:17px;font-weight:800}
-.close-x{background:rgba(255,255,255,.06);border:none;color:var(--text2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:17px;transition:.2s}
-.close-x:hover{background:rgba(255,255,255,.1);color:var(--text)}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.detail-item{background:var(--surface2);border-radius:10px;padding:12px}
-.di-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
-.di-val{font-size:14px;font-weight:600}
-.condition-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:10px;padding:14px;margin-bottom:16px}
-.cb-label{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px}
-.condition-box p{font-size:13px;line-height:1.7;color:var(--text2)}
-.status-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
-.sb-btn{padding:9px;border-radius:9px;border:none;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
-.sb-btn:hover{opacity:.8;transform:translateY(-1px)}
-.sb-pending{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#F59E0B}
-.sb-inspecting{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#3B82F6}
-.sb-in_repair{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);color:#F97316}
-.sb-ready{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#10B981}
-.log{display:flex;flex-direction:column;gap:0}
-.log-item{display:flex;gap:12px;padding-bottom:14px;position:relative}
-.log-item:not(:last-child)::after{content:'';position:absolute;right:14px;top:28px;bottom:0;width:1px;background:var(--border)}
-.log-dot{width:28px;height:28px;border-radius:50%;background:var(--pdim);border:2px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;z-index:1}
-.log-body{flex:1;padding-top:2px}
-.log-action{font-size:13px;margin-bottom:2px}
-.log-meta{font-size:11px;color:var(--text2)}
-.f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.f label{font-size:13px;font-weight:600;color:var(--text2)}
-.f input, .f textarea{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;transition:.2s}
-.f input:focus, .f textarea:focus{border-color:var(--primary);background:var(--pdim)}
-input[type="tel"] { direction: ltr; text-align: left; }
-
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:12px;padding:12px 24px;font-size:14px;font-weight:600;z-index:9999;transition:.3s;pointer-events:none;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.empty-state{text-align:center;padding:60px 20px;color:var(--text2)}
-.empty-state .es-icon{font-size:48px;margin-bottom:14px;opacity:.4}
-.empty-state p{font-size:14px}
+/* Print Support */
+@media print {
+  .sidebar, .btn, .mode-toggle, .pos-input, .mode-btn { display: none !important; }
+  .main { margin-right: 0 !important; padding: 0 !important; }
+  .card { border: none !important; box-shadow: none !important; }
+}
 </style>
 </head>
 <body>
 
 <div class="sidebar">
-  <div class="sb-brand">
-    <div class="sb-icon"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Logo"></div>
-    <div><h2>Lawrence For PC</h2><p>لوحة الفني</p></div>
-    <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="تبديل المظهر">🌙</button>
-  </div>
+  <div class="sb-brand"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" style="width:40px;border-radius:10px"> <h2>Lawrence</h2></div>
   <nav class="sb-nav">
-    <div class="nav-section">أجهزتي</div>
-    <div class="nav-item active" onclick="showSec('mine',this)"><span>🔧</span> أجهزتي المعينة</div>
-    <div class="nav-item" onclick="showSec('all',this)"><span>📋</span> جميع الطلبات</div>
-    <div class="nav-section">الحساب</div>
-    <div class="nav-item" onclick="openChangePwd()"><span>🔑</span> تغيير كلمة المرور</div>
-    <a class="nav-item" href="customer.html" target="_blank"><span>🔍</span> بوابة العملاء</a>
+    <a href="admin.html" class="nav-item">🏠 لوحة الإدارة</a>
+    <a href="inventory.html" class="nav-item">📦 المخزون</a>
+    <a href="sales.html" class="nav-item active">🛒 المبيعات</a>
+    <a href="returns.html" class="nav-item">↩️ المرتجعات</a>
+    <a href="reports.html" class="nav-item">📊 التقارير</a>
+    <a href="customer.html" class="nav-item" target="_blank">🔍 بوابة العملاء</a>
   </nav>
-  <div class="sb-user">
-    <div class="sb-user-info">
-      <div class="sb-avatar">🔧</div>
-      <div><div class="sb-user-name" id="sbName">—</div><div class="sb-user-role">فني صيانة</div></div>
-    </div>
-    <button class="logout-btn" onclick="doLogout()">تسجيل الخروج 🚪</button>
-  </div>
 </div>
 
 <div class="main">
-  <div class="section active" id="sec-mine">
-    <div class="page-header">
-      <div><h1>أجهزتي المعينة</h1><p id="mineSubtitle">—</p></div>
+  <div class="grid-pos">
+    <div class="card">
+      <div class="mode-toggle">
+        <button class="mode-btn mode-active" id="btnSale" onclick="setMode('sale')">وضع البيع</button>
+        <button class="mode-btn" id="btnReturn" onclick="setMode('return')">وضع المرتجعات</button>
+      </div>
+      <input type="text" id="posSearch" class="pos-input" placeholder="امسح الباركود أو ابحث عن صنف..." oninput="searchItems()">
+      <div id="itemsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;max-height:500px;overflow-y:auto"></div>
     </div>
-    <div class="stats">
-      <div class="stat-card c-yellow"><div class="stat-label">قيد العمل</div><div class="stat-val" id="sc-active">0</div><div class="stat-icon">🔧</div></div>
-      <div class="stat-card c-green"><div class="stat-label">جاهز</div><div class="stat-val" id="sc-ready">0</div><div class="stat-icon">✅</div></div>
-      <div class="stat-card c-blue"><div class="stat-label">مُسلَّم</div><div class="stat-val" id="sc-done">0</div><div class="stat-icon">📦</div></div>
+
+    <div class="card">
+      <h3>🛒 السلة</h3>
+      <div style="max-height:400px;overflow-y:auto;margin-top:15px">
+        <table class="cart-table">
+          <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th></th></tr></thead>
+          <tbody id="cartBody"></tbody>
+        </table>
+      </div>
+      <div class="total-box">
+        <div style="font-size:14px;color:var(--text2)">الإجمالي المطلوب</div>
+        <div class="total-val" id="totalSum">0.00 د.أ</div>
+        <button class="btn btn-primary" onclick="completeSale()">إتمام العملية ✓</button>
+        <button class="btn btn-primary" style="background:var(--success)" onclick="window.print()">طباعة (PDF)</button>
+        <button class="btn btn-danger" onclick="clearCart()">تفريغ السلة</button>
+      </div>
     </div>
-    <div class="tickets-grid" id="myTickets"></div>
   </div>
-
-  <div class="section" id="sec-all">
-    <div class="page-header">
-      <div><h1>جميع الطلبات</h1><p>للاطلاع فقط</p></div>
-    </div>
-    <div class="tickets-grid" id="allTickets"></div>
-  </div>
-</div>
-
-<div class="overlay" id="m-detail">
-<div class="modal">
-  <div class="modal-head">
-    <div>
-      <div class="modal-title" id="dt-id">—</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:3px" id="dt-date">—</div>
-    </div>
-    <button class="close-x" onclick="closeModal('m-detail')">✕</button>
-  </div>
-  <div class="detail-grid" id="dt-grid"></div>
-  <div class="condition-box" id="dt-condition"></div>
-
-  <div id="dt-statusSection">
-    <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">تحديث الحالة</div>
-    <div class="status-grid" id="dt-statusBtns"></div>
-  </div>
-
-  <div class="f">
-    <label>إضافة ملاحظة</label>
-    <textarea id="dt-note" rows="3" placeholder="اكتب ملاحظة..."></textarea>
-  </div>
-  <button class="btn btn-outline" style="margin-bottom:20px" onclick="addNote()">إضافة ملاحظة</button>
-
-  <div style="padding-top:16px;border-top:1px solid var(--border)">
-    <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px">سجل الأحداث</div>
-    <div class="log" id="dt-log"></div>
-  </div>
-</div>
-</div>
-
-<div class="overlay" id="m-changePwd">
-<div class="modal" style="max-width:420px">
-  <div class="modal-head"><div class="modal-title">🔑 تغيير كلمة المرور</div><button class="close-x" onclick="closeModal('m-changePwd')">✕</button></div>
-  <div class="f"><label>كلمة المرور الحالية</label><input type="password" id="cp-old" placeholder="كلمة المرور الحالية"></div>
-  <div class="f"><label>كلمة المرور الجديدة</label><input type="text" id="cp-new" placeholder="كلمة المرور الجديدة (6 أحرف على الأقل)"></div>
-  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-    <button class="btn btn-outline" onclick="closeModal('m-changePwd')">إلغاء</button>
-    <button class="btn btn-primary" onclick="doChangePwd()">تغيير ✓</button>
-  </div>
-</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script type="module">
-import { initializeApp }                       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signOut, onAuthStateChanged,
-         signInWithEmailAndPassword, updatePassword } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, getDoc, updateDoc,
-         onSnapshot, query, orderBy }          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const CFG = {
-  apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",
-  authDomain:"lorans-2.firebaseapp.com",
-  projectId:"lorans-2",
-  storageBucket:"lorans-2.firebasestorage.app",
-  messagingSenderId:"399952166847",
-  appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"
-};
+const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
+const app=initializeApp(CFG); const db=getFirestore(app);
 
-const app  = initializeApp(CFG);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+let inventory=[], cart=[], isReturnMode=false;
 
-let CU = null;
-let allTickets = [];
-let currentTicketId = null;
-let isMyTicket = false;
-
-onAuthStateChanged(auth, async user => {
-  if (!user) { location.href = 'index.html'; return; }
-  CU = JSON.parse(sessionStorage.getItem('lpc_user') || 'null');
-  if (!CU) {
-    const snap = await getDoc(doc(db, 'users', user.uid));
-    if (!snap.exists()) { doLogout(); return; }
-    CU = { uid: user.uid, ...snap.data() };
-    sessionStorage.setItem('lpc_user', JSON.stringify(CU));
-  }
-  document.getElementById('sbName').textContent = CU.displayName;
-  document.getElementById('mineSubtitle').textContent = `أهلاً، ${CU.displayName}`;
-  listenTickets();
+onSnapshot(collection(db,'inventory'), snap => {
+  inventory = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  renderItems();
 });
 
-function listenTickets() {
-  onSnapshot(query(collection(db,'tickets'), orderBy('createdAt','desc')), snap => {
-    allTickets = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderMyTickets();
-    renderAllTickets();
-  });
-}
-
-window.showSec = function(id, el) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('sec-' + id).classList.add('active');
-  if (el) el.classList.add('active');
-};
-
-function renderMyTickets() {
-  const mine = allTickets.filter(t => t.assignedTo === CU.uid && t.status !== 'delivered');
-  document.getElementById('sc-active').textContent = mine.filter(t => ['inspecting','in_repair'].includes(t.status)).length;
-  document.getElementById('sc-ready').textContent  = mine.filter(t => t.status === 'ready').length;
-  document.getElementById('sc-done').textContent   = allTickets.filter(t => t.assignedTo === CU.uid && t.status === 'delivered').length;
-
-  if (!mine.length) {
-    document.getElementById('myTickets').innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">🎉</div><p>لا توجد أجهزة معينة لك حالياً</p></div>';
-    return;
-  }
-  document.getElementById('myTickets').innerHTML = mine.map(t => renderCard(t, true)).join('');
-}
-
-function renderAllTickets() {
-  document.getElementById('allTickets').innerHTML = allTickets.length
-    ? allTickets.map(t => renderCard(t, false)).join('')
-    : '<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">📋</div><p>لا توجد طلبات</p></div>';
-}
-
-function renderCard(t, isEditable) {
-  const h = slaHours(t.createdAt);
-  const barColor = h >= 48 ? '#EF4444' : h >= 24 ? '#F59E0B' : '#10B981';
-  const barWidth = Math.min(100, Math.round((h / 72) * 100));
-  return `
-    <div class="ticket-card" onclick="openDetail('${t.id}',${isEditable})">
-      <div class="tc-header">
-        <span class="tc-id">${t.ticketId}</span>
-        <span class="tc-badge b-${t.status}">${statusLabel(t.status)}</span>
-      </div>
-      <div class="tc-row">👤 <strong>${t.customerName}</strong></div>
-      <div class="tc-row">💻 <strong>${t.device} ${t.brand ? '('+t.brand+')' : ''}</strong></div>
-      <div class="tc-row">🔩 ${t.issue?.substring(0,30) || '—'}</div>
-      <div class="sla-bar"><div class="sla-fill" style="width:${barWidth}%;background:${barColor}"></div></div>
-      <div class="sla-label" style="color:${barColor}">${h} ساعة منذ الإنشاء</div>
-      ${isEditable ? `<div class="tc-actions">
-        <button class="btn btn-info" onclick="event.stopPropagation();quickStatus('${t.id}','inspecting')">🔍 فحص</button>
-        <button class="btn btn-primary" onclick="event.stopPropagation();quickStatus('${t.id}','in_repair')">🔧 تصليح</button>
-        <button class="btn btn-success" onclick="event.stopPropagation();quickStatus('${t.id}','ready')">✅ جاهز</button>
-      </div>` : ''}
+function renderItems() {
+  document.getElementById('itemsGrid').innerHTML = inventory.map(i => `
+    <div style="background:var(--surface2);padding:10px;border-radius:8px;cursor:pointer;text-align:center" onclick="addToCart('${i.id}')">
+      <div style="font-size:12px;font-weight:700">${i.name}</div>
+      <div style="color:var(--primary);font-size:13px">${i.price.toFixed(2)}</div>
     </div>
-  `;
+  `).join('');
 }
 
-window.openDetail = function(id, editable) {
-  currentTicketId = id;
-  isMyTicket = editable;
-  const t = allTickets.find(x => x.id === id);
-  if (!t) return;
+window.setMode = (m) => {
+  isReturnMode = (m === 'return');
+  document.getElementById('btnSale').classList.toggle('mode-active', !isReturnMode);
+  document.getElementById('btnReturn').classList.toggle('mode-active', isReturnMode);
+  toast(isReturnMode ? '⚠️ وضع المرتجعات مفعل' : '✅ وضع البيع مفعل');
+};
 
-  document.getElementById('dt-id').textContent   = `🎫 ${t.ticketId}`;
-  document.getElementById('dt-date').textContent = `تاريخ الإنشاء: ${fmtDate(t.createdAt)}`;
-
-  document.getElementById('dt-grid').innerHTML = `
-    <div class="detail-item"><div class="di-label">العميل</div><div class="di-val">${t.customerName}</div></div>
-    <div class="detail-item"><div class="di-label">الهاتف</div><div class="di-val" dir="ltr">${t.phone}</div></div>
-    <div class="detail-item"><div class="di-label">الجهاز</div><div class="di-val">${t.device} ${t.brand?' - '+t.brand:''}</div></div>
-    <div class="detail-item"><div class="di-label">العطل</div><div class="di-val">${t.issue}</div></div>
-  `;
-
-  document.getElementById('dt-condition').innerHTML = `
-    <div class="cb-label">⚠️ الحالة الخارجية (عند الاستلام)</div>
-    <p>${t.externalCondition || '—'}</p>
-  `;
-
-  document.getElementById('dt-statusSection').style.display = editable ? 'block' : 'none';
-  if (editable) {
-    const statuses = [
-      {key:'inspecting',label:'🔍 قيد الفحص',cls:'sb-inspecting'},
-      {key:'in_repair', label:'🔧 قيد التصليح',cls:'sb-in_repair'},
-      {key:'ready',     label:'✅ جاهز للاستلام',cls:'sb-ready'},
-    ];
-    document.getElementById('dt-statusBtns').innerHTML = statuses.map(s => `
-      <button class="sb-btn ${s.cls}" onclick="quickStatus('${t.id}','${s.key}')" ${t.status===s.key?'style="opacity:.5;cursor:default"':''}>
-        ${s.label}
-      </button>
-    `).join('');
+window.addToCart = function(id) {
+  const item = inventory.find(x => x.id === id);
+  if(!item) return;
+  const existing = cart.find(x => x.id === id);
+  if(existing) {
+    if(!isReturnMode && existing.cartQty >= item.qty) { toast('❌ الكمية غير متوفرة'); return; }
+    existing.cartQty++;
+  } else {
+    cart.push({...item, cartQty: 1});
   }
-
-  document.getElementById('dt-note').value = '';
-
-  const logItems = (t.log||[]).slice().reverse();
-  document.getElementById('dt-log').innerHTML = logItems.map(l => `
-    <div class="log-item">
-      <div class="log-dot">📝</div>
-      <div class="log-body">
-        <div class="log-action">${l.action}</div>
-        <div class="log-meta">${l.user} — ${l.time ? new Date(l.time).toLocaleString('ar-JO') : '—'}</div>
-      </div>
-    </div>
-  `).join('') || '<p style="color:var(--text2);font-size:13px">لا توجد أحداث</p>';
-
-  openModal('m-detail');
+  updateCart();
 };
 
-window.quickStatus = async function(id, status) {
-  const t = allTickets.find(x => x.id === id);
-  if (!t) return;
-  const newLog = [...(t.log||[]), { time: new Date().toISOString(), user: CU.displayName, action: `تحديث الحالة: ${statusLabel(t.status)} ← ${statusLabel(status)}` }];
-  await updateDoc(doc(db,'tickets',id), { status, log: newLog });
-  closeModal('m-detail');
-  toast(`✅ تم تحديث الحالة: ${statusLabel(status)}`);
+window.updateCart = function() {
+  let total = 0;
+  document.getElementById('cartBody').innerHTML = cart.map((i, idx) => {
+    const itemTotal = i.price * i.cartQty;
+    total += itemTotal;
+    return `<tr><td>${i.name}</td><td>${i.cartQty}</td><td>${i.price.toFixed(2)}</td><td><button onclick="rem(${idx})" style="background:none;border:none;color:var(--danger);cursor:pointer">✕</button></td></tr>`;
+  }).join('');
+  document.getElementById('totalSum').textContent = (isReturnMode ? -total : total).toFixed(2) + ' د.أ';
 };
 
-window.addNote = async function() {
-  const note = document.getElementById('dt-note').value.trim();
-  if (!note) { toast('⚠️ الملاحظة فارغة'); return; }
-  if (!isMyTicket) { toast('⚠️ لا يمكنك إضافة ملاحظة على طلب ليس معيناً لك'); return; }
-  const t = allTickets.find(x => x.id === currentTicketId);
-  const newLog = [...(t?.log||[]), { time: new Date().toISOString(), user: CU.displayName, action: `ملاحظة: ${note}` }];
-  await updateDoc(doc(db,'tickets',currentTicketId), { log: newLog });
-  document.getElementById('dt-note').value = '';
-  toast('✅ تمت إضافة الملاحظة');
-};
+window.rem = (idx) => { cart.splice(idx,1); updateCart(); };
+window.clearCart = () => { cart=[]; updateCart(); };
 
-// ─── CHANGE OWN PASSWORD ────────────────────────
-window.openChangePwd = function() {
-  document.getElementById('cp-old').value = '';
-  document.getElementById('cp-new').value = '';
-  openModal('m-changePwd');
-};
-
-window.doChangePwd = async function() {
-  const oldPwd = document.getElementById('cp-old').value;
-  const newPwd = document.getElementById('cp-new').value.trim();
-  if (!oldPwd || !newPwd) { toast('⚠️ يرجى تعبئة الحقلين'); return; }
-  if (newPwd.length < 6) { toast('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
-
-  const user = auth.currentUser;
-  if (!user) { toast('❌ الجلسة منتهية'); return; }
-
-  try {
-    const { signInWithEmailAndPassword: siwp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-    await signInWithEmailAndPassword(auth, user.email, oldPwd);
-    await updatePassword(user, newPwd);
-    const { doc: d, updateDoc: upd } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await updateDoc(doc(db,'users',CU.uid), { pwd: newPwd });
-
-    closeModal('m-changePwd');
-    toast('✅ تم تغيير كلمة المرور بنجاح');
-  } catch(e) {
-    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') toast('❌ كلمة المرور الحالية غير صحيحة');
-    else toast('❌ خطأ: ' + e.message);
-  }
-};
-
-// ── BARCODE SCANNER GLOBAL LISTENER ──
-let _sbuf='', _stimer=null;
-document.addEventListener('keydown', function(e) {
-  const tag = document.activeElement?.tagName;
-  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+window.completeSale = async function() {
+  if(cart.length === 0) return;
+  const total = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
   
-  if(e.key === 'Enter') {
-    clearTimeout(_stimer);
-    if(_sbuf.length >= 3) {
-      const code = _sbuf.trim().toUpperCase();
-      _sbuf = '';
-      const foundTicket = allTickets.find(t => t.ticketId.toUpperCase() === code);
-      if(foundTicket) {
-        // إذا كان الطلب مُسنداً للفني، يفتح نافذة التعديل، وإلا يفتحه للقراءة فقط
-        openDetail(foundTicket.id, foundTicket.assignedTo === CU.uid);
-        toast('📡 تم التقاط الطلب');
-      } else {
-        toast('⚠️ لم يتم العثور على طلب بهذا الرقم');
-      }
-    }
-    _sbuf = '';
-    return;
+  for(const item of cart) {
+    await updateDoc(doc(db, 'inventory', item.id), {
+      qty: increment(isReturnMode ? item.cartQty : -item.cartQty)
+    });
   }
-  if(e.key.length === 1) {
-    _sbuf += e.key;
-    clearTimeout(_stimer);
-    _stimer = setTimeout(()=>{ _sbuf = '' }, 200);
-  }
-});
-
-// ─── HELPERS ────────────────────────────────────
-function statusLabel(s) {
-  return {pending:'انتظار',inspecting:'فحص',in_repair:'تصليح',ready:'جاهز',delivered:'مُسلَّم'}[s]||s;
-}
-
-function slaHours(ts) {
-  if (!ts?.toDate) return 0;
-  return Math.floor((Date.now() - ts.toDate().getTime()) / 3600000);
-}
-
-function fmtDate(ts) {
-  if (!ts?.toDate) return '—';
-  return ts.toDate().toLocaleDateString('ar-JO',{year:'numeric',month:'long',day:'numeric'});
-}
-
-function openModal(id)  { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-window.closeModal = closeModal;
+  
+  await addDoc(collection(db,'sales'), {
+    cart, 
+    total: isReturnMode ? -total : total,
+    type: isReturnMode ? 'مرتجع' : 'بيع',
+    createdAt: serverTimestamp()
+  });
+  
+  cart = []; updateCart();
+  toast('✅ تمت العملية بنجاح');
+};
 
 function toast(msg) {
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3000);
 }
 
-window.doLogout = async function() {
-  await signOut(auth);
-  sessionStorage.removeItem('lpc_user');
-  location.href = 'index.html';
-};
-
-// ── THEME ────────────────────────────────────────────────
-;(function(){const t=localStorage.getItem('lpc_theme')||'light';document.documentElement.setAttribute('data-theme',t);const b=document.getElementById('themeToggle');if(b)b.textContent=t==='dark'?'☀️':'🌙'})();
-window.toggleTheme=function(){const c=document.documentElement.getAttribute('data-theme');const n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('lpc_theme',n);const b=document.getElementById('themeToggle');if(b)b.textContent=n==='dark'?'☀️':'🌙'};
+// Global Scanner
+let _sbuf='', _stimer=null;
+document.addEventListener('keydown', e => {
+  if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
+  if(e.key==='Enter') {
+    const code = _sbuf.trim();
+    const item = inventory.find(x => x.code === code);
+    if(item) addToCart(item.id);
+    else toast('❌ الصنف غير موجود');
+    _sbuf='';
+  } else if(e.key.length===1) {
+    _sbuf += e.key;
+    clearTimeout(_stimer);
+    _stimer = setTimeout(()=>{_sbuf=''}, 200);
+  }
+});
 </script>
 </body>
 </html>
