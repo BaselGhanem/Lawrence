@@ -3,66 +3,126 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lawrence For PC — تسجيل الدخول</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script>
+  // تهيئة السمة قبل تحميل الصفحة لمنع الوميض
+  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.1);--pdark:#B45309;
-  --danger:#EF4444;--text:#F1F5F9;--text2:#94A3B8;--text3:#475569
+:root {
+  /* Light Theme (الافتراضي) */
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface2: #F1F5F9;
+  --border: #E2E8F0;
+  --primary: #F59E0B;
+  --pdim: rgba(245,158,11,.15);
+  --pdark: #B45309;
+  --danger: #EF4444;
+  --text: #0F172A;
+  --text2: #475569;
+  --text3: #94A3B8;
+  --input-bg: #FFFFFF;
 }
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --bg: #07090F;
+  --surface: #0D1117;
+  --surface2: #13181F;
+  --border: #1A2235;
+  --pdim: rgba(245,158,11,.1);
+  --text: #F1F5F9;
+  --text2: #94A3B8;
+  --text3: #475569;
+  --input-bg: rgba(255,255,255,.04);
+}
+
+body{font-family:'Almarai', 'Poppins', sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;transition: background 0.3s, color 0.3s;}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.theme-toggle:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
 
 /* ANIMATED GRID */
-.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(245,158,11,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
-.bg-glow{position:fixed;width:600px;height:600px;background:radial-gradient(circle,rgba(245,158,11,.06) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.bg-grid{position:fixed;inset:0;background-image:linear-gradient(var(--pdim) 1px,transparent 1px),linear-gradient(90deg,var(--pdim) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;transition: background-image 0.3s;}
+.bg-glow{position:fixed;width:600px;height:600px;background:radial-gradient(circle,var(--pdim) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;transition: background 0.3s;}
 
 /* LOGIN BOX */
 .login-wrap{position:relative;z-index:10;width:100%;max-width:420px;padding:20px}
 .brand{text-align:center;margin-bottom:36px}
-.brand-icon{width:72px;height:72px;background:linear-gradient(135deg,#F59E0B,#B45309);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 16px;box-shadow:0 16px 40px rgba(245,158,11,.25)}
-.brand h1{font-size:26px;font-weight:900;letter-spacing:.3px}
+.brand-icon{width:80px;height:80px;border-radius:20px;margin:0 auto 16px;box-shadow:0 16px 40px rgba(0,0,0,.15); overflow: hidden; border: 2px solid var(--border);}
+.brand-icon img {width: 100%; height: 100%; object-fit: cover; display: block;}
+.brand h1{font-size:26px;font-weight:800;letter-spacing:.3px; font-family: 'Poppins', sans-serif;}
 .brand h1 span{color:var(--primary)}
-.brand p{color:var(--text2);font-size:13px;margin-top:5px}
+.brand p{color:var(--text2);font-size:14px;margin-top:5px; font-weight: 700;}
 
-.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: background 0.3s, border-color 0.3s;}
 .card h2{font-size:18px;font-weight:800;margin-bottom:24px}
 
 .f{margin-bottom:18px}
-.f label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px}
+.f label{display:block;font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px}
 .f .input-wrap{position:relative}
 .f .input-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none}
-.f input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:13px 44px 13px 16px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;outline:none;transition:all .2s}
-.f input:focus{border-color:var(--primary);background:var(--pdim);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
-.f input::placeholder{color:var(--text3)}
+.f input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;padding:13px 44px 13px 16px;color:var(--text);font-family:inherit;font-size:15px;font-weight: 700;outline:none;transition:all .2s}
+.f input:focus{border-color:var(--primary);background:var(--surface);box-shadow:0 0 0 3px var(--pdim)}
+.f input::placeholder{color:var(--text3); font-weight: 400;}
 
 .show-pass{position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px;transition:color .2s}
 .show-pass:hover{color:var(--text2)}
 
-.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#F59E0B,#B45309);border:none;border-radius:12px;color:#000;font-family:'Tajawal',sans-serif;font-size:16px;font-weight:900;cursor:pointer;transition:all .25s;letter-spacing:.3px;margin-top:4px}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#F59E0B,#B45309);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer;transition:all .25s;letter-spacing:.3px;margin-top:4px}
 .btn-login:hover:not(:disabled){box-shadow:0 8px 28px rgba(245,158,11,.35);transform:translateY(-1px)}
 .btn-login:disabled{opacity:.5;cursor:not-allowed}
 .btn-login.loading{opacity:.7}
 
-.error-msg{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--danger);margin-bottom:18px;display:none;text-align:center}
+.error-msg{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:11px 14px;font-size:13px;font-weight: 700;color:var(--danger);margin-bottom:18px;display:none;text-align:center}
 
 .footer-link{text-align:center;margin-top:20px}
-.footer-link a{color:var(--text3);font-size:12px;text-decoration:none;transition:color .2s}
+.footer-link a{color:var(--text3);font-size:13px;font-weight: 700;text-decoration:none;transition:color .2s}
 .footer-link a:hover{color:var(--text2)}
 
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-left:8px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:8px}
 </style>
 </head>
 <body>
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 الوضع الليلي</button>
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
 
 <div class="login-wrap">
   <div class="brand">
-    <div class="brand-icon">💻</div>
+    <div class="brand-icon">
+      <img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Lawrence Logo">
+    </div>
     <h1>Lawrence <span>For PC</span></h1>
-    <p>نظام إدارة الصيانة</p>
+    <p>نظام إدارة الصيانة والمبيعات</p>
   </div>
 
   <div class="card">
@@ -81,7 +141,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
       <label>كلمة المرور</label>
       <div class="input-wrap">
         <span class="input-icon">🔑</span>
-        <input type="password" id="password" placeholder="أدخل كلمة المرور" id="pwField" autocomplete="current-password">
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password">
         <button class="show-pass" onclick="togglePass()" tabindex="-1" id="showPassBtn" type="button">👁️</button>
       </div>
     </div>
@@ -111,6 +171,24 @@ const CFG = {
 const app  = initializeApp(CFG);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+
+// إدارة الوضع الليلي/النهاري
+window.toggleTheme = function() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('lpc_theme', newTheme);
+  updateThemeBtnUI();
+};
+
+function updateThemeBtnUI() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  const btn = document.getElementById('themeBtn');
+  if(btn) {
+    btn.innerHTML = theme === 'light' ? '🌙 الوضع الليلي' : '☀️ الوضع النهاري';
+  }
+}
+document.addEventListener('DOMContentLoaded', updateThemeBtnUI);
 
 // If already logged in, redirect
 onAuthStateChanged(auth, async user => {
