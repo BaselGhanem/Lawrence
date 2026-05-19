@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — نظام المرتجعات</title>
+<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<script>
+  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
+<style>
+/* استيراد التصميم الموحد */
+:root{
+  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
+  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--success:#10B981;
+  --danger:#EF4444;--text:#F1F5F9;--text2:#94A3B8;--sw:240px;
+}
+[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+.sidebar{width:var(--sw);background:var(--surface);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;z-index:100}
+.main{margin-right:var(--sw);flex:1;padding:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px}
+.btn{padding:8px 16px;border-radius:9px;border:none;cursor:pointer;font-weight:700;font-family:inherit}
+.btn-primary{background:var(--primary);color:#000}
+.f{margin-bottom:12px}.f label{font-size:12px;color:var(--text2);display:block;margin-bottom:5px}
+.f input,.f select{width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:var(--text)}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.b-pending{background:rgba(245,158,11,.1);color:#F59E0B}
+.b-approved{background:rgba(16,185,129,.1);color:#10B981}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div style="padding:20px;text-align:center"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" style="width:50px;border-radius:10px"></div>
+  <nav style="padding:10px">
+    <a href="admin.html" style="display:block;padding:10px;color:var(--text2);text-decoration:none;">🏠 لوحة الإدارة</a>
+    <a href="inventory.html" style="display:block;padding:10px;color:var(--text2);text-decoration:none;">📦 المخزون</a>
+    <a href="returns.html" style="display:block;padding:10px;color:var(--primary);text-decoration:none;">↩️ المرتجعات</a>
+  </nav>
+</div>
+
+<div class="main">
+  <div class="page-header" style="display:flex;justify-content:space-between">
+    <div><h1>نظام المرتجعات (MRA)</h1><p>إدارة استرجاع المنتجات والطلبات</p></div>
+    <button class="btn btn-primary" onclick="openNewReturn()">+ إنشاء مرتجع جديد</button>
+  </div>
+
+  <div class="card">
+    <table style="width:100%">
+      <thead><tr style="text-align:right;color:var(--text2);font-size:12px"><th>رقم المرتجع</th><th>المرجع (الفاتورة/الطلب)</th><th>النوع</th><th>السبب</th><th>الحالة</th><th>الإجراء</th></tr></thead>
+      <tbody id="returnsBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="overlay" id="m-return" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center">
+  <div class="card" style="width:500px">
+    <div class="modal-head" style="display:flex;justify-content:space-between;margin-bottom:15px"><h3>إنشاء مرتجع</h3><button onclick="closeModal()">✕</button></div>
+    <div class="f"><label>نوع المرتجع</label><select id="r-type"><option value="Sale">مبيعات</option><option value="Maintenance">صيانة</option></select></div>
+    <div class="f"><label>رقم الفاتورة / الطلب</label><input id="r-ref" placeholder="مثال: SALE-12345"></div>
+    <div class="f"><label>السبب</label><select id="r-reason"><option>منتج تالف</option><option>عدم مطابقة المواصفات</option><option>خطأ في الطلب</option><option>رغبة العميل</option></select></div>
+    <button class="btn btn-primary" style="width:100%" onclick="saveReturn()">حفظ الطلب</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
+const app=initializeApp(CFG); const db=getFirestore(app);
+
+// عرض المرتجعات
+onSnapshot(collection(db,'returns'), snap => {
+  document.getElementById('returnsBody').innerHTML = snap.docs.map(d => {
+    const r = d.data();
+    return `<tr>
+      <td>${r.id}</td>
+      <td>${r.refId}</td>
+      <td>${r.type}</td>
+      <td>${r.reason}</td>
+      <td><span class="badge ${r.status === 'Pending' ? 'b-pending' : 'b-approved'}">${r.status}</span></td>
+      <td>${r.status === 'Pending' ? `<button onclick="approveReturn('${d.id}')">قبول</button>` : '—'}</td>
+    </tr>`;
+  }).join('');
+});
+
+window.saveReturn = async function() {
+  const refId = document.getElementById('r-ref').value;
+  const type = document.getElementById('r-type').value;
+  const reason = document.getElementById('r-reason').value;
+  
+  await addDoc(collection(db,'returns'), {
+    id: 'RET-' + Math.floor(Math.random()*10000),
+    refId, type, reason, status: 'Pending', createdAt: serverTimestamp()
+  });
+  closeModal();
+};
+
+window.approveReturn = async function(id) {
+  // هنا يتم تحديث حالة المرتجع ويمكن إضافة logic إرجاع القطع للمخزون
+  await updateDoc(doc(db,'returns',id), { status: 'Approved' });
+  alert('تم اعتماد المرتجع');
+};
+
+window.openNewReturn = () => document.getElementById('m-return').style.display = 'flex';
+window.closeModal = () => document.getElementById('m-return').style.display = 'none';
+</script>
+</body>
+</html>
