@@ -3,311 +3,298 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lawrence For PC — التقارير</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script>
+  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;--primary:#F59E0B;--pdim:rgba(245,158,11,.12);--success:#10B981;--sdim:rgba(16,185,129,.12);--danger:#EF4444;--ddim:rgba(239,68,68,.12);--info:#3B82F6;--text:#F1F5F9;--text2:#94A3B8;--text3:#475569;--sw:240px}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+:root{
+  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
+  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--pdark:#B45309;
+  --success:#10B981;--sdim:rgba(16,185,129,.12);
+  --danger:#EF4444;--ddim:rgba(239,68,68,.12);
+  --info:#3B82F6;--idim:rgba(59,130,246,.12);
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;--sw:240px;
+}
+[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569;--text3:#94A3B8;--pdim:rgba(245,158,11,.1);--sdim:rgba(16,185,129,.1);--ddim:rgba(239,68,68,.08);--idim:rgba(59,130,246,.1)}
+[data-theme="light"] .f input, [data-theme="light"] .f select, [data-theme="light"] .search-wrap input{background:#F8FAFC;color:var(--text);border-color:var(--border)}
+[data-theme="light"] tr:hover td{background:rgba(0,0,0,.02)!important}
+[data-theme="light"] th{background:rgba(0,0,0,.02)}[data-theme="light"] td{border-bottom:1px solid var(--border)}
+[data-theme="light"] .toast{background:#fff;color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.15)}
+[data-theme="light"] .nav-item:hover{background:rgba(0,0,0,.04)}
+[data-theme="light"] .card, [data-theme="light"] .stat-card, [data-theme="light"] .sidebar, [data-theme="light"] .modal{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+
+body{font-family:'Almarai', 'Poppins', sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
 .sidebar{width:var(--sw);min-height:100vh;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:100}
-.sb-brand{padding:22px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-icon{width:38px;height:38px;background:linear-gradient(135deg,#F59E0B,#B45309);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.sb-brand h2{font-size:14px;font-weight:900}.sb-brand p{font-size:11px;color:var(--text2)}
-.sb-nav{flex:1;padding:14px 10px;overflow-y:auto}
-.nav-section{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:8px 8px 5px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--text2);font-size:14px;font-weight:500;text-decoration:none;margin-bottom:2px}
+.sb-brand{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-icon{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;}
+.sb-icon img{width:100%;height:100%;object-fit:cover}
+.sb-info{flex:1}.sb-info h2{font-size:14px;font-weight:900; font-family:'Poppins',sans-serif;}.sb-info p{font-size:11px;color:var(--text2);margin-top:1px}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
 .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}.nav-item.active{background:var(--pdim);color:var(--primary)}
-.sb-user{padding:14px 18px;border-top:1px solid var(--border)}
-.sb-user-info{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.sb-avatar{width:36px;height:36px;border-radius:50%;background:var(--pdim);border:1px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:16px}
-.sb-user-name{font-size:13px;font-weight:700}.sb-user-role{font-size:11px;color:var(--text2)}
-.logout-btn{width:100%;padding:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;color:#EF4444;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
-.logout-btn:hover{background:rgba(239,68,68,.15)}
-.main{margin-right:var(--sw);flex:1;padding:28px;min-height:100vh}
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
-.page-header h1{font-size:20px;font-weight:800}.page-header p{color:var(--text2);font-size:13px;margin-top:3px}
-.period-tabs{display:flex;gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:4px;width:fit-content;margin-bottom:22px}
-.period-tab{padding:7px 16px;border-radius:7px;border:none;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;color:var(--text2);background:transparent}
-.period-tab.active{background:var(--primary);color:#000}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.main{margin-right:var(--sw);flex:1;padding:24px;min-height:100vh}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.page-header h1{font-size:21px;font-weight:800}.page-header p{color:var(--text2);font-size:13px;margin-top:3px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden;transition:.2s}
 .stat-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 14px 14px 0}
-.c-green::before{background:var(--success)}.c-orange::before{background:#F97316}.c-red::before{background:var(--danger)}.c-yellow::before{background:var(--primary)}
-.stat-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
-.stat-val{font-size:26px;font-weight:900}.stat-sub{font-size:12px;color:var(--text2);margin-top:3px}
-.stat-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:28px;opacity:.12}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.card-title{font-size:15px;font-weight:700}
-.pl-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-radius:10px;margin-bottom:6px}
-.pl-income{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15)}
-.pl-parts{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.15)}
-.pl-expense{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15)}
-.pl-net{background:var(--pdim);border:1px solid rgba(245,158,11,.25);margin-top:10px}
-.pl-label{font-size:13px;font-weight:600}
-.pl-val{font-size:15px;font-weight:800}
+.stat-card.c-green::before{background:var(--success)}.stat-card.c-red::before{background:var(--danger)}.stat-card.c-blue::before{background:var(--info)}
+.stat-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;text-transform:uppercase}
+.stat-val{font-size:26px;font-weight:900;font-family:'Poppins',sans-serif}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px}
+.table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:right;padding:9px 12px;color:var(--text2);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
-td{padding:11px 12px;border-bottom:1px solid rgba(26,34,53,.5);vertical-align:middle}
-tr:hover td{background:rgba(255,255,255,.02)}tr:last-child td{border-bottom:none}
-.chart-wrap{display:flex;align-items:flex-end;gap:6px;height:150px;padding-bottom:8px}
-.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
-.bar-inner{flex:1;display:flex;align-items:flex-end;gap:2px;width:100%}
-.bar{border-radius:5px 5px 0 0;transition:height .6s ease;min-height:3px;flex:1}
-.bar.income{background:linear-gradient(180deg,#F59E0B,#B45309)}
-.bar.expense{background:linear-gradient(180deg,#EF4444,#991B1B)}
-.bar.profit{background:linear-gradient(180deg,#10B981,#065F46)}
-.bar-label{font-size:10px;color:var(--text3);font-weight:600;text-align:center}
-.legend{display:flex;gap:16px;margin-bottom:14px}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
-.ld{width:10px;height:10px;border-radius:3px}
-.ld-i{background:#F59E0B}.ld-e{background:#EF4444}.ld-p{background:#10B981}
-/* EXPENSE FORM */
-.exp-form{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px}
-.exp-form h3{font-size:14px;font-weight:700;margin-bottom:14px}
-.exp-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
-.f{display:flex;flex-direction:column;gap:5px}
-.f label{font-size:11px;font-weight:700;color:var(--text2)}
-.f input,.f select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;transition:.2s}
-.f input:focus,.f select:focus{border-color:var(--primary)}.f select option{background:var(--surface2)}
-.btn{padding:8px 16px;border:none;border-radius:9px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
-.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#000}.btn-primary:hover{box-shadow:0 4px 14px rgba(245,158,11,.3)}
-.btn-danger{background:var(--ddim);border:1px solid rgba(239,68,68,.25);color:var(--danger)}.btn-sm{padding:5px 10px;font-size:12px}
-.sec-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:22px}
-.sec-tab{padding:10px 20px;border:none;background:transparent;color:var(--text2);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.2s}
-.sec-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
-.sec-content{display:none}.sec-content.active{display:block}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:12px;padding:12px 24px;font-size:14px;font-weight:600;z-index:9999;transition:.3s;pointer-events:none}
+th{text-align:right;padding:9px 13px;color:var(--text2);font-weight:700;font-size:11px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+td{padding:10px 13px;border-bottom:1px solid rgba(26,34,53,.5);vertical-align:middle}
+.btn{padding:8px 15px;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#fff}.btn-primary:hover{box-shadow:0 5px 18px rgba(245,158,11,.3);transform:translateY(-1px)}
+.btn-danger{background:var(--ddim);border:1px solid rgba(239,68,68,.25);color:var(--danger)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.f label{font-size:12px;font-weight:700;color:var(--text2)}
+.f input,.f select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.2s}
+.f input:focus,.f select:focus{border-color:var(--primary);background:var(--pdim)}
+input[type="tel"] { direction: ltr; text-align: left; font-family: 'Poppins', sans-serif; }
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:11px;padding:10px 22px;font-size:14px;font-weight:700;z-index:9999;transition:.3s;pointer-events:none;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
+.filters{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
 </style>
 </head>
 <body>
-
 <div class="sidebar">
   <div class="sb-brand">
-    <div class="sb-icon">💻</div>
-    <div><h2>Lawrence For PC</h2><p>التقارير المالية</p></div>
+    <div class="sb-icon"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Logo"></div>
+    <div class="sb-info"><h2>Lawrence</h2><p>التقارير المالية</p></div>
   </div>
   <nav class="sb-nav">
-    <div class="nav-section">الرئيسية</div>
-    <a class="nav-item" href="admin.html"><span>🏠</span> لوحة التحكم</a>
-    <a class="nav-item" href="admin.html"><span>🎫</span> طلبات الصيانة</a>
-    <div class="nav-section">الإدارة</div>
-    <a class="nav-item" href="inventory.html"><span>📦</span> المخزون</a>
-    <a class="nav-item active" href="reports.html"><span>📊</span> التقارير</a>
+    <a class="nav-item" href="admin.html"><span class="ni">🏠</span> لوحة التحكم</a>
+    <a class="nav-item" href="inventory.html"><span class="ni">📦</span> المخزون</a>
+    <a class="nav-item" href="sales.html"><span class="ni">🛒</span> المبيعات</a>
+    <a class="nav-item" href="returns.html"><span class="ni">↩️</span> المرتجعات</a>
+    <a class="nav-item active" href="reports.html"><span class="ni">📊</span> التقارير</a>
   </nav>
-  <div class="sb-user">
-    <div class="sb-user-info">
-      <div class="sb-avatar">👑</div>
-      <div><div class="sb-user-name" id="sbName">—</div><div class="sb-user-role">مدير</div></div>
-    </div>
-    <button class="logout-btn" onclick="doLogout()">تسجيل الخروج 🚪</button>
-  </div>
 </div>
 
 <div class="main">
   <div class="page-header">
-    <div><h1>📊 التقارير المالية</h1><p id="rptSub">نظرة شاملة على أرباح المحل</p></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="window.print()">🖨️ طباعة</button>
+    <div><h1>التقارير المالية</h1><p>متابعة الأرباح، الإيرادات، والمصاريف</p></div>
+  </div>
+
+  <div class="filters">
+    <span style="font-size:12px;color:var(--text2);font-weight:700">تصفية حسب:</span>
+    <select id="monthFilter" class="f select" style="width:120px;padding:6px;border-radius:6px;margin:0" onchange="renderReports()">
+      <option value="all">كل الأوقات</option>
+      </select>
+  </div>
+
+  <div class="stats" id="reportStats">
     </div>
-  </div>
 
-  <div class="period-tabs">
-    <button class="period-tab active" onclick="setPeriod('today',this)">اليوم</button>
-    <button class="period-tab" onclick="setPeriod('week',this)">هذا الأسبوع</button>
-    <button class="period-tab" onclick="setPeriod('month',this)">هذا الشهر</button>
-    <button class="period-tab" onclick="setPeriod('year',this)">هذه السنة</button>
-    <button class="period-tab" onclick="setPeriod('all',this)">الكل</button>
-  </div>
-
-  <div class="sec-tabs">
-    <button class="sec-tab active" onclick="showSec('overview',this)">📈 نظرة عامة</button>
-    <button class="sec-tab" onclick="showSec('invoices',this)">🧾 الفواتير</button>
-    <button class="sec-tab" onclick="showSec('expenses',this)">💸 المصاريف</button>
-  </div>
-
-  <!-- OVERVIEW -->
-  <div class="sec-content active" id="sec-overview">
-    <div class="stats" id="kpiStats"></div>
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-head"><div class="card-title">📅 الإيرادات الشهرية (آخر 6 أشهر)</div></div>
-        <div class="legend"><div class="legend-item"><div class="ld ld-i"></div>إيرادات</div><div class="legend-item"><div class="ld ld-e"></div>مصاريف</div><div class="legend-item"><div class="ld ld-p"></div>صافي</div></div>
-        <div class="chart-wrap" id="monthChart"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">⚖️ ملخص الربح والخسارة</div></div>
-        <div id="plBox"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- INVOICES -->
-  <div class="sec-content" id="sec-invoices">
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
     <div class="card">
-      <div class="card-head"><div class="card-title">🧾 سجل الفواتير</div><span id="invCount" style="background:var(--pdim);color:var(--primary);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700">0</span></div>
-      <div style="overflow-x:auto"><table><thead><tr><th>العميل</th><th>الجهاز</th><th>أجر اليد</th><th>قطع الغيار</th><th>الإجمالي</th><th>التاريخ</th></tr></thead><tbody id="invBody"></tbody></table></div>
-    </div>
-  </div>
-
-  <!-- EXPENSES -->
-  <div class="sec-content" id="sec-expenses">
-    <div class="exp-form">
-      <h3>➕ إضافة مصروف</h3>
-      <div class="exp-row">
-        <div class="f"><label>اسم المصروف</label><input id="en" placeholder="مثال: إيجار"></div>
-        <div class="f"><label>المبلغ (JOD)</label><input id="ea" type="number" placeholder="0.00" min="0" step="0.01"></div>
-        <div class="f"><label>الفئة</label><select id="ec"><option>إيجار</option><option>كهرباء</option><option>إنترنت</option><option>رواتب</option><option>مستلزمات</option><option>أخرى</option></select></div>
-        <div class="f"><label>التاريخ</label><input id="ed" type="date"></div>
-        <button class="btn btn-primary" onclick="addExpense()">+ إضافة</button>
+      <div style="font-size:15px;font-weight:700;margin-bottom:16px">إيرادات الصيانة والمبيعات</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>الطلب/الفاتورة</th><th>العميل</th><th>المبلغ</th><th>التاريخ</th></tr></thead>
+          <tbody id="incomeBody"></tbody>
+        </table>
       </div>
     </div>
+    
     <div class="card">
-      <div class="card-head"><div class="card-title">📋 المصاريف</div><span id="expCount" style="background:var(--ddim);color:var(--danger);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700">0</span></div>
-      <div style="overflow-x:auto"><table><thead><tr><th>الاسم</th><th>الفئة</th><th>المبلغ</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="expBody"></tbody></table></div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:16px">إضافة مصروف</div>
+      <div class="f"><label>وصف المصروف</label><input id="en" placeholder="مثال: فاتورة كهرباء"></div>
+      <div class="f"><label>المبلغ (JOD)</label><input id="ea" type="number" step="0.01"></div>
+      <div class="f"><label>التصنيف</label><select id="ec"><option>تشغيلية</option><option>مشتريات</option><option>أخرى</option></select></div>
+      <div class="f"><label>التاريخ</label><input id="ed" type="date"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="addExpense()">تسجيل المصروف ✓</button>
     </div>
   </div>
 
+  <div class="card" style="margin-top:16px">
+    <div style="font-size:15px;font-weight:700;margin-bottom:16px">سجل المصروفات</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الوصف</th><th>التصنيف</th><th>المبلغ</th><th>التاريخ</th><th>إجراء</th></tr></thead>
+        <tbody id="expensesBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, getDoc, addDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, addDoc, deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
 const app=initializeApp(CFG);const auth=getAuth(app);const db=getFirestore(app);
-const MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
-let CU=null,allInv=[],allExp=[],period='all';
+let allInvoices=[], allExpenses=[], allSales=[];
 
-onAuthStateChanged(auth,async user=>{
+onAuthStateChanged(auth, user => {
   if(!user){location.href='index.html';return}
-  CU=JSON.parse(sessionStorage.getItem('lpc_user')||'null');
-  if(!CU){const s=await getDoc(doc(db,'users',user.uid));CU={uid:user.uid,...s.data()};sessionStorage.setItem('lpc_user',JSON.stringify(CU))}
-  if(!CU.permissions?.reports&&CU.role!=='admin'){document.querySelector('.main').innerHTML='<div style="text-align:center;padding:80px;color:#94A3B8"><div style="font-size:48px;margin-bottom:16px">🔒</div><h2 style="color:#EF4444">الوصول مقيد</h2></div>';return}
-  document.getElementById('sbName').textContent=CU.displayName;
-  document.getElementById('ed').value=new Date().toISOString().split('T')[0];
-  onSnapshot(query(collection(db,'invoices'),orderBy('createdAt','desc')),s=>{allInv=s.docs.map(d=>({id:d.id,...d.data()}));refresh()});
-  onSnapshot(query(collection(db,'expenses'),orderBy('date','desc')),s=>{allExp=s.docs.map(d=>({id:d.id,...d.data()}));refresh()});
+  const u=JSON.parse(sessionStorage.getItem('lpc_user')||'{}');
+  if(u.role!=='admin'){location.href='technician.html';return}
+  
+  document.getElementById('ed').valueAsDate = new Date();
+
+  onSnapshot(collection(db,'invoices'), snap => {
+    allInvoices = snap.docs.map(d=>({id:d.id, ...d.data(), type:'صيانة'}));
+    updateMonthFilter();
+    renderReports();
+  });
+  
+  // دمج المبيعات إذا تم بناؤها (اختياري، يقرأ من جدول المبيعات)
+  onSnapshot(collection(db,'sales'), snap => {
+    allSales = snap.docs.map(d=>({id:d.id, ...d.data(), type:'مبيعات'}));
+    updateMonthFilter();
+    renderReports();
+  });
+
+  onSnapshot(collection(db,'expenses'), snap => {
+    allExpenses = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    updateMonthFilter();
+    renderReports();
+  });
 });
 
-window.setPeriod=function(p,btn){period=p;document.querySelectorAll('.period-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const lbl={today:'اليوم',week:'هذا الأسبوع',month:'هذا الشهر',year:'هذه السنة',all:'كل الفترات'};document.getElementById('rptSub').textContent='عرض بيانات: '+lbl[p];refresh()};
-window.showSec=function(id,btn){document.querySelectorAll('.sec-content').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.sec-tab').forEach(b=>b.classList.remove('active'));document.getElementById('sec-'+id).classList.add('active');btn.classList.add('active')};
+function updateMonthFilter() {
+  const sel = document.getElementById('monthFilter');
+  const currentVal = sel.value;
+  const months = new Set();
+  
+  const addMonth = (d) => {
+    if(!d) return;
+    const dt = d.toDate ? d.toDate() : new Date(d);
+    if(dt.toString()!=='Invalid Date') months.add(`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`);
+  };
 
-function filterPeriod(items,key){
-  const now=new Date();
-  return items.filter(i=>{
-    const d=i[key]?.toDate?i[key].toDate():new Date(i[key]||0);
-    if(isNaN(d)) return period==='all';
-    switch(period){
-      case 'today':return d.toDateString()===now.toDateString();
-      case 'week':{const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());return d>=ws}
-      case 'month':return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
-      case 'year':return d.getFullYear()===now.getFullYear();
-      default:return true;
-    }
-  });
+  allInvoices.forEach(i => addMonth(i.createdAt));
+  allSales.forEach(s => addMonth(s.createdAt));
+  allExpenses.forEach(e => addMonth(e.date || e.createdAt));
+
+  const sorted = Array.from(months).sort().reverse();
+  sel.innerHTML = '<option value="all">كل الأوقات</option>' + sorted.map(m => `<option value="${m}">${m}</option>`).join('');
+  if(sorted.includes(currentVal)) sel.value = currentVal;
 }
 
-function refresh(){
-  const inv=filterPeriod(allInv,'createdAt');
-  const exp=filterPeriod(allExp,'date');
-  const revenue=inv.reduce((s,i)=>s+(i.total||0),0);
-  const parts=inv.reduce((s,i)=>s+(i.partsCost||0),0);
-  const labor=inv.reduce((s,i)=>s+(i.laborCost||0),0);
-  const expenses=exp.reduce((s,e)=>s+(e.amount||0),0);
-  const net=revenue-parts-expenses;
-  const margin=revenue>0?((net/revenue)*100).toFixed(1):0;
+window.renderReports = function() {
+  const filter = document.getElementById('monthFilter').value;
+  
+  const filterByMonth = (item, dateField) => {
+    if(filter === 'all') return true;
+    const d = item[dateField];
+    if(!d) return false;
+    const dt = d.toDate ? d.toDate() : new Date(d);
+    if(dt.toString()==='Invalid Date') return false;
+    const m = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
+    return m === filter;
+  };
 
-  document.getElementById('kpiStats').innerHTML=`
-    <div class="stat-card c-green"><div class="stat-label">إجمالي الإيرادات</div><div class="stat-val" style="color:var(--success)">${revenue.toFixed(2)}</div><div class="stat-sub">من ${inv.length} فاتورة</div><div class="stat-icon">💰</div></div>
-    <div class="stat-card c-orange"><div class="stat-label">تكلفة القطع</div><div class="stat-val" style="color:#F97316">${parts.toFixed(2)}</div><div class="stat-sub">دينار أردني</div><div class="stat-icon">🔩</div></div>
-    <div class="stat-card c-red"><div class="stat-label">المصاريف</div><div class="stat-val" style="color:var(--danger)">${expenses.toFixed(2)}</div><div class="stat-sub">من ${exp.length} مصروف</div><div class="stat-icon">📤</div></div>
-    <div class="stat-card c-yellow"><div class="stat-label">صافي الربح</div><div class="stat-val" style="color:${net>=0?'var(--primary)':'var(--danger)'}">${net.toFixed(2)}</div><div class="stat-sub">هامش: ${margin}%</div><div class="stat-icon">${net>=0?'📈':'📉'}</div></div>
+  // تصفية
+  const invs = allInvoices.filter(i => filterByMonth(i, 'createdAt'));
+  const sales = allSales.filter(s => filterByMonth(s, 'createdAt'));
+  const exps = allExpenses.filter(e => filterByMonth(e, e.date ? 'date' : 'createdAt'));
+
+  // حساب الإجماليات
+  const totalInvoices = invs.reduce((sum, i) => sum + (i.total || 0), 0);
+  const totalSales = sales.reduce((sum, s) => sum + (s.total || 0), 0);
+  const totalIncome = totalInvoices + totalSales;
+  const totalExp = exps.reduce((sum, e) => sum + (e.amount || 0), 0);
+  const netProfit = totalIncome - totalExp;
+
+  // عرض الإحصائيات
+  document.getElementById('reportStats').innerHTML = `
+    <div class="stat-card c-green"><div class="stat-label">إجمالي الإيرادات</div><div class="stat-val" style="color:var(--success)">${totalIncome.toFixed(2)}</div></div>
+    <div class="stat-card c-red"><div class="stat-label">إجمالي المصروفات</div><div class="stat-val" style="color:var(--danger)">${totalExp.toFixed(2)}</div></div>
+    <div class="stat-card c-blue"><div class="stat-label">صافي الربح</div><div class="stat-val" style="color:var(--info)">${netProfit.toFixed(2)}</div></div>
   `;
 
-  document.getElementById('plBox').innerHTML=`
-    <div class="pl-row pl-income"><div class="pl-label" style="color:var(--success)">✅ الإيرادات الإجمالية</div><div class="pl-val" style="color:var(--success)">+ ${revenue.toFixed(2)} د.أ</div></div>
-    <div class="pl-row" style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);margin-bottom:6px"><div class="pl-label" style="color:var(--info)">🔧 أجر اليد</div><div class="pl-val" style="color:var(--info)">+ ${labor.toFixed(2)} د.أ</div></div>
-    <hr style="border:none;border-top:1px dashed var(--border);margin:8px 0">
-    <div class="pl-row pl-parts"><div class="pl-label" style="color:#F97316">🔩 تكلفة القطع</div><div class="pl-val" style="color:#F97316">− ${parts.toFixed(2)} د.أ</div></div>
-    <div class="pl-row pl-expense"><div class="pl-label" style="color:var(--danger)">💸 المصاريف</div><div class="pl-val" style="color:var(--danger)">− ${expenses.toFixed(2)} د.أ</div></div>
-    <hr style="border:none;border-top:1px dashed var(--border);margin:8px 0">
-    <div class="pl-row pl-net"><div class="pl-label" style="font-size:15px;font-weight:800;color:var(--primary)">${net>=0?'📈':'📉'} صافي الربح</div><div class="pl-val" style="color:var(--primary);font-size:20px">${net>=0?'+':''}${net.toFixed(2)} د.أ</div></div>
-  `;
-
-  renderMonthChart();
-  renderInvoicesTab(inv);
-  renderExpTab(exp);
-}
-
-function renderMonthChart(){
-  const now=new Date();
-  const months=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({year:d.getFullYear(),month:d.getMonth(),label:MONTHS[d.getMonth()].slice(0,3)})}
-  const data=months.map(m=>{
-    const mi=allInv.filter(i=>{const d=i.createdAt?.toDate?.();return d&&d.getMonth()===m.month&&d.getFullYear()===m.year});
-    const me=allExp.filter(e=>{const d=new Date(e.date||0);return d.getMonth()===m.month&&d.getFullYear()===m.year});
-    const income=mi.reduce((s,i)=>s+(i.total||0),0);
-    const parts=mi.reduce((s,i)=>s+(i.partsCost||0),0);
-    const exp=me.reduce((s,e)=>s+(e.amount||0),0);
-    return{label:m.label,income,expense:exp+parts,profit:Math.max(0,income-parts-exp)};
+  // دمج وترتيب الإيرادات (صيانة + مبيعات)
+  const combinedIncome = [...invs, ...sales].sort((a,b) => {
+    const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+    const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+    return tB - tA;
   });
-  const max=Math.max(...data.map(d=>Math.max(d.income,d.expense,d.profit)),1);
-  const pct=v=>Math.max(3,Math.round((v/max)*100));
-  document.getElementById('monthChart').innerHTML=data.map(d=>`
-    <div class="bar-group">
-      <div class="bar-inner">
-        <div class="bar income" style="height:${pct(d.income)}%"></div>
-        <div class="bar expense" style="height:${pct(d.expense)}%"></div>
-        <div class="bar profit" style="height:${pct(d.profit)}%"></div>
-      </div>
-      <div class="bar-label">${d.label}</div>
-    </div>
-  `).join('');
-}
 
-function renderInvoicesTab(inv){
-  document.getElementById('invCount').textContent=inv.length+' فاتورة';
-  document.getElementById('invBody').innerHTML=inv.length?inv.map(i=>`<tr>
-    <td><strong>${i.customerName}</strong><br><span style="font-size:11px;color:var(--text2)">${i.ticketId||''}</span></td>
-    <td>${i.device||'—'}</td>
-    <td>${(i.laborCost||0).toFixed(2)} د.أ</td>
-    <td>${(i.partsCost||0).toFixed(2)} د.أ</td>
-    <td><strong style="color:var(--success)">${(i.total||0).toFixed(2)} د.أ</strong></td>
-    <td style="color:var(--text2);font-size:12px">${fmtDate(i.createdAt)}</td>
-  </tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:30px">لا توجد فواتير في هذه الفترة</td></tr>';
-}
+  document.getElementById('incomeBody').innerHTML = combinedIncome.length ? combinedIncome.map(i => `
+    <tr>
+      <td><strong style="color:var(--primary)">${i.ticketId || i.saleId || '—'}</strong> <span style="font-size:10px;background:var(--pdim);padding:2px 5px;border-radius:4px;margin-right:4px">${i.type}</span></td>
+      <td>${i.customerName || 'عميل نقدي'}</td>
+      <td><strong style="color:var(--success)">${(i.total||0).toFixed(2)} د.أ</strong></td>
+      <td style="font-size:12px;color:var(--text2)">${fmtDate(i.createdAt)}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text2);padding:30px">لا توجد إيرادات</td></tr>';
 
-function renderExpTab(exp){
-  document.getElementById('expCount').textContent=exp.length+' مصروف';
-  document.getElementById('expBody').innerHTML=exp.length?exp.map(e=>`<tr>
-    <td><strong>${e.name}</strong></td>
-    <td><span style="background:var(--purdim,rgba(139,92,246,.12));color:#8B5CF6;padding:3px 10px;border-radius:20px;font-size:12px">${e.category}</span></td>
-    <td><strong style="color:var(--danger)">${(e.amount||0).toFixed(2)} د.أ</strong></td>
-    <td style="font-size:12px;color:var(--text2)">${e.date||'—'}</td>
-    <td><button class="btn btn-danger btn-sm" onclick="delExp('${e.id}')">🗑️</button></td>
-  </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px">لا توجد مصاريف</td></tr>';
-}
+  // سجل المصروفات
+  const sortedExps = [...exps].sort((a,b) => new Date(b.date) - new Date(a.date));
+  document.getElementById('expensesBody').innerHTML = sortedExps.length ? sortedExps.map(e => `
+    <tr>
+      <td><strong>${e.name}</strong></td>
+      <td><span style="font-size:11px;background:var(--idim);color:var(--info);padding:3px 8px;border-radius:12px">${e.category}</span></td>
+      <td><strong style="color:var(--danger)">${(e.amount||0).toFixed(2)} د.أ</strong></td>
+      <td style="font-size:12px;color:var(--text2)">${e.date||'—'}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="delExp('${e.id}')">🗑️</button></td>
+    </tr>
+  `).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px">لا توجد مصاريف</td></tr>';
+};
 
-window.addExpense=async function(){
-  const name=document.getElementById('en').value.trim();
-  const amount=parseFloat(document.getElementById('ea').value);
-  const cat=document.getElementById('ec').value;
-  const date=document.getElementById('ed').value;
-  if(!name||!amount||amount<=0||!date){toast('⚠️ يرجى تعبئة جميع الحقول');return}
-  await addDoc(collection(db,'expenses'),{name,amount,category:cat,date,createdAt:serverTimestamp()});
-  document.getElementById('en').value='';document.getElementById('ea').value='';
+window.addExpense = async function() {
+  const name = document.getElementById('en').value.trim();
+  const amount = parseFloat(document.getElementById('ea').value);
+  const cat = document.getElementById('ec').value;
+  const date = document.getElementById('ed').value;
+  if(!name || !amount || amount <= 0 || !date){ toast('⚠️ يرجى تعبئة جميع الحقول بشكل صحيح'); return; }
+  
+  await addDoc(collection(db,'expenses'),{ name, amount, category:cat, date, createdAt:serverTimestamp() });
+  document.getElementById('en').value = ''; 
+  document.getElementById('ea').value = '';
   toast('✅ تمت إضافة المصروف');
 };
-window.delExp=async function(id){if(!confirm('حذف هذا المصروف؟'))return;await deleteDoc(doc(db,'expenses',id));toast('🗑️ تم الحذف')};
 
-function fmtDate(ts){if(!ts?.toDate)return'—';return ts.toDate().toLocaleDateString('ar-JO',{year:'numeric',month:'short',day:'numeric'})}
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000)}
-window.doLogout=async function(){await signOut(auth);sessionStorage.removeItem('lpc_user');location.href='index.html'};
+window.delExp = async function(id) {
+  if(!confirm('هل أنت متأكد من حذف هذا المصروف؟')) return;
+  await deleteDoc(doc(db,'expenses',id));
+  toast('🗑️ تم الحذف');
+};
+
+function fmtDate(ts) {
+  if(!ts?.toDate) return '—';
+  return ts.toDate().toLocaleDateString('ar-JO',{year:'numeric',month:'short',day:'numeric'});
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// ── BARCODE SCANNER GLOBAL LISTENER ──
+let _sbuf='', _stimer=null;
+document.addEventListener('keydown', function(e) {
+  const tag = document.activeElement?.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if(e.key === 'Enter') {
+    clearTimeout(_stimer);
+    if(_sbuf.length >= 3) {
+      toast('📡 تم مسح باركود في التقارير: ' + _sbuf.trim());
+    }
+    _sbuf = '';
+    return;
+  }
+  if(e.key.length === 1) {
+    _sbuf += e.key;
+    clearTimeout(_stimer);
+    _stimer = setTimeout(()=>{ _sbuf = '' }, 200);
+  }
+});
 </script>
 </body>
 </html>
