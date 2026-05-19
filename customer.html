@@ -16,8 +16,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);mar
 .phone-input{width:100%;max-width:400px;padding:15px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-size:18px;text-align:center;margin-bottom:15px;outline:none}
 .phone-input:focus{border-color:var(--primary)}
 .btn-search{padding:15px 40px;background:var(--primary);border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px}
-
-/* Device Card */
 .device-card{background:var(--surface);border:1px solid var(--border);padding:20px;border-radius:16px;margin-top:20px}
 .status-tag{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:var(--surface2)}
 .grid-info{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
@@ -45,45 +43,116 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);mar
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
-const app=initializeApp(CFG); const db=getFirestore(app);
+const CFG = {
+  apiKey: "AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",
+  authDomain: "lorans-2.firebaseapp.com",
+  projectId: "lorans-2",
+  storageBucket: "lorans-2.firebasestorage.app",
+  messagingSenderId: "399952166847",
+  appId: "1:399952166847:web:ac71d3e0d9afe4be8c2b0a"
+};
+
+const app = initializeApp(CFG);
+const db = getFirestore(app);
+
+function getLatestNote(ticketLog) {
+  if (!ticketLog || !ticketLog.length) return "لا توجد ملاحظات حالياً";
+  // نبحث عن آخر إدخال يحتوي على "ملاحظة:" أو نأخذ آخر حدث بشكل عام
+  const last = ticketLog[ticketLog.length - 1];
+  if (last.action && last.action.startsWith("ملاحظة:")) {
+    return last.action.replace("ملاحظة:", "").trim();
+  }
+  // وإلا نعرض آخر حدث مع اسم المستخدم
+  return `${last.action} (${last.user || "النظام"})`;
+}
+
+function formatDate(timestamp) {
+  if (!timestamp || !timestamp.toDate) return "—";
+  return timestamp.toDate().toLocaleDateString("ar-JO", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+}
+
+function statusLabel(status) {
+  const map = {
+    pending: "انتظار",
+    inspecting: "فحص",
+    in_repair: "تصليح",
+    ready: "جاهز",
+    delivered: "مُسلَّم"
+  };
+  return map[status] || status;
+}
 
 window.searchDevices = async () => {
-  const phone = document.getElementById('phoneInput').value.trim();
-  const resDiv = document.getElementById('results');
-  if(!phone) { alert('يرجى إدخال رقم الهاتف'); return; }
+  const phone = document.getElementById("phoneInput").value.trim();
+  const resDiv = document.getElementById("results");
+  if (!phone) {
+    alert("يرجى إدخال رقم الهاتف");
+    return;
+  }
 
   resDiv.innerHTML = '<p style="text-align:center">جاري البحث...</p>';
 
-  const q = query(collection(db, 'tickets'), where('customerPhone', '==', phone));
-  const snap = await getDocs(q);
+  // استخدام الحقل الصحيح "phone"
+  const q = query(collection(db, "tickets"), where("phone", "==", phone));
+  const snapshot = await getDocs(q);
 
-  if(snap.empty) {
+  if (snapshot.empty) {
     resDiv.innerHTML = '<div class="device-card" style="text-align:center">❌ لم يتم العثور على أجهزة مرتبطة بهذا الرقم</div>';
     return;
   }
 
-  resDiv.innerHTML = snap.docs.map(doc => {
-    const d = doc.data();
+  resDiv.innerHTML = snapshot.docs.map(docSnap => {
+    const ticket = docSnap.data();
+    const ticketId = ticket.ticketId || docSnap.id.slice(0, 8);
+    const deviceName = ticket.device || "جهاز غير معروف";
+    const receiveDate = formatDate(ticket.createdAt);
+    const latestNote = getLatestNote(ticket.log);
+    const status = ticket.status || "pending";
+
     return `
       <div class="device-card">
-        <div style="display:flex;justify-content:between;align-items:center">
-          <h3>${d.deviceName || 'جهاز غير معروف'}</h3>
-          <span class="status-tag">${statusLabel(d.status)}</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h3 style="margin:0">${escapeHtml(deviceName)}</h3>
+          <span class="status-tag">${statusLabel(status)}</span>
         </div>
         <div class="grid-info">
-          <div><small style="color:var(--text2)">تاريخ الاستلام</small><br>${d.date?.toDate().toLocaleDateString('ar-JO') || '—'}</div>
-          <div><small style="color:var(--text2)">رقم الطلب</small><br>${doc.id.substring(0,8)}</div>
-          <div style="grid-column:span 2"><small style="color:var(--text2)">ملاحظات الفني</small><br>${d.technicianNotes || 'لا توجد ملاحظات حالياً'}</div>
+          <div>
+            <small style="color:var(--text2)">تاريخ الاستلام</small><br>
+            ${receiveDate}
+          </div>
+          <div>
+            <small style="color:var(--text2)">رقم الطلب</small><br>
+            ${escapeHtml(ticketId)}
+          </div>
+          <div style="grid-column:span 2">
+            <small style="color:var(--text2)">آخر تحديث / ملاحظة</small><br>
+            ${escapeHtml(latestNote)}
+          </div>
         </div>
       </div>
     `;
-  }).join('');
+  }).join("");
 };
 
-function statusLabel(s) {
-  return {pending:'انتظار',inspecting:'فحص',in_repair:'تصليح',ready:'جاهز',delivered:'مُسلَّم'}[s]||s;
+// دالة بسيطة لمنع حقن HTML من البيانات (احتياطاً)
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === "&") return "&amp;";
+    if (m === "<") return "&lt;";
+    if (m === ">") return "&gt;";
+    return m;
+  });
 }
+
+// السماح بالبحث بالضغط على Enter
+document.getElementById("phoneInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") searchDevices();
+});
 </script>
 </body>
 </html>
