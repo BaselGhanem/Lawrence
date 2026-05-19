@@ -157,7 +157,11 @@ onSnapshot(collection(db,'inventory'), snap => {
 function updateProductSelect() {
   const select = document.getElementById('productSelect');
   select.innerHTML = '<option value="">-- اختر منتج من المخزون --</option>' + 
-    inventory.map(p => `<option value="${p.id}">${p.name} - ${p.brand || ''} ${p.model || ''} (${p.price.toFixed(2)} د.أ)</option>`).join('');
+    inventory.map(p => {
+  const priceValue = (typeof p.price === 'number' && !isNaN(p.price)) ? p.price : 0;
+  return `<option value="${p.id}">${escapeHtml(p.name)} - ${escapeHtml(p.brand || '')} ${escapeHtml(p.model || '')} (${priceValue.toFixed(2)} د.أ)</option>`;
+}).join('')
+;
 }
 
 window.addSelectedProduct = function() {
