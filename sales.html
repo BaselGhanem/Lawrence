@@ -12,7 +12,7 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 :root {
-  --bg:#07090F; --surface:#0D1117; --surface2:#13181F; --border:#1A2235;
+  --bg:#07090F; --surface: rgba(15,23,42,0.72); --surface2:#13181F; --border:#1A2235;
   --primary:#F59E0B; --pdim:rgba(245,158,11,.12); --success:#10B981;
   --danger:#EF4444; --text:#F1F5F9; --text2:#94A3B8; --sw:240px;
 }
@@ -22,7 +22,9 @@
 }
 body {
   font-family: 'Almarai', sans-serif;
-  background: var(--bg);
+  background: radial-gradient(circle at top right, rgba(245,158,11,.15), transparent 25%),
+radial-gradient(circle at bottom left, rgba(59,130,246,.12), transparent 25%),
+var(--bg);
   color: var(--text);
   display: flex;
   min-height: 100vh;
@@ -34,6 +36,8 @@ body {
   position: fixed;
   top:0; right:0; bottom:0;
   z-index: 100;
+  backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
 }
 .sb-brand { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
 .sb-nav { padding:12px 10px; }
@@ -54,13 +58,15 @@ body {
 }
 /* Step indicator */
 .step-container {
-  max-width: 700px;
+  max-width: 850px;
   margin: 0 auto;
   background: var(--surface);
   border-radius: 28px;
-  padding: 28px 32px;
+  padding: 42px;
   border: 1px solid var(--border);
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.03);
+  backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
 }
 .step-header {
   display: flex;
@@ -102,7 +108,7 @@ body {
 }
 .form-group input, .form-group select {
   width: 100%;
-  padding: 12px 14px;
+  padding: 16px 18px;
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -158,6 +164,8 @@ body {
   border-radius: 18px;
   flex-wrap: wrap;
   gap: 8px;
+  backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
 }
 .cart-item-info {
   flex: 2;
@@ -232,6 +240,9 @@ body {
   transition: .3s;
   pointer-events: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  backdrop-filter: blur(14px);
+-webkit-backdrop-filter: blur(14px);
+border:1px solid rgba(255,255,255,.08);
 }
 .toast.show {
   transform: translateX(-50%) translateY(0);
@@ -242,6 +253,20 @@ body {
   .print-only { display: block; }
   body { background: white; color: black; padding: 1cm; }
   .invoice-print { max-width: 100%; }
+}
+  .step-page {
+  animation: fadeSlide .35s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity:0;
+    transform:translateY(18px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 </style>
 </head>
@@ -262,30 +287,48 @@ body {
 <div class="main">
   <div class="step-container" id="stepContainer">
     <!-- Step 1: Customer Info -->
-    <div id="step1">
+    <div id="step1" class="step-page">
       <div class="step-header">
         <span class="step active">1</span>
         <span class="step">2</span>
         <span class="step">3</span>
+        <span class="step">4</span>
       </div>
       <div class="step-title">📋 معلومات العميل</div>
       <div class="form-group">
         <label>الاسم الكامل *</label>
         <input type="text" id="customerName" placeholder="أحمد محمد">
       </div>
-      <div class="form-group">
-        <label>رقم الهاتف *</label>
-        <input type="tel" id="customerPhone" placeholder="07xxxxxxxx" dir="ltr">
-      </div>
-      <button class="btn btn-primary" style="width:100%" onclick="goToStep2()">التالي ←</button>
+    
+      <button class="btn btn-primary" style="width:100%" onclick="goToPhoneStep()">التالي ←</button>
     </div>
 
-    <!-- Step 2: Add Items -->
-    <div id="step2" style="display:none">
+    <!-- Step Phone -->
+    <div id="stepPhone" class="step-page" style="display:none">
       <div class="step-header">
         <span class="step completed">1</span>
         <span class="step active">2</span>
         <span class="step">3</span>
+        <span class="step">4</span>
+      </div>
+      <div class="step-title">📞 رقم الهاتف</div>
+      <div class="form-group">
+        <label>رقم الهاتف *</label>
+        <input type="tel" id="customerPhone" placeholder="07xxxxxxxx" dir="ltr">
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button class="btn btn-outline" onclick="goToStep1()">← رجوع</button>
+        <button class="btn btn-primary" style="flex:1" onclick="goToProductsStep()">التالي →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Add Items -->
+    <div id="step2" class="step-page" style="display:none">
+      <div class="step-header">
+        <span class="step completed">1</span>
+        <span class="step completed">2</span>
+        <span class="step active">3</span>
+        <span class="step">4</span>
       </div>
       <div class="step-title">🛍️ إضافة المنتجات</div>
       
@@ -314,22 +357,23 @@ body {
       <div id="cartList" style="margin:20px 0"></div>
 
       <div style="display:flex; gap:12px; margin-top:20px">
-        <button class="btn btn-outline" onclick="goToStep1()">← رجوع</button>
+        <button class="btn btn-outline" onclick="goToPhoneStep()">← رجوع</button>
         <button class="btn btn-primary" style="flex:1" onclick="goToStep3()">مراجعة الفاتورة →</button>
       </div>
     </div>
 
     <!-- Step 3: Review & Complete -->
-    <div id="step3" style="display:none">
+    <div id="step3" class="step-page" style="display:none">
       <div class="step-header">
         <span class="step completed">1</span>
         <span class="step completed">2</span>
-        <span class="step active">3</span>
+        <span class="step completed">3</span>
+        <span class="step active">4</span>
       </div>
       <div class="step-title">📝 مراجعة الفاتورة</div>
       <div id="reviewContainer"></div>
       <div style="display:flex; gap:12px; margin-top:25px">
-        <button class="btn btn-outline" onclick="goToStep2()">← رجوع</button>
+        <button class="btn btn-outline" onclick="goToProductsStep()">← رجوع</button>
         <button class="btn btn-primary" style="flex:1" onclick="completeSale()">✅ إتمام البيع</button>
       </div>
     </div>
@@ -492,17 +536,29 @@ function showToast(msg) {
 // Step navigation
 window.goToStep1 = function() {
   document.getElementById('step1').style.display = 'block';
+  document.getElementById('stepPhone').style.display = 'none';
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'none';
 };
-window.goToStep2 = function() {
+window.goToPhoneStep = function() {
   const name = document.getElementById('customerName').value.trim();
-  const phone = document.getElementById('customerPhone').value.trim();
-  if (!name || !phone) {
-    showToast('⚠️ يرجى إدخال اسم العميل ورقم الهاتف');
+  if (!name) {
+    showToast('⚠️ يرجى إدخال الاسم');
     return;
   }
   document.getElementById('step1').style.display = 'none';
+  document.getElementById('stepPhone').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+};
+window.goToProductsStep = function() {
+  const phone = document.getElementById('customerPhone').value.trim();
+  if (!phone) {
+    showToast('⚠️ يرجى إدخال رقم الهاتف');
+    return;
+  }
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('stepPhone').style.display = 'none';
   document.getElementById('step2').style.display = 'block';
   document.getElementById('step3').style.display = 'none';
   renderCart();
@@ -510,7 +566,7 @@ window.goToStep2 = function() {
 window.goToStep3 = function() {
   if (cart.length === 0) {
     showToast('⚠️ السلة فارغة, أضف منتجات أولاً');
-    return;
+    return;  // ✅ لا ننتقل إلى step3
   }
   // build review
   let subtotal = 0;
@@ -518,9 +574,9 @@ window.goToStep3 = function() {
   cart.forEach(item => {
     const total = item.price * item.cartQty;
     subtotal += total;
-    itemsHtml += `<tr><td>${escapeHtml(item.name)}</td><td>${item.cartQty}</td><td>${item.price.toFixed(2)}</td><td>${total.toFixed(2)}</td></tr>`;
+    itemsHtml += `<tr><td style="text-align:right">${escapeHtml(item.name)}</td><td style="text-align:center">${item.cartQty}</td><td style="text-align:center">${item.price.toFixed(2)}</td><td style="text-align:center">${total.toFixed(2)}</td></tr>`;
   });
-  const taxRate = 0; // يمكن جعلها قابلة للتعديل
+  const taxRate = 0;
   const taxAmount = 0;
   const total = subtotal;
   const reviewHtml = `
@@ -534,6 +590,7 @@ window.goToStep3 = function() {
   `;
   document.getElementById('reviewContainer').innerHTML = reviewHtml;
   document.getElementById('step1').style.display = 'none';
+  document.getElementById('stepPhone').style.display = 'none';
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'block';
 };
@@ -586,7 +643,7 @@ function printInvoice(customerName, customerPhone, cart, subtotal, taxRate, taxA
   const now = new Date().toLocaleString('ar-JO');
   let itemsHtml = '';
   cart.forEach(item => {
-    itemsHtml += `<tr><td>${escapeHtml(item.name)}</td><td>${item.cartQty}</td><td>${item.price.toFixed(2)}</td><td>${(item.price * item.cartQty).toFixed(2)}</td></tr>`;
+    itemsHtml += `<tr><td style="text-align:right">${escapeHtml(item.name)}</td><td style="text-align:center">${item.cartQty}</td><td style="text-align:center">${item.price.toFixed(2)}</td><td style="text-align:center">${(item.price * item.cartQty).toFixed(2)}</td></tr>`;
   });
   const printWindow = window.open('', '_blank', 'width=600,height=800');
   printWindow.document.write(`
@@ -595,7 +652,7 @@ function printInvoice(customerName, customerPhone, cart, subtotal, taxRate, taxA
     <head><meta charset="UTF-8"><title>فاتورة مبيعات</title>
     <style>
       body { font-family: 'Almarai', sans-serif; margin: 0; padding: 1.5cm; background: white; color: black; }
-      .invoice { max-width: 700px; margin: auto; }
+      .invoice { max-width: 850px; margin: auto; }
       .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #F59E0B; padding-bottom: 10px; }
       .logo { width: 70px; }
       h2 { color: #B45309; margin: 5px 0; }
