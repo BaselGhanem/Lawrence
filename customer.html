@@ -1,39 +1,80 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lawrence For PC — استعلام عن حالة الجهاز</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — استعلام عن طلبك</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
 <style>
-:root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
-  --primary:#F59E0B;--text:#F1F5F9;--text2:#94A3B8;--success:#10B981;
+body { display:flex; align-items:flex-start; justify-content:center; padding:24px; }
+.container { max-width:780px; width:100%; }
+.header { text-align:center; margin-bottom:36px; }
+.brand-logo { width:80px; height:80px; border-radius:20px; object-fit:cover; margin-bottom:14px; border:2px solid var(--border); }
+.header h1 { font-size:26px; font-weight:900; margin-bottom:6px; }
+.header p  { color:var(--text2); font-size:14px; }
+.search-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:28px; text-align:center; margin-bottom:20px;
 }
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:20px;display:flex;justify-content:center}
-.container{max-width:800px;width:100%}
-.header{text-align:center;margin-bottom:40px}
-.search-box{background:var(--surface);padding:30px;border-radius:20px;border:1px solid var(--border);text-align:center}
-.phone-input{width:100%;max-width:400px;padding:15px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-size:18px;text-align:center;margin-bottom:15px;outline:none}
-.phone-input:focus{border-color:var(--primary)}
-.btn-search{padding:15px 40px;background:var(--primary);border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px}
-.device-card{background:var(--surface);border:1px solid var(--border);padding:20px;border-radius:16px;margin-top:20px}
-.status-tag{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:var(--surface2)}
-.grid-info{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
+.search-card input {
+  width:100%; max-width:400px; padding:14px 18px;
+  background:var(--surface2); border:2px solid var(--border);
+  border-radius:12px; color:var(--text); font-family:'Tajawal',sans-serif;
+  font-size:16px; text-align:center; outline:none; margin-bottom:14px; display:block; margin-inline:auto;
+  transition:.2s;
+}
+.search-card input:focus { border-color:var(--primary); }
+.btn-search {
+  padding:13px 40px; background:linear-gradient(135deg,#F59E0B,#B45309);
+  border:none; border-radius:12px; color:#000; font-family:'Tajawal',sans-serif;
+  font-size:15px; font-weight:800; cursor:pointer; transition:.2s;
+}
+.btn-search:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(245,158,11,.3); }
+.device-card { background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:16px; margin-bottom:14px; }
+.device-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.device-name { font-size:16px; font-weight:800; }
+.status-badge {
+  padding:5px 14px; border-radius:20px; font-size:13px; font-weight:700;
+  background:var(--surface2); color:var(--text2);
+}
+.status-pending    { background:rgba(245,158,11,.12); color:#F59E0B; }
+.status-inspecting { background:var(--idim); color:#3B82F6; }
+.status-in_repair  { background:rgba(249,115,22,.12); color:#F97316; }
+.status-ready      { background:var(--sdim); color:#10B981; }
+.status-delivered  { background:rgba(71,85,105,.12); color:#94A3B8; }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.info-item { background:var(--surface2); border-radius:9px; padding:10px; }
+.info-label { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+.info-val { font-size:13px; font-weight:600; }
+.note-box { background:rgba(245,158,11,.06); border:1px solid rgba(245,158,11,.18); border-radius:9px; padding:10px; margin-top:12px; font-size:13px; color:var(--text2); }
+.note-box strong { color:var(--primary); }
+.theme-toggle-pub {
+  position:fixed; top:16px; left:16px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:7px 12px; cursor:pointer;
+  font-family:'Tajawal',sans-serif; font-size:13px; font-weight:700;
+  color:var(--text2); z-index:10; transition:.2s;
+}
+.theme-toggle-pub:hover { border-color:var(--primary); color:var(--primary); }
 </style>
 </head>
 <body>
 
+<script src="scripts.js"></script>
+
+<button class="theme-toggle-pub" id="themeToggle" onclick="toggleTheme()">🌙</button>
+
 <div class="container">
   <div class="header">
-    <img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" style="width:80px;border-radius:20px;margin-bottom:10px">
-    <h1>استعلام عن حالة أجهزتك</h1>
-    <p style="color:var(--text2)">أدخل رقم هاتفك لعرض حالة كافة أجهزتك لدينا</p>
+    <img class="brand-logo" src="logo.jpg" alt="Lawrence For PC" onerror="this.style.display='none'">
+    <h1>استعلام عن طلبك</h1>
+    <p>أدخل رقم هاتفك لعرض حالة أجهزتك لدى Lawrence For PC</p>
   </div>
 
-  <div class="search-box">
-    <input type="text" id="phoneInput" class="phone-input" placeholder="رقم الهاتف (مثال: 07xxxxxxxx)">
-    <br>
-    <button class="btn-search" onclick="searchDevices()">بحث عن الأجهزة</button>
+  <div class="search-card">
+    <input type="tel" id="phoneInput" placeholder="رقم الهاتف (مثال: 07xxxxxxxx)" dir="ltr">
+    <button class="btn-search" onclick="searchDevices()">🔎 بحث عن الأجهزة</button>
   </div>
 
   <div id="results"></div>
@@ -41,118 +82,50 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);mar
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, collection, query, where, getDocs }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const CFG = {
-  apiKey: "AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",
-  authDomain: "lorans-2.firebaseapp.com",
-  projectId: "lorans-2",
-  storageBucket: "lorans-2.firebasestorage.app",
-  messagingSenderId: "399952166847",
-  appId: "1:399952166847:web:ac71d3e0d9afe4be8c2b0a"
+const CFG={apiKey:'AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY',authDomain:'lorans-2.firebaseapp.com',projectId:'lorans-2',storageBucket:'lorans-2.firebasestorage.app',messagingSenderId:'399952166847',appId:'1:399952166847:web:ac71d3e0d9afe4be8c2b0a'};
+const app=initializeApp(CFG);const db=getFirestore(app);
+
+function statusLabel(s){return{pending:'⏳ انتظار',inspecting:'🔍 قيد الفحص',in_repair:'🔧 قيد التصليح',ready:'✅ جاهز للاستلام',delivered:'📦 تم التسليم'}[s]||s}
+function statusClass(s){return{'pending':'status-pending','inspecting':'status-inspecting','in_repair':'status-in_repair','ready':'status-ready','delivered':'status-delivered'}[s]||''}
+function fmtDate(ts){if(!ts?.toDate)return'—';return ts.toDate().toLocaleDateString('ar-JO',{year:'numeric',month:'long',day:'numeric'})}
+function escapeHtml(str){if(!str)return'';return String(str).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function getLatestNote(log){if(!log?.length)return'لا توجد ملاحظات';const last=log[log.length-1];if(last.action?.startsWith('ملاحظة:'))return last.action.replace('ملاحظة:','').trim();return last.action||'—'}
+
+window.searchDevices=async function(){
+  const phone=document.getElementById('phoneInput').value.trim();
+  const resDiv=document.getElementById('results');
+  if(!phone){resDiv.innerHTML='<div class="device-card" style="text-align:center;color:var(--danger)">⚠️ يرجى إدخال رقم الهاتف</div>';return}
+  resDiv.innerHTML='<div class="device-card" style="text-align:center;color:var(--text2)">⏳ جاري البحث...</div>';
+  try{
+    const q=query(collection(db,'tickets'),where('phone','==',phone));
+    const snap=await getDocs(q);
+    if(snap.empty){resDiv.innerHTML='<div class="device-card" style="text-align:center"><span style="font-size:48px;display:block;margin-bottom:12px">🔍</span><strong>لم يتم العثور على أجهزة</strong><br><span style="color:var(--text2);font-size:13px">تأكد من رقم الهاتف أو تواصل مع فريق Lawrence For PC</span></div>';return}
+    resDiv.innerHTML=snap.docs.map(ds=>{
+      const t=ds.data();
+      const tid=t.ticketId||ds.id.slice(0,8);
+      const status=t.status||'pending';
+      const note=getLatestNote(t.log);
+      return`<div class="device-card">
+        <div class="device-header">
+          <div class="device-name">🖥️ ${escapeHtml(t.device||'جهاز غير معروف')}</div>
+          <span class="status-badge ${statusClass(status)}">${statusLabel(status)}</span>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="info-label">رقم الطلب</div><div class="info-val" style="color:var(--primary)">${escapeHtml(tid)}</div></div>
+          <div class="info-item"><div class="info-label">تاريخ الاستلام</div><div class="info-val">${fmtDate(t.createdAt)}</div></div>
+          <div class="info-item"><div class="info-label">الفني المعين</div><div class="info-val">${escapeHtml(t.assignedName||'قيد التعيين')}</div></div>
+          <div class="info-item"><div class="info-label">التكلفة التقديرية</div><div class="info-val">${(t.estimatedCost||0).toFixed(2)} د.أ</div></div>
+        </div>
+        <div class="note-box"><strong>📝 آخر تحديث: </strong>${escapeHtml(note)}</div>
+      </div>`;
+    }).join('');
+  }catch(e){resDiv.innerHTML=`<div class="device-card" style="text-align:center;color:var(--danger)">❌ حدث خطأ: ${escapeHtml(e.message)}</div>`}
 };
 
-const app = initializeApp(CFG);
-const db = getFirestore(app);
-
-function getLatestNote(ticketLog) {
-  if (!ticketLog || !ticketLog.length) return "لا توجد ملاحظات حالياً";
-  // نبحث عن آخر إدخال يحتوي على "ملاحظة:" أو نأخذ آخر حدث بشكل عام
-  const last = ticketLog[ticketLog.length - 1];
-  if (last.action && last.action.startsWith("ملاحظة:")) {
-    return last.action.replace("ملاحظة:", "").trim();
-  }
-  // وإلا نعرض آخر حدث مع اسم المستخدم
-  return `${last.action} (${last.user || "النظام"})`;
-}
-
-function formatDate(timestamp) {
-  if (!timestamp || !timestamp.toDate) return "—";
-  return timestamp.toDate().toLocaleDateString("ar-JO", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
-}
-
-function statusLabel(status) {
-  const map = {
-    pending: "انتظار",
-    inspecting: "فحص",
-    in_repair: "تصليح",
-    ready: "جاهز",
-    delivered: "مُسلَّم"
-  };
-  return map[status] || status;
-}
-
-window.searchDevices = async () => {
-  const phone = document.getElementById("phoneInput").value.trim();
-  const resDiv = document.getElementById("results");
-  if (!phone) {
-    alert("يرجى إدخال رقم الهاتف");
-    return;
-  }
-
-  resDiv.innerHTML = '<p style="text-align:center">جاري البحث...</p>';
-
-  // استخدام الحقل الصحيح "phone"
-  const q = query(collection(db, "tickets"), where("phone", "==", phone));
-  const snapshot = await getDocs(q);
-
-  if (snapshot.empty) {
-    resDiv.innerHTML = '<div class="device-card" style="text-align:center">❌ لم يتم العثور على أجهزة مرتبطة بهذا الرقم</div>';
-    return;
-  }
-
-  resDiv.innerHTML = snapshot.docs.map(docSnap => {
-    const ticket = docSnap.data();
-    const ticketId = ticket.ticketId || docSnap.id.slice(0, 8);
-    const deviceName = ticket.device || "جهاز غير معروف";
-    const receiveDate = formatDate(ticket.createdAt);
-    const latestNote = getLatestNote(ticket.log);
-    const status = ticket.status || "pending";
-
-    return `
-      <div class="device-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-          <h3 style="margin:0">${escapeHtml(deviceName)}</h3>
-          <span class="status-tag">${statusLabel(status)}</span>
-        </div>
-        <div class="grid-info">
-          <div>
-            <small style="color:var(--text2)">تاريخ الاستلام</small><br>
-            ${receiveDate}
-          </div>
-          <div>
-            <small style="color:var(--text2)">رقم الطلب</small><br>
-            ${escapeHtml(ticketId)}
-          </div>
-          <div style="grid-column:span 2">
-            <small style="color:var(--text2)">آخر تحديث / ملاحظة</small><br>
-            ${escapeHtml(latestNote)}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-};
-
-// دالة بسيطة لمنع حقن HTML من البيانات (احتياطاً)
-function escapeHtml(str) {
-  if (!str) return "";
-  return str.replace(/[&<>]/g, function(m) {
-    if (m === "&") return "&amp;";
-    if (m === "<") return "&lt;";
-    if (m === ">") return "&gt;";
-    return m;
-  });
-}
-
-// السماح بالبحث بالضغط على Enter
-document.getElementById("phoneInput").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") searchDevices();
-});
+document.getElementById('phoneInput').addEventListener('keypress',e=>{if(e.key==='Enter')window.searchDevices()});
 </script>
 </body>
 </html>

@@ -1,300 +1,164 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lawrence For PC — التقارير</title>
-<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
-<script>
-  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-</script>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--pdark:#B45309;
-  --success:#10B981;--sdim:rgba(16,185,129,.12);
-  --danger:#EF4444;--ddim:rgba(239,68,68,.12);
-  --info:#3B82F6;--idim:rgba(59,130,246,.12);
-  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;--sw:240px;
+.stats { grid-template-columns: repeat(3,1fr); }
+.filters { align-items: center; }
+.month-sel {
+  background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 12px; color: var(--text);
+  font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none;
 }
-[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569;--text3:#94A3B8;--pdim:rgba(245,158,11,.1);--sdim:rgba(16,185,129,.1);--ddim:rgba(239,68,68,.08);--idim:rgba(59,130,246,.1)}
-[data-theme="light"] .f input, [data-theme="light"] .f select, [data-theme="light"] .search-wrap input{background:#F8FAFC;color:var(--text);border-color:var(--border)}
-[data-theme="light"] tr:hover td{background:rgba(0,0,0,.02)!important}
-[data-theme="light"] th{background:rgba(0,0,0,.02)}[data-theme="light"] td{border-bottom:1px solid var(--border)}
-[data-theme="light"] .toast{background:#fff;color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-[data-theme="light"] .nav-item:hover{background:rgba(0,0,0,.04)}
-[data-theme="light"] .card, [data-theme="light"] .stat-card, [data-theme="light"] .sidebar, [data-theme="light"] .modal{box-shadow:0 2px 12px rgba(0,0,0,.08)}
-
-body{font-family:'Almarai', 'Poppins', sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
-.sidebar{width:var(--sw);min-height:100vh;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:100}
-.sb-brand{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-icon{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;}
-.sb-icon img{width:100%;height:100%;object-fit:cover}
-.sb-info{flex:1}.sb-info h2{font-size:14px;font-weight:900; font-family:'Poppins',sans-serif;}.sb-info p{font-size:11px;color:var(--text2);margin-top:1px}
-.sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
-.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}.nav-item.active{background:var(--pdim);color:var(--primary)}
-.main{margin-right:var(--sw);flex:1;padding:24px;min-height:100vh}
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-.page-header h1{font-size:21px;font-weight:800}.page-header p{color:var(--text2);font-size:13px;margin-top:3px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden;transition:.2s}
-.stat-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 14px 14px 0}
-.stat-card.c-green::before{background:var(--success)}.stat-card.c-red::before{background:var(--danger)}.stat-card.c-blue::before{background:var(--info)}
-.stat-label{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px;text-transform:uppercase}
-.stat-val{font-size:26px;font-weight:900;font-family:'Poppins',sans-serif}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:right;padding:9px 13px;color:var(--text2);font-weight:700;font-size:11px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
-td{padding:10px 13px;border-bottom:1px solid rgba(26,34,53,.5);vertical-align:middle}
-.btn{padding:8px 15px;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
-.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#fff}.btn-primary:hover{box-shadow:0 5px 18px rgba(245,158,11,.3);transform:translateY(-1px)}
-.btn-danger{background:var(--ddim);border:1px solid rgba(239,68,68,.25);color:var(--danger)}
-.btn-sm{padding:5px 11px;font-size:12px}
-.f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.f label{font-size:12px;font-weight:700;color:var(--text2)}
-.f input,.f select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.2s}
-.f input:focus,.f select:focus{border-color:var(--primary);background:var(--pdim)}
-input[type="tel"] { direction: ltr; text-align: left; font-family: 'Poppins', sans-serif; }
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:11px;padding:10px 22px;font-size:14px;font-weight:700;z-index:9999;transition:.3s;pointer-events:none;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.filters{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+[data-theme="light"] .month-sel { background: #F8FAFC; }
 </style>
 </head>
 <body>
-<div class="sidebar">
-  <div class="sb-brand">
-    <div class="sb-icon"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Logo"></div>
-    <div class="sb-info"><h2>Lawrence</h2><p>التقارير المالية</p></div>
-  </div>
-  <nav class="sb-nav">
-    <a class="nav-item" href="admin.html"><span class="ni">🏠</span> لوحة التحكم</a>
-    <a class="nav-item" href="inventory.html"><span class="ni">📦</span> المخزون</a>
-    <a class="nav-item" href="sales.html"><span class="ni">🛒</span> المبيعات</a>
-    <a class="nav-item" href="returns.html"><span class="ni">↩️</span> المرتجعات</a>
-    <a class="nav-item active" href="reports.html"><span class="ni">📊</span> التقارير</a>
-  </nav>
-</div>
+
+<script src="scripts.js"></script>
+<div id="app-sidebar"></div>
 
 <div class="main">
   <div class="page-header">
-    <div><h1>التقارير المالية</h1><p>متابعة الأرباح، الإيرادات، والمصاريف</p></div>
+    <div><h1>📊 التقارير المالية</h1><p>الإيرادات، المصاريف، وصافي الربح</p></div>
   </div>
 
   <div class="filters">
-    <span style="font-size:12px;color:var(--text2);font-weight:700">تصفية حسب:</span>
-    <select id="monthFilter" class="f select" style="width:120px;padding:6px;border-radius:6px;margin:0" onchange="renderReports()">
+    <span style="font-size:12px;font-weight:700;color:var(--text2)">تصفية:</span>
+    <select id="monthFilter" class="month-sel" onchange="renderReports()">
       <option value="all">كل الأوقات</option>
-      </select>
+    </select>
   </div>
 
-  <div class="stats" id="reportStats">
-    </div>
+  <div class="stats mb-16" id="reportStats">
+    <div class="stat-card c-green"><div class="stat-label">الإيرادات</div><div class="stat-val">—</div></div>
+    <div class="stat-card c-red"><div class="stat-label">المصاريف</div><div class="stat-val">—</div></div>
+    <div class="stat-card c-blue"><div class="stat-label">صافي الربح</div><div class="stat-val">—</div></div>
+  </div>
 
   <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+    <!-- إيرادات -->
     <div class="card">
-      <div style="font-size:15px;font-weight:700;margin-bottom:16px">إيرادات الصيانة والمبيعات</div>
+      <div class="card-head"><div class="card-title">💰 سجل الإيرادات (صيانة + مبيعات)</div></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>الطلب/الفاتورة</th><th>العميل</th><th>المبلغ</th><th>التاريخ</th></tr></thead>
-          <tbody id="incomeBody"></tbody>
+          <thead><tr><th>المرجع</th><th>العميل</th><th>المبلغ</th><th>النوع</th><th>التاريخ</th></tr></thead>
+          <tbody id="incomeBody"><tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px">جاري التحميل...</td></tr></tbody>
         </table>
       </div>
     </div>
-    
+
+    <!-- إضافة مصروف -->
     <div class="card">
-      <div style="font-size:15px;font-weight:700;margin-bottom:16px">إضافة مصروف</div>
-      <div class="f"><label>وصف المصروف</label><input id="en" placeholder="مثال: فاتورة كهرباء"></div>
-      <div class="f"><label>المبلغ (JOD)</label><input id="ea" type="number" step="0.01"></div>
-      <div class="f"><label>التصنيف</label><select id="ec"><option>تشغيلية</option><option>مشتريات</option><option>أخرى</option></select></div>
-      <div class="f"><label>التاريخ</label><input id="ed" type="date"></div>
-      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="addExpense()">تسجيل المصروف ✓</button>
+      <div class="card-head"><div class="card-title">➕ تسجيل مصروف</div></div>
+      <div class="f"><label>وصف المصروف *</label><input id="en" placeholder="مثال: فاتورة كهرباء"></div>
+      <div class="f"><label>المبلغ (JOD) *</label><input id="ea" type="number" step="0.01" min="0"></div>
+      <div class="f"><label>التصنيف</label>
+        <select id="ec"><option>تشغيلية</option><option>مشتريات</option><option>مرتجعات</option><option>أخرى</option></select>
+      </div>
+      <div class="f mb-16"><label>التاريخ *</label><input id="ed" type="date"></div>
+      <button class="btn btn-primary btn-block" onclick="addExpense()">تسجيل المصروف ✓</button>
     </div>
   </div>
 
-  <div class="card" style="margin-top:16px">
-    <div style="font-size:15px;font-weight:700;margin-bottom:16px">سجل المصروفات</div>
+  <!-- سجل المصاريف -->
+  <div class="card mt-16">
+    <div class="card-head"><div class="card-title">💸 سجل المصاريف</div></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>الوصف</th><th>التصنيف</th><th>المبلغ</th><th>التاريخ</th><th>إجراء</th></tr></thead>
-        <tbody id="expensesBody"></tbody>
+        <thead><tr><th>الوصف</th><th>التصنيف</th><th>المبلغ</th><th>التاريخ</th><th>حذف</th></tr></thead>
+        <tbody id="expensesBody"><tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px">جاري التحميل...</td></tr></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
+<div id="scanIndicator" class="scan-indicator">📡 <span id="scanCode"></span></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, addDoc, deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, addDoc, deleteDoc, onSnapshot, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
+const CFG={apiKey:'AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY',authDomain:'lorans-2.firebaseapp.com',projectId:'lorans-2',storageBucket:'lorans-2.firebasestorage.app',messagingSenderId:'399952166847',appId:'1:399952166847:web:ac71d3e0d9afe4be8c2b0a'};
 const app=initializeApp(CFG);const auth=getAuth(app);const db=getFirestore(app);
 
-let allInvoices=[], allExpenses=[], allSales=[];
+let allInvoices=[],allExpenses=[],allSales=[];
 
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth,user=>{
   if(!user){location.href='index.html';return}
   const u=JSON.parse(sessionStorage.getItem('lpc_user')||'{}');
   if(u.role!=='admin'){location.href='technician.html';return}
-  
-  document.getElementById('ed').valueAsDate = new Date();
-
-  onSnapshot(collection(db,'invoices'), snap => {
-    allInvoices = snap.docs.map(d=>({id:d.id, ...d.data(), type:'صيانة'}));
-    updateMonthFilter();
-    renderReports();
-  });
-  
-  // دمج المبيعات إذا تم بناؤها (اختياري، يقرأ من جدول المبيعات)
-  onSnapshot(collection(db,'sales'), snap => {
-    allSales = snap.docs.map(d=>({id:d.id, ...d.data(), type:'مبيعات'}));
-    updateMonthFilter();
-    renderReports();
-  });
-
-  onSnapshot(collection(db,'expenses'), snap => {
-    allExpenses = snap.docs.map(d=>({id:d.id, ...d.data()}));
-    updateMonthFilter();
-    renderReports();
-  });
+  renderSidebar('reports');
+  document.getElementById('ed').valueAsDate=new Date();
+  onSnapshot(collection(db,'invoices'),snap=>{allInvoices=snap.docs.map(d=>({id:d.id,...d.data(),type:'صيانة'}));updateMonthFilter();renderReports()});
+  onSnapshot(collection(db,'sales'),snap=>{allSales=snap.docs.map(d=>({id:d.id,...d.data(),type:'مبيعات'}));updateMonthFilter();renderReports()});
+  onSnapshot(collection(db,'expenses'),snap=>{allExpenses=snap.docs.map(d=>({id:d.id,...d.data()}));updateMonthFilter();renderReports()});
 });
 
-function updateMonthFilter() {
-  const sel = document.getElementById('monthFilter');
-  const currentVal = sel.value;
-  const months = new Set();
-  
-  const addMonth = (d) => {
-    if(!d) return;
-    const dt = d.toDate ? d.toDate() : new Date(d);
-    if(dt.toString()!=='Invalid Date') months.add(`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`);
-  };
-
-  allInvoices.forEach(i => addMonth(i.createdAt));
-  allSales.forEach(s => addMonth(s.createdAt));
-  allExpenses.forEach(e => addMonth(e.date || e.createdAt));
-
-  const sorted = Array.from(months).sort().reverse();
-  sel.innerHTML = '<option value="all">كل الأوقات</option>' + sorted.map(m => `<option value="${m}">${m}</option>`).join('');
-  if(sorted.includes(currentVal)) sel.value = currentVal;
+function updateMonthFilter(){
+  const sel=document.getElementById('monthFilter'),cur=sel.value;
+  const months=new Set();
+  const addM=d=>{if(!d)return;const dt=d.toDate?d.toDate():new Date(d);if(!isNaN(dt))months.add(`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`)};
+  allInvoices.forEach(i=>addM(i.createdAt));allSales.forEach(s=>addM(s.createdAt));allExpenses.forEach(e=>addM(e.date||e.createdAt));
+  const sorted=Array.from(months).sort().reverse();
+  sel.innerHTML='<option value="all">كل الأوقات</option>'+sorted.map(m=>`<option value="${m}">${m}</option>`).join('');
+  if(sorted.includes(cur))sel.value=cur;
 }
 
-window.renderReports = function() {
-  const filter = document.getElementById('monthFilter').value;
-  
-  const filterByMonth = (item, dateField) => {
-    if(filter === 'all') return true;
-    const d = item[dateField];
-    if(!d) return false;
-    const dt = d.toDate ? d.toDate() : new Date(d);
-    if(dt.toString()==='Invalid Date') return false;
-    const m = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-    return m === filter;
-  };
+window.renderReports=function(){
+  const filter=document.getElementById('monthFilter').value;
+  const byMonth=(item,field)=>{if(filter==='all')return true;const d=item[field];if(!d)return false;const dt=d.toDate?d.toDate():new Date(d);if(isNaN(dt))return false;return`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`===filter};
+  const invs=allInvoices.filter(i=>byMonth(i,'createdAt'));
+  const sales=allSales.filter(s=>byMonth(s,'createdAt'));
+  const exps=allExpenses.filter(e=>byMonth(e,e.date?'date':'createdAt'));
+  const totalIncome=invs.reduce((s,i)=>s+(i.total||0),0)+sales.reduce((s,i)=>s+(i.total||0),0);
+  const totalExp=exps.reduce((s,e)=>s+(e.amount||0),0);
+  const net=totalIncome-totalExp;
+  const netColor=net>=0?'var(--success)':'var(--danger)';
 
-  // تصفية
-  const invs = allInvoices.filter(i => filterByMonth(i, 'createdAt'));
-  const sales = allSales.filter(s => filterByMonth(s, 'createdAt'));
-  const exps = allExpenses.filter(e => filterByMonth(e, e.date ? 'date' : 'createdAt'));
+  document.getElementById('reportStats').innerHTML=`
+    <div class="stat-card c-green"><div class="stat-label">إجمالي الإيرادات</div><div class="stat-val" style="color:var(--success)">${totalIncome.toFixed(2)}<div class="stat-sub">دينار أردني</div></div><div class="stat-icon">💰</div></div>
+    <div class="stat-card c-red"><div class="stat-label">إجمالي المصاريف</div><div class="stat-val" style="color:var(--danger)">${totalExp.toFixed(2)}<div class="stat-sub">دينار أردني</div></div><div class="stat-icon">💸</div></div>
+    <div class="stat-card c-blue"><div class="stat-label">صافي الربح</div><div class="stat-val" style="color:${netColor}">${net.toFixed(2)}<div class="stat-sub">دينار أردني</div></div><div class="stat-icon">📈</div></div>`;
 
-  // حساب الإجماليات
-  const totalInvoices = invs.reduce((sum, i) => sum + (i.total || 0), 0);
-  const totalSales = sales.reduce((sum, s) => sum + (s.total || 0), 0);
-  const totalIncome = totalInvoices + totalSales;
-  const totalExp = exps.reduce((sum, e) => sum + (e.amount || 0), 0);
-  const netProfit = totalIncome - totalExp;
-
-  // عرض الإحصائيات
-  document.getElementById('reportStats').innerHTML = `
-    <div class="stat-card c-green"><div class="stat-label">إجمالي الإيرادات</div><div class="stat-val" style="color:var(--success)">${totalIncome.toFixed(2)}</div></div>
-    <div class="stat-card c-red"><div class="stat-label">إجمالي المصروفات</div><div class="stat-val" style="color:var(--danger)">${totalExp.toFixed(2)}</div></div>
-    <div class="stat-card c-blue"><div class="stat-label">صافي الربح</div><div class="stat-val" style="color:var(--info)">${netProfit.toFixed(2)}</div></div>
-  `;
-
-  // دمج وترتيب الإيرادات (صيانة + مبيعات)
-  const combinedIncome = [...invs, ...sales].sort((a,b) => {
-    const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-    const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-    return tB - tA;
-  });
-
-  document.getElementById('incomeBody').innerHTML = combinedIncome.length ? combinedIncome.map(i => `
+  const combined=[...invs,...sales].sort((a,b)=>(b.createdAt?.toMillis?.()??0)-(a.createdAt?.toMillis?.()??0));
+  document.getElementById('incomeBody').innerHTML=combined.length?combined.map(i=>`
     <tr>
-      <td><strong style="color:var(--primary)">${i.ticketId || i.saleId || '—'}</strong> <span style="font-size:10px;background:var(--pdim);padding:2px 5px;border-radius:4px;margin-right:4px">${i.type}</span></td>
-      <td>${i.customerName || 'عميل نقدي'}</td>
+      <td><strong style="color:var(--primary)">${i.ticketId||i.invoiceNumber||'—'}</strong></td>
+      <td>${i.customerName||'—'}</td>
       <td><strong style="color:var(--success)">${(i.total||0).toFixed(2)} د.أ</strong></td>
+      <td><span style="font-size:11px;background:var(--pdim);color:var(--primary);padding:2px 7px;border-radius:10px">${i.type}</span></td>
       <td style="font-size:12px;color:var(--text2)">${fmtDate(i.createdAt)}</td>
-    </tr>
-  `).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text2);padding:30px">لا توجد إيرادات</td></tr>';
+    </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px">لا توجد إيرادات</td></tr>';
 
-  // سجل المصروفات
-  const sortedExps = [...exps].sort((a,b) => new Date(b.date) - new Date(a.date));
-  document.getElementById('expensesBody').innerHTML = sortedExps.length ? sortedExps.map(e => `
+  document.getElementById('expensesBody').innerHTML=exps.length?[...exps].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(e=>`
     <tr>
       <td><strong>${e.name}</strong></td>
-      <td><span style="font-size:11px;background:var(--idim);color:var(--info);padding:3px 8px;border-radius:12px">${e.category}</span></td>
+      <td><span style="font-size:11px;background:var(--idim);color:var(--info);padding:2px 8px;border-radius:10px">${e.category}</span></td>
       <td><strong style="color:var(--danger)">${(e.amount||0).toFixed(2)} د.أ</strong></td>
       <td style="font-size:12px;color:var(--text2)">${e.date||'—'}</td>
       <td><button class="btn btn-danger btn-sm" onclick="delExp('${e.id}')">🗑️</button></td>
-    </tr>
-  `).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:30px">لا توجد مصاريف</td></tr>';
+    </tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text2);padding:24px">لا توجد مصاريف</td></tr>';
 };
 
-window.addExpense = async function() {
-  const name = document.getElementById('en').value.trim();
-  const amount = parseFloat(document.getElementById('ea').value);
-  const cat = document.getElementById('ec').value;
-  const date = document.getElementById('ed').value;
-  if(!name || !amount || amount <= 0 || !date){ toast('⚠️ يرجى تعبئة جميع الحقول بشكل صحيح'); return; }
-  
-  await addDoc(collection(db,'expenses'),{ name, amount, category:cat, date, createdAt:serverTimestamp() });
-  document.getElementById('en').value = ''; 
-  document.getElementById('ea').value = '';
+window.addExpense=async function(){
+  const name=document.getElementById('en').value.trim(),amount=parseFloat(document.getElementById('ea').value),cat=document.getElementById('ec').value,date=document.getElementById('ed').value;
+  if(!name||!amount||amount<=0||!date){toast('⚠️ يرجى تعبئة جميع الحقول');return}
+  await addDoc(collection(db,'expenses'),{name,amount,category:cat,date,createdAt:serverTimestamp()});
+  document.getElementById('en').value='';document.getElementById('ea').value='';
   toast('✅ تمت إضافة المصروف');
 };
+window.delExp=async function(id){if(!confirm('حذف هذا المصروف؟'))return;await deleteDoc(doc(db,'expenses',id));toast('🗑️ تم الحذف')};
 
-window.delExp = async function(id) {
-  if(!confirm('هل أنت متأكد من حذف هذا المصروف؟')) return;
-  await deleteDoc(doc(db,'expenses',id));
-  toast('🗑️ تم الحذف');
-};
-
-function fmtDate(ts) {
-  if(!ts?.toDate) return '—';
-  return ts.toDate().toLocaleDateString('ar-JO',{year:'numeric',month:'short',day:'numeric'});
-}
-
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 3000);
-}
-
-// ── BARCODE SCANNER GLOBAL LISTENER ──
-let _sbuf='', _stimer=null;
-document.addEventListener('keydown', function(e) {
-  const tag = document.activeElement?.tagName;
-  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-  if(e.key === 'Enter') {
-    clearTimeout(_stimer);
-    if(_sbuf.length >= 3) {
-      toast('📡 تم مسح باركود في التقارير: ' + _sbuf.trim());
-    }
-    _sbuf = '';
-    return;
-  }
-  if(e.key.length === 1) {
-    _sbuf += e.key;
-    clearTimeout(_stimer);
-    _stimer = setTimeout(()=>{ _sbuf = '' }, 200);
-  }
-});
+function fmtDate(ts){if(!ts?.toDate)return'—';return ts.toDate().toLocaleDateString('ar-JO',{year:'numeric',month:'short',day:'numeric'})}
+window.doLogout=async function(){await signOut(auth);sessionStorage.removeItem('lpc_user');location.href='index.html'};
 </script>
 </body>
 </html>

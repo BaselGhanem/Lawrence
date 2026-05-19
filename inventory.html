@@ -1,166 +1,121 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lawrence For PC — المخزون</title>
-<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-<script>
-  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--pdark:#B45309;
-  --success:#10B981;--sdim:rgba(16,185,129,.12);
-  --danger:#EF4444;--ddim:rgba(239,68,68,.12);
-  --info:#3B82F6;--idim:rgba(59,130,246,.12);
-  --text:#F1F5F9;--text2:#94A3B8;--text3:#475569;--sw:260px;
-}
-[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569;--text3:#94A3B8;--pdim:rgba(245,158,11,.1);--sdim:rgba(16,185,129,.1);--ddim:rgba(239,68,68,.08);--idim:rgba(59,130,246,.1)}
-[data-theme="light"] .f input, [data-theme="light"] .f select, [data-theme="light"] .search-wrap input{background:#F8FAFC;color:var(--text);border-color:var(--border)}
-[data-theme="light"] tr:hover td{background:rgba(0,0,0,.02)!important}
-[data-theme="light"] th{background:rgba(0,0,0,.02)}[data-theme="light"] td{border-bottom:1px solid var(--border)}
-[data-theme="light"] .toast{background:#fff;color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-[data-theme="light"] .nav-item:hover{background:rgba(0,0,0,.04)}
-[data-theme="light"] .card, [data-theme="light"] .sidebar, [data-theme="light"] .modal{box-shadow:0 2px 12px rgba(0,0,0,.08)}
-
-body{font-family:'Almarai', 'Poppins', sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s,color .3s}
-.sidebar{width:var(--sw);min-height:100vh;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:100}
-.sb-brand{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-icon{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;}
-.sb-icon img{width:100%;height:100%;object-fit:cover}
-.sb-info{flex:1}.sb-info h2{font-size:14px;font-weight:900; font-family:'Poppins',sans-serif;}.sb-info p{font-size:11px;color:var(--text2);margin-top:1px}
-.sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
-.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}.nav-item.active{background:var(--pdim);color:var(--primary)}
-.main{margin-right:var(--sw);flex:1;padding:24px;min-height:100vh}
-.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
-.page-header h1{font-size:21px;font-weight:800}.page-header p{color:var(--text2);font-size:13px;margin-top:3px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:right;padding:9px 13px;color:var(--text2);font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
-td{padding:10px 13px;border-bottom:1px solid rgba(26,34,53,.5);vertical-align:middle}
-.btn{padding:8px 15px;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
-.btn-primary{background:linear-gradient(135deg,#F59E0B,#B45309);color:#fff}.btn-primary:hover{box-shadow:0 5px 18px rgba(245,158,11,.3);transform:translateY(-1px)}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--pdim)}
-.btn-danger{background:var(--ddim);border:1px solid rgba(239,68,68,.25);color:var(--danger)}
-.btn-info{background:var(--idim);border:1px solid rgba(59,130,246,.25);color:var(--info)}
-.btn-sm{padding:5px 11px;font-size:12px}
-.search-wrap{position:relative;margin-bottom:14px}
-.search-wrap input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:12px 36px 12px 13px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:.2s}
-.search-wrap input:focus{border-color:var(--primary)}
-.search-wrap span{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:20px}
-.overlay.show{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px;width:100%;max-width:500px;animation:mIn .25s ease}
-@keyframes mIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.modal-title{font-size:17px;font-weight:800}
-.close-x{background:rgba(255,255,255,.06);border:none;color:var(--text2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:17px;transition:.2s}
-.close-x:hover{background:rgba(255,255,255,.12);color:var(--text)}
-.f{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.f label{font-size:12px;font-weight:700;color:var(--text2)}
-.f input,.f select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:.2s}
-.f input:focus,.f select:focus{border-color:var(--primary);background:var(--pdim)}
-input[type="tel"], .barcode-input { direction: ltr; text-align: left; font-family: 'Poppins', sans-serif; }
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:#1A2235;border:1px solid var(--border);border-radius:11px;padding:10px 22px;font-size:14px;font-weight:700;z-index:9999;transition:.3s;pointer-events:none;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.low-stock{color:var(--danger);font-weight:800}
+.barcode-input { direction: ltr; text-align: left; font-family: monospace; }
+.low-stock { color: var(--danger); font-weight: 800; }
 </style>
 </head>
 <body>
-<div class="sidebar">
-  <div class="sb-brand">
-    <div class="sb-icon"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Logo"></div>
-    <div class="sb-info"><h2>Lawrence</h2><p>المخزون والمشتريات</p></div>
-  </div>
-  <nav class="sb-nav">
-    <a class="nav-item" href="admin.html"><span class="ni">🏠</span> لوحة التحكم</a>
-    <a class="nav-item active" href="inventory.html"><span class="ni">📦</span> المخزون</a>
-    <a class="nav-item" href="sales.html"><span class="ni">🛒</span> المبيعات</a>
-    <a class="nav-item" href="returns.html"><span class="ni">↩️</span> المرتجعات</a>
-    <a class="nav-item" href="reports.html"><span class="ni">📊</span> التقارير</a>
-  </nav>
-</div>
+
+<script src="scripts.js"></script>
+
+<div id="app-sidebar"></div>
 
 <div class="main">
   <div class="page-header">
-    <div><h1>المخزون والأجهزة</h1><p>إدارة قطع الغيار، الملحقات، والأجهزة (دعم الباركود)</p></div>
-    <button class="btn btn-primary" onclick="openAddItem()">+ إضافة صنف جديد</button>
+    <div><h1>📦 المخزون والأجهزة</h1><p>قطع الغيار والملحقات — دعم الباركود الكامل</p></div>
+    <button class="btn btn-primary" onclick="openAddItem()">+ إضافة صنف</button>
   </div>
 
   <div class="search-wrap">
-    <span>🔎</span>
-    <input type="text" id="searchInput" placeholder="مسح الباركود، أو البحث بالاسم، الكود..." oninput="renderTable()">
+    <span class="sw-icon">🔎</span>
+    <input type="text" id="searchInput"
+           placeholder="امسح الباركود أو ابحث بالاسم، الكود، الفئة..."
+           oninput="renderTable()">
   </div>
 
   <div class="card">
     <div class="table-wrap">
       <table>
-        <thead><tr><th>الباركود / الكود</th><th>اسم الصنف</th><th>التصنيف</th><th>سعر البيع</th><th>الكمية</th><th>إجراءات</th></tr></thead>
-        <tbody id="itemsBody"></tbody>
+        <thead><tr>
+          <th>الباركود</th><th>اسم الصنف</th><th>الفئة</th>
+          <th>سعر البيع</th><th>الكمية</th><th>إجراءات</th>
+        </tr></thead>
+        <tbody id="itemsBody">
+          <tr><td colspan="6" style="text-align:center;color:var(--text2);padding:28px">جاري التحميل...</td></tr>
+        </tbody>
       </table>
     </div>
   </div>
 </div>
 
+<!-- ADD / EDIT ITEM -->
 <div class="overlay" id="m-item">
-<div class="modal">
-  <div class="modal-head"><div class="modal-title" id="m-title">إضافة صنف</div><button class="close-x" onclick="closeModal('m-item')">✕</button></div>
-  <div class="f"><label>الباركود (اتركه فارغاً للتوليد التلقائي)</label><input id="i-code" class="barcode-input" placeholder="مثال: 123456789"></div>
+<div class="modal sm">
+  <div class="modal-head">
+    <div class="modal-title" id="m-title">إضافة صنف</div>
+    <button class="close-x" onclick="closeModal('m-item')">✕</button>
+  </div>
+  <div class="f"><label>الباركود (تلقائي إذا تُرك فارغاً)</label>
+    <input id="i-code" class="barcode-input" placeholder="LPC-xxxxxx أو امسح الباركود">
+  </div>
   <div class="f"><label>اسم الصنف *</label><input id="i-name" placeholder="مثال: شاشة 15.6 Dell"></div>
-  <div class="f"><label>التصنيف</label>
+  <div class="f"><label>الفئة</label>
     <select id="i-cat">
-      <option value="شاشات">شاشات</option><option value="رامات">رامات</option><option value="تخزين">تخزين (HDD/SSD)</option>
-      <option value="بطاريات">بطاريات</option><option value="كيبورد">كيبورد</option><option value="أجهزة كاملة">أجهزة كاملة</option>
-      <option value="ملحقات">ملحقات عامة</option><option value="أخرى">أخرى</option>
+      <option value="شاشات">شاشات</option>
+      <option value="رامات">رامات</option>
+      <option value="تخزين">تخزين (HDD/SSD)</option>
+      <option value="بطاريات">بطاريات</option>
+      <option value="كيبورد">كيبورد</option>
+      <option value="أجهزة كاملة">أجهزة كاملة</option>
+      <option value="ملحقات">ملحقات</option>
+      <option value="أخرى">أخرى</option>
     </select>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-    <div class="f"><label>سعر التكلفة (JOD) *</label><input id="i-cost" type="number" step="0.01"></div>
-    <div class="f"><label>سعر البيع (JOD) *</label><input id="i-price" type="number" step="0.01"></div>
+  <div class="form-row">
+    <div class="f"><label>سعر التكلفة (JOD)</label><input id="i-cost" type="number" step="0.01" min="0" placeholder="0.00"></div>
+    <div class="f"><label>سعر البيع (JOD) *</label><input id="i-price" type="number" step="0.01" min="0" placeholder="0.00"></div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-    <div class="f"><label>الكمية الحالية *</label><input id="i-qty" type="number"></div>
-    <div class="f"><label>الحد الأدنى للتنبيه</label><input id="i-min" type="number" value="3"></div>
+  <div class="form-row">
+    <div class="f"><label>الكمية الحالية *</label><input id="i-qty" type="number" min="0" placeholder="0"></div>
+    <div class="f"><label>الحد الأدنى للتنبيه</label><input id="i-min" type="number" min="0" value="3"></div>
   </div>
-  <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:16px">
+  <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:8px">
     <button class="btn btn-outline" onclick="closeModal('m-item')">إلغاء</button>
     <button class="btn btn-primary" onclick="saveItem()">حفظ الصنف ✓</button>
   </div>
 </div></div>
 
+<!-- ADD STOCK -->
 <div class="overlay" id="m-addStock">
-<div class="modal" style="max-width:400px">
-  <div class="modal-head"><div class="modal-title">📦 شراء / إضافة كمية</div><button class="close-x" onclick="closeModal('m-addStock')">✕</button></div>
+<div class="modal sm">
+  <div class="modal-head">
+    <div class="modal-title">📦 شراء / إضافة كمية</div>
+    <button class="close-x" onclick="closeModal('m-addStock')">✕</button>
+  </div>
   <p style="font-size:13px;color:var(--text2);margin-bottom:14px" id="addStockName"></p>
-  <div class="f"><label>الكمية المضافة (الوارد)</label><input id="as-qty" type="number" min="1" value="1"></div>
-  <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:16px">
+  <div class="f"><label>الكمية الواردة</label><input id="as-qty" type="number" min="1" value="1"></div>
+  <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:14px">
     <button class="btn btn-outline" onclick="closeModal('m-addStock')">إلغاء</button>
     <button class="btn btn-primary" onclick="doAddStock()">إضافة للمخزون ✓</button>
   </div>
 </div></div>
 
+<!-- PRINT BARCODE -->
 <div class="overlay" id="m-printBarcode">
-<div class="modal" style="max-width:350px; text-align:center;">
-  <div class="modal-head"><div class="modal-title">🖨️ طباعة ملصق الباركود</div><button class="close-x" onclick="closeModal('m-printBarcode')">✕</button></div>
-  <p style="font-size:14px; font-weight:700; margin-bottom:10px;" id="pb-name"></p>
-  <div style="background:#fff; padding:20px; border-radius:12px; margin-bottom:16px; display:inline-block;">
+<div class="modal sm" style="text-align:center">
+  <div class="modal-head">
+    <div class="modal-title">🖨️ طباعة ملصق الباركود</div>
+    <button class="close-x" onclick="closeModal('m-printBarcode')">✕</button>
+  </div>
+  <p style="font-size:14px;font-weight:700;margin-bottom:10px" id="pb-name"></p>
+  <div style="background:#fff;padding:20px;border-radius:12px;margin-bottom:16px;display:inline-block">
     <svg id="barcode-svg"></svg>
   </div>
-  <div style="display:flex;gap:9px;justify-content:center;">
-    <button class="btn btn-primary" onclick="printBarcodeSticker()">طباعة الملصق الآن</button>
-  </div>
+  <button class="btn btn-primary btn-block" onclick="printBarcodeSticker()">🖨️ طباعة الملصق الآن</button>
 </div></div>
 
+<!-- CONFIRM DELETE -->
 <div class="overlay" id="m-confirm">
-<div class="modal" style="max-width:350px">
-  <div class="modal-head"><div class="modal-title">⚠️ تأكيد</div><button class="close-x" onclick="closeModal('m-confirm')">✕</button></div>
+<div class="modal sm">
+  <div class="modal-head"><div class="modal-title">⚠️ تأكيد الحذف</div><button class="close-x" onclick="closeModal('m-confirm')">✕</button></div>
   <p style="color:var(--text2);font-size:14px;margin-bottom:16px" id="confirmMsg"></p>
   <div style="display:flex;gap:9px;justify-content:flex-end">
     <button class="btn btn-outline" onclick="closeModal('m-confirm')">إلغاء</button>
@@ -168,222 +123,68 @@ input[type="tel"], .barcode-input { direction: ltr; text-align: left; font-famil
   </div>
 </div></div>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
+<div id="scanIndicator" class="scan-indicator">📡 <span id="scanCode"></span></div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { initializeApp }  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
+const CFG = {apiKey:'AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY',authDomain:'lorans-2.firebaseapp.com',projectId:'lorans-2',storageBucket:'lorans-2.firebasestorage.app',messagingSenderId:'399952166847',appId:'1:399952166847:web:ac71d3e0d9afe4be8c2b0a'};
 const app=initializeApp(CFG);const auth=getAuth(app);const db=getFirestore(app);
 
-let allItems=[], editId=null, stockTargetId=null, currentBarcodeToPrint = null, currentItemNameToPrint = null;
+let allItems=[], editId=null, stockTargetId=null, currentBarcodeToPrint=null, currentItemNameToPrint=null;
 
 onAuthStateChanged(auth, user => {
   if(!user){location.href='index.html';return}
-  const u = JSON.parse(sessionStorage.getItem('lpc_user')||'{}');
-  if(u.role !== 'admin'){location.href='technician.html';return}
+  const u=JSON.parse(sessionStorage.getItem('lpc_user')||'{}');
+  if(u.role!=='admin'){location.href='technician.html';return}
+  renderSidebar('inventory');
   onSnapshot(collection(db,'inventory'), snap => {
-    allItems = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    allItems=snap.docs.map(d=>({id:d.id,...d.data()}));
     renderTable();
   });
 });
 
 function renderTable() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  let rows = allItems;
-  if(q) {
-    rows = rows.filter(i => (i.code||'').toLowerCase().includes(q) || (i.name||'').toLowerCase().includes(q) || (i.cat||'').toLowerCase().includes(q));
-  }
-  
-  document.getElementById('itemsBody').innerHTML = rows.length ? rows.map(i => `
-    <tr>
-      <td style="font-family:'Poppins',sans-serif; font-weight:700; color:var(--primary)">${i.code||'—'}</td>
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  let rows=allItems;
+  if(q) rows=rows.filter(i=>(i.code||'').toLowerCase().includes(q)||(i.name||'').toLowerCase().includes(q)||(i.cat||'').toLowerCase().includes(q));
+
+  document.getElementById('itemsBody').innerHTML=rows.length?rows.map(i=>{
+    const lowClass=i.qty<=(i.min||0)?'low-stock':'';
+    return `<tr>
+      <td><code style="font-size:12px;color:var(--primary)">${i.code||'—'}</code></td>
       <td><strong>${i.name}</strong></td>
-      <td><span style="background:var(--pdim);color:var(--pdark);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700">${i.cat}</span></td>
-      <td style="font-weight:700">${(i.price||0).toFixed(2)} د.أ</td>
-      <td><span class="${i.qty <= (i.min||0) ? 'low-stock' : ''}">${i.qty}</span></td>
-      <td style="display:flex;gap:5px;">
-        <button class="btn btn-success btn-sm" onclick="openAddStock('${i.id}')" title="شراء / إضافة كمية">➕</button>
-        <button class="btn btn-info btn-sm" onclick="openPrintBarcode('${i.code}', '${i.name}')" title="طباعة ملصق">🖨️</button>
+      <td><span class="badge" style="background:var(--pdim);color:var(--pdark)">${i.cat||'—'}</span></td>
+      <td><strong>${(i.price||0).toFixed(2)} د.أ</strong><br><span style="font-size:11px;color:var(--text3)">تكلفة: ${(i.cost||0).toFixed(2)}</span></td>
+      <td><span class="${lowClass}" style="font-size:15px;font-weight:900">${i.qty}</span></td>
+      <td style="display:flex;gap:5px;flex-wrap:wrap">
+        <button class="btn btn-success btn-sm" onclick="openAddStock('${i.id}')" title="إضافة كمية">➕</button>
+        <button class="btn btn-info btn-sm" onclick="openPrintBarcode('${i.code||''}','${(i.name||'').replace(/'/g,'')}')" title="طباعة ملصق">🖨️</button>
         <button class="btn btn-outline btn-sm" onclick="openEditItem('${i.id}')" title="تعديل">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="confirmDel('${i.id}','${i.name}')" title="حذف">🗑️</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDel('${i.id}','${(i.name||'').replace(/'/g,'')}')" title="حذف">🗑️</button>
       </td>
-    </tr>
-  `).join('') : '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text2)">لا توجد أصناف تطابق البحث</td></tr>';
+    </tr>`;
+  }).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:28px">لا توجد أصناف</td></tr>';
 }
 
-window.openAddItem = function() {
-  editId = null;
-  document.getElementById('m-title').textContent = 'إضافة صنف جديد';
-  ['i-code','i-name','i-cost','i-price','i-qty'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('i-min').value = '3';
-  openModal('m-item');
-};
+window.openAddItem=function(){editId=null;document.getElementById('m-title').textContent='إضافة صنف جديد';['i-code','i-name','i-cost','i-price','i-qty'].forEach(id=>document.getElementById(id).value='');document.getElementById('i-min').value='3';openModal('m-item')};
+window.openEditItem=function(id){editId=id;const i=allItems.find(x=>x.id===id);if(!i)return;document.getElementById('m-title').textContent='تعديل صنف';document.getElementById('i-code').value=i.code||'';document.getElementById('i-name').value=i.name||'';document.getElementById('i-cat').value=i.cat||'أخرى';document.getElementById('i-cost').value=i.cost||0;document.getElementById('i-price').value=i.price||0;document.getElementById('i-qty').value=i.qty||0;document.getElementById('i-min').value=i.min||3;openModal('m-item')};
+window.saveItem=async function(){let code=document.getElementById('i-code').value.trim();const name=document.getElementById('i-name').value.trim(),cat=document.getElementById('i-cat').value,cost=parseFloat(document.getElementById('i-cost').value)||0,price=parseFloat(document.getElementById('i-price').value)||0,qty=parseInt(document.getElementById('i-qty').value)||0,min=parseInt(document.getElementById('i-min').value)||0;if(!name){toast('⚠️ أدخل اسم الصنف');return}if(!code)code='LPC'+Math.floor(100000+Math.random()*900000);const data={code,name,cat,cost,price,qty,min,updatedAt:serverTimestamp()};if(editId){await updateDoc(doc(db,'inventory',editId),data);toast('✅ تم التعديل')}else{data.createdAt=serverTimestamp();await addDoc(collection(db,'inventory'),data);toast('✅ تمت الإضافة')}closeModal('m-item')};
+window.openAddStock=function(id){stockTargetId=id;const i=allItems.find(x=>x.id===id);document.getElementById('addStockName').textContent=`الصنف: ${i?.name} (الرصيد الحالي: ${i?.qty})`;document.getElementById('as-qty').value='1';openModal('m-addStock');setTimeout(()=>document.getElementById('as-qty').focus(),100)};
+window.doAddStock=async function(){const n=parseInt(document.getElementById('as-qty').value)||0;if(n<=0){toast('⚠️ أدخل كمية صحيحة');return}const i=allItems.find(x=>x.id===stockTargetId);await updateDoc(doc(db,'inventory',stockTargetId),{qty:(i.qty||0)+n});closeModal('m-addStock');toast(`✅ تمت إضافة ${n} وحدة`)};
+window.confirmDel=function(id,name){document.getElementById('confirmMsg').textContent=`هل أنت متأكد من حذف "${name}"؟`;document.getElementById('confirmOkBtn').onclick=async()=>{await deleteDoc(doc(db,'inventory',id));closeModal('m-confirm');toast('🗑️ تم الحذف')};openModal('m-confirm')};
 
-window.openEditItem = function(id) {
-  editId = id;
-  const item = allItems.find(x => x.id === id);
-  if(!item) return;
-  document.getElementById('m-title').textContent = 'تعديل صنف';
-  document.getElementById('i-code').value = item.code || '';
-  document.getElementById('i-name').value = item.name || '';
-  document.getElementById('i-cat').value  = item.cat || 'أخرى';
-  document.getElementById('i-cost').value = item.cost || 0;
-  document.getElementById('i-price').value= item.price || 0;
-  document.getElementById('i-qty').value  = item.qty || 0;
-  document.getElementById('i-min').value  = item.min || 3;
-  openModal('m-item');
-};
+window.openPrintBarcode=function(code,name){if(!code||code==='—'){toast('⚠️ هذا الصنف لا يمتلك باركود');return}currentBarcodeToPrint=code;currentItemNameToPrint=name;document.getElementById('pb-name').textContent=name;JsBarcode('#barcode-svg',code,{format:'CODE128',lineColor:'#000',width:2,height:60,displayValue:true});openModal('m-printBarcode')};
+window.printBarcodeSticker=function(){const svgHtml=document.getElementById('barcode-svg').outerHTML;const w=window.open('','_blank','width=400,height=300');w.document.write(`<!DOCTYPE html><html><head><title>Barcode</title><style>body{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:15px;font-family:sans-serif}.name{font-size:13px;font-weight:bold;margin-bottom:5px;text-align:center}@media print{@page{margin:0}body{padding:5mm}}</style></head><body><div class="name">Lawrence For PC<br>${currentItemNameToPrint}</div>${svgHtml}<script>window.onload=function(){window.print();window.close()}<\/script></body></html>`);w.document.close()};
 
-window.saveItem = async function() {
-  let code  = document.getElementById('i-code').value.trim();
-  const name  = document.getElementById('i-name').value.trim();
-  const cat   = document.getElementById('i-cat').value;
-  const cost  = parseFloat(document.getElementById('i-cost').value)||0;
-  const price = parseFloat(document.getElementById('i-price').value)||0;
-  const qty   = parseInt(document.getElementById('i-qty').value)||0;
-  const min   = parseInt(document.getElementById('i-min').value)||0;
+// Barcode scanner override — فتح إضافة كمية إذا عُثر على الصنف
+window.onBarcodeInput=function(code){const found=allItems.find(i=>i.code===code);if(found){window.openAddStock(found.id)}else{document.getElementById('searchInput').value=code;renderTable();toast('⚠️ صنف غير مسجل — يمكنك إضافته')}};
 
-  if(!name) { toast('⚠️ أدخل اسم الصنف'); return; }
-  
-  // توليد باركود تلقائي إذا تُرك فارغاً
-  if(!code) { code = 'LPC' + Math.floor(100000 + Math.random() * 900000); }
-
-  const data = { code, name, cat, cost, price, qty, min, updatedAt: serverTimestamp() };
-
-  if(editId) {
-    await updateDoc(doc(db, 'inventory', editId), data);
-    toast('✅ تم التعديل');
-  } else {
-    data.createdAt = serverTimestamp();
-    await addDoc(collection(db, 'inventory'), data);
-    toast('✅ تمت الإضافة');
-  }
-  closeModal('m-item');
-};
-
-// نظام المشتريات المبسط (إضافة كمية)
-window.openAddStock = function(id) {
-  stockTargetId = id;
-  const item = allItems.find(x => x.id === id);
-  document.getElementById('addStockName').textContent = `تزويد الصنف: ${item?.name} (الحالي: ${item?.qty})`;
-  document.getElementById('as-qty').value = '1';
-  openModal('m-addStock');
-  // التركيز التلقائي على حقل الكمية لسرعة الإدخال
-  setTimeout(() => document.getElementById('as-qty').focus(), 100);
-};
-
-window.doAddStock = async function() {
-  const n = parseInt(document.getElementById('as-qty').value)||0;
-  if(n <= 0) { toast('⚠️ أدخل كمية صحيحة'); return; }
-  const item = allItems.find(x => x.id === stockTargetId);
-  await updateDoc(doc(db, 'inventory', stockTargetId), { qty: (item.qty||0) + n });
-  
-  // تسجيل عملية المشتريات/الإضافة (اختياري، يمكن توسيعه لاحقاً لجدول المشتريات)
-  closeModal('m-addStock');
-  toast(`✅ تمت إضافة ${n} وحدة للرصيد`);
-  document.getElementById('searchInput').value = ''; // تصفير البحث
-  renderTable();
-};
-
-window.confirmDel = function(id, name) {
-  document.getElementById('confirmMsg').textContent = `هل أنت متأكد من حذف "${name}" نهائياً؟`;
-  document.getElementById('confirmOkBtn').onclick = async () => {
-    await deleteDoc(doc(db, 'inventory', id));
-    closeModal('m-confirm');
-    toast('🗑️ تم الحذف');
-  };
-  openModal('m-confirm');
-};
-
-// طباعة الباركود
-window.openPrintBarcode = function(code, name) {
-  if(!code || code === '—') { toast('⚠️ هذا الصنف لا يمتلك باركود'); return; }
-  currentBarcodeToPrint = code;
-  currentItemNameToPrint = name;
-  document.getElementById('pb-name').textContent = name;
-  
-  // توليد الباركود باستخدام JsBarcode
-  JsBarcode("#barcode-svg", code, {
-    format: "CODE128",
-    lineColor: "#000",
-    width: 2,
-    height: 60,
-    displayValue: true,
-    fontOptions: "bold",
-    font: "Poppins",
-    textAlign: "center"
-  });
-  
-  openModal('m-printBarcode');
-};
-
-window.printBarcodeSticker = function() {
-  const svgHtml = document.getElementById('barcode-svg').outerHTML;
-  const w = window.open('', '_blank', 'width=400,height=300');
-  w.document.write(`
-    <!DOCTYPE html><html><head><title>Print Barcode</title>
-    <style>
-      body { margin: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top: 20px; font-family: sans-serif;}
-      .name { font-size: 14px; font-weight: bold; margin-bottom: 5px; text-align: center; }
-      @media print { @page { margin: 0; } body { padding: 5mm; } }
-    </style>
-    </head><body>
-      <div class="name">Lawrence For PC<br>${currentItemNameToPrint}</div>
-      ${svgHtml}
-      <script>window.onload=function(){window.print();window.close();}<\/script>
-    </body></html>
-  `);
-  w.document.close();
-};
-
-// ── BARCODE SCANNER GLOBAL LISTENER ──
-// التقاط مسح الباركود لفتح نافذة الشراء مباشرة إذا كان الصنف موجوداً
-let _sbuf='', _stimer=null;
-document.addEventListener('keydown', function(e) {
-  const tag = document.activeElement?.tagName;
-  if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-  
-  if(e.key === 'Enter') {
-    clearTimeout(_stimer);
-    if(_sbuf.length >= 3) {
-      const code = _sbuf.trim();
-      _sbuf = '';
-      
-      // البحث عن الصنف
-      const foundItem = allItems.find(i => i.code === code);
-      if(foundItem) {
-        // إذا وجد الصنف، افتح نافذة إضافة الكمية (المشتريات السريعة)
-        openAddStock(foundItem.id);
-        toast('📦 تم إيجاد الصنف');
-      } else {
-        // إذا لم يوجد، ضعه في حقل البحث لعل المستخدم يريد إضافته
-        document.getElementById('searchInput').value = code;
-        renderTable();
-        toast('⚠️ صنف غير مسجل، يمكنك إضافته');
-      }
-    }
-    _sbuf = '';
-    return;
-  }
-  if(e.key.length === 1) {
-    _sbuf += e.key;
-    clearTimeout(_stimer);
-    _stimer = setTimeout(()=>{ _sbuf = '' }, 200);
-  }
-});
-
-// Modal Utilities
-function openModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-window.closeModal = closeModal;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 3000);
-}
+window.doLogout=async function(){await signOut(auth);sessionStorage.removeItem('lpc_user');location.href='index.html'};
 </script>
 </body>
 </html>

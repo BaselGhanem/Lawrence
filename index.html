@@ -1,72 +1,159 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lawrence For PC — تسجيل الدخول</title>
-<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-<script>
-  // تفعيل الوضع الفاتح كافتراضي
-  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-</script>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07090F;--surface:#0D1117;--border:#1A2235;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.1);
-  --danger:#EF4444;--text:#F1F5F9;--text2:#94A3B8;--text3:#475569;
+/* صفحة الدخول لها تصميم مستقل (بدون sidebar) */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
 }
-[data-theme="light"]{
-  --bg:#F0F4F8;--surface:#FFFFFF;--border:#E2E8F0;
-  --text:#0F172A;--text2:#475569;--text3:#94A3B8;--pdim:rgba(245,158,11,.1);
+.bg-grid {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: .35;
+  pointer-events: none;
 }
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:background .3s,color .3s}
-.theme-btn{position:absolute;top:20px;left:20px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;z-index:100;transition:.2s}
-.theme-btn:hover{border-color:var(--primary)}
-.login-wrap{width:100%;max-width:400px;padding:20px;z-index:10}
-.brand{text-align:center;margin-bottom:30px}
-.brand img{width:80px;height:80px;border-radius:20px;margin-bottom:15px;object-fit:cover;box-shadow:0 10px 30px rgba(0,0,0,.15);border:2px solid var(--border)}
-.brand h1{font-size:24px;font-weight:900}
-.brand h1 span{color:var(--primary)}
-.brand p{color:var(--text2);font-size:14px;margin-top:5px;font-weight:700}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.08);transition:background .3s,border-color .3s}
-.f{margin-bottom:15px}
-.f label{display:block;font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px}
-.input-wrap{position:relative}
-.f input{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:12px 40px 12px 15px;color:var(--text);font-family:inherit;font-size:14px;font-weight:600;outline:none;transition:.2s}
-[data-theme="light"] .f input{background:#F8FAFC}
-.f input:focus{border-color:var(--primary);background:var(--pdim)}
-.input-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
-.show-pass{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3);transition:.2s}
-.show-pass:hover{color:var(--text)}
-.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#F59E0B,#B45309);border:none;border-radius:12px;color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:.2s;margin-top:5px}
-.btn-login:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 25px rgba(245,158,11,.3)}
-.btn-login:disabled{opacity:.6;cursor:not-allowed}
-.error-msg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:10px;font-size:13px;font-weight:700;color:var(--danger);margin-bottom:15px;display:none;text-align:center}
-.footer-link{text-align:center;margin-top:20px}
-.footer-link a{color:var(--text3);font-size:14px;font-weight:700;text-decoration:none;transition:.2s}
-.footer-link a:hover{color:var(--text)}
-/* Animated Grid Background */
-.bg-grid{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.3;pointer-events:none}
+.theme-toggle-login {
+  position: fixed;
+  top: 18px; left: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  z-index: 10;
+  transition: .2s;
+}
+.theme-toggle-login:hover { border-color: var(--primary); color: var(--primary); }
+
+.login-wrap { position: relative; z-index: 5; width: 100%; max-width: 400px; padding: 20px; }
+
+.brand { text-align: center; margin-bottom: 28px; }
+.brand-logo {
+  width: 80px; height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+  margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  border: 2px solid var(--border);
+}
+.brand h1 { font-size: 24px; font-weight: 900; }
+.brand h1 span { color: var(--primary); }
+.brand p { color: var(--text2); font-size: 13px; margin-top: 5px; }
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.1);
+}
+[data-theme="light"] .login-card { box-shadow: 0 8px 30px rgba(0,0,0,.1); }
+
+.input-wrap { position: relative; }
+.input-icon {
+  position: absolute;
+  right: 13px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+}
+.login-card .f input {
+  padding-right: 40px;
+}
+.show-pass {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text3);
+  transition: .2s;
+}
+.show-pass:hover { color: var(--text2); }
+
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg,#F59E0B,#B45309);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s;
+  margin-top: 6px;
+}
+.btn-login:hover:not(:disabled) { box-shadow: 0 8px 25px rgba(245,158,11,.35); transform: translateY(-2px); }
+.btn-login:disabled { opacity: .6; cursor: not-allowed; }
+
+.error-msg {
+  background: rgba(239,68,68,.1);
+  border: 1px solid rgba(239,68,68,.2);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--danger);
+  margin-bottom: 14px;
+  display: none;
+  text-align: center;
+}
+.footer-link { text-align: center; margin-top: 18px; }
+.footer-link a { color: var(--text3); font-size: 14px; font-weight: 700; text-decoration: none; transition: .2s; }
+.footer-link a:hover { color: var(--text2); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(0,0,0,.25);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
 </style>
 </head>
 <body>
 
-<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 الوضع الليلي</button>
+<script src="scripts.js"></script>
+
 <div class="bg-grid"></div>
+
+<button class="theme-toggle-login" id="themeToggle" onclick="toggleTheme()">🌙</button>
 
 <div class="login-wrap">
   <div class="brand">
-    <img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" alt="Logo">
+    <img class="brand-logo" src="logo.jpg" alt="Lawrence For PC" onerror="this.style.display='none'">
     <h1>Lawrence <span>System</span></h1>
     <p>نظام إدارة الصيانة والمبيعات</p>
   </div>
 
-  <div class="card">
+  <div class="login-card">
     <div class="error-msg" id="errMsg"></div>
 
-    <div class="f">
+    <div class="f" style="margin-bottom:14px">
       <label>اسم المستخدم</label>
       <div class="input-wrap">
         <span class="input-icon">👤</span>
@@ -74,7 +161,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
       </div>
     </div>
 
-    <div class="f">
+    <div class="f" style="margin-bottom:18px">
       <label>كلمة المرور</label>
       <div class="input-wrap">
         <span class="input-icon">🔑</span>
@@ -92,62 +179,36 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { initializeApp }                                              from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }                                 from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const CFG = {
-  apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",
-  authDomain:"lorans-2.firebaseapp.com",
-  projectId:"lorans-2",
-  storageBucket:"lorans-2.firebasestorage.app",
-  messagingSenderId:"399952166847",
-  appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"
+  apiKey:            'AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY',
+  authDomain:        'lorans-2.firebaseapp.com',
+  projectId:         'lorans-2',
+  storageBucket:     'lorans-2.firebasestorage.app',
+  messagingSenderId: '399952166847',
+  appId:             '1:399952166847:web:ac71d3e0d9afe4be8c2b0a',
 };
-
 const app  = initializeApp(CFG);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// إدارة المظهر
-function updateThemeBtn() {
-  const t = document.documentElement.getAttribute('data-theme');
-  document.getElementById('themeBtn').innerHTML = t === 'light' ? '🌙 الوضع الليلي' : '☀️ الوضع النهاري';
+function redirect(role) {
+  location.href = role === 'admin' ? 'admin.html' : 'technician.html';
 }
-updateThemeBtn();
-
-window.toggleTheme = function() {
-  const c = document.documentElement.getAttribute('data-theme');
-  const n = c === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', n);
-  localStorage.setItem('lpc_theme', n);
-  updateThemeBtn();
-};
-
-window.togglePass = function() {
-  const f = document.getElementById('password');
-  const b = document.getElementById('showPassBtn');
-  if (f.type === 'password') { f.type = 'text'; b.textContent = '🙈'; }
-  else { f.type = 'password'; b.textContent = '👁️'; }
-};
-
+async function getProfile(uid) {
+  const snap = await getDoc(doc(db, 'users', uid));
+  return snap.exists() ? snap.data() : null;
+}
 function showErr(msg) {
   const el = document.getElementById('errMsg');
   el.textContent = msg; el.style.display = 'block';
 }
 function hideErr() { document.getElementById('errMsg').style.display = 'none'; }
 
-function redirect(role) {
-  if (role === 'admin') location.href = 'admin.html';
-  else location.href = 'technician.html';
-}
-
-async function getProfile(uid) {
-  const snap = await getDoc(doc(db, 'users', uid));
-  return snap.exists() ? snap.data() : null;
-}
-
-// توجيه تلقائي إذا كان المستخدم مسجلاً مسبقاً
+// توجيه تلقائي إذا كان مسجلاً دخوله
 onAuthStateChanged(auth, async user => {
   if (user) {
     const profile = await getProfile(user.uid);
@@ -158,52 +219,51 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-window.doLogin = async function() {
+window.togglePass = function () {
+  const f = document.getElementById('password');
+  const b = document.getElementById('showPassBtn');
+  if (f.type === 'password') { f.type = 'text'; b.textContent = '🙈'; }
+  else { f.type = 'password'; b.textContent = '👁️'; }
+};
+
+window.doLogin = async function () {
   const username = document.getElementById('username').value.trim().toLowerCase();
   const password = document.getElementById('password').value;
-  const btn = document.getElementById('loginBtn');
+  const btn      = document.getElementById('loginBtn');
 
   if (!username) { showErr('يرجى إدخال اسم المستخدم'); return; }
-  if (!password) { showErr('يرجى إدخال كلمة المرور'); return; }
-
+  if (!password) { showErr('يرجى إدخال كلمة المرور');  return; }
   hideErr();
-  btn.disabled = true;
-  btn.textContent = 'جاري الدخول...';
+
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> جاري الدخول...';
 
   try {
-    const email = `${username}@lorans.local`;
-    const cred  = await signInWithEmailAndPassword(auth, email, password);
+    const email   = `${username}@lorans.local`;
+    const cred    = await signInWithEmailAndPassword(auth, email, password);
     const profile = await getProfile(cred.user.uid);
 
-    if (!profile) {
-      showErr('الحساب غير موجود، تواصل مع المدير');
-      btn.disabled = false; btn.textContent = 'تسجيل الدخول'; return;
-    }
-    if (profile.active === false) {
-      showErr('الحساب معطّل، تواصل مع المدير');
-      btn.disabled = false; btn.textContent = 'تسجيل الدخول'; return;
-    }
+    if (!profile)               { showErr('الحساب غير موجود، تواصل مع المدير'); return; }
+    if (profile.active === false) { showErr('الحساب معطّل، تواصل مع المدير');      return; }
 
     sessionStorage.setItem('lpc_user', JSON.stringify({ uid: cred.user.uid, ...profile }));
     redirect(profile.role);
 
   } catch (e) {
-    btn.disabled = false;
+    const map = {
+      'auth/user-not-found':       'اسم المستخدم أو كلمة المرور غير صحيحة',
+      'auth/wrong-password':       'اسم المستخدم أو كلمة المرور غير صحيحة',
+      'auth/invalid-credential':   'اسم المستخدم أو كلمة المرور غير صحيحة',
+      'auth/too-many-requests':    'محاولات كثيرة، انتظر قليلاً ثم حاول',
+    };
+    showErr(map[e.code] || 'خطأ في الاتصال: ' + e.message);
+  } finally {
+    btn.disabled  = false;
     btn.textContent = 'تسجيل الدخول';
-    if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
-      showErr('اسم المستخدم أو كلمة المرور غير صحيحة');
-    } else if (e.code === 'auth/too-many-requests') {
-      showErr('محاولات كثيرة، انتظر قليلاً');
-    } else {
-      showErr('خطأ: ' + e.message);
-    }
   }
 };
 
-// الدخول عبر زر Enter
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') window.doLogin();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
 </script>
 </body>
 </html>

@@ -1,286 +1,277 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lawrence For PC — نظام المرتجعات</title>
-<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
-<script>
-  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — المرتجعات</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
 <style>
-:root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--success:#10B981;
-  --danger:#EF4444;--text:#F1F5F9;--text2:#94A3B8;--sw:240px;
-}
-[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
-.sidebar{width:var(--sw);background:var(--surface);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;z-index:100}
-.sb-brand{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-nav{padding:12px 10px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
-.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
-.nav-item.active{background:var(--pdim);color:var(--primary)}
-.main{margin-right:var(--sw);flex:1;padding:24px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px}
-.btn{padding:8px 16px;border-radius:9px;border:none;cursor:pointer;font-weight:700;font-family:inherit}
-.btn-primary{background:var(--primary);color:#000}
-.btn-success{background:var(--success);color:#000}
-.btn-danger{background:var(--danger);color:#fff}
-.btn-sm{padding:4px 10px;font-size:12px}
-.f{margin-bottom:12px}.f label{font-size:12px;color:var(--text2);display:block;margin-bottom:5px}
-.f input,.f select{width:100%;padding:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:var(--text)}
-.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
-.b-pending{background:rgba(245,158,11,.1);color:#F59E0B}
-.b-approved{background:rgba(16,185,129,.1);color:#10B981}
-.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:13px}
-.invoice-items{background:var(--surface2);border-radius:10px;padding:10px;margin:10px 0}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000}
-.overlay.show{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;width:100%;max-width:550px}
-.modal-head{display:flex;justify-content:space-between;margin-bottom:15px}
+.detail-row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px dashed var(--border); font-size:13px; }
+.invoice-items { background:var(--surface2); border-radius:9px; padding:10px; margin:10px 0; }
 </style>
 </head>
 <body>
 
-<div class="sidebar">
-  <div class="sb-brand"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" style="width:40px;border-radius:10px"> <h2>Lawrence</h2></div>
-  <nav class="sb-nav">
-    <a href="admin.html" class="nav-item">🏠 لوحة الإدارة</a>
-    <a href="inventory.html" class="nav-item">📦 المخزون</a>
-    <a href="sales.html" class="nav-item">🛒 المبيعات</a>
-    <a href="returns.html" class="nav-item active">↩️ المرتجعات</a>
-    <a href="reports.html" class="nav-item">📊 التقارير</a>
-    <a href="customer.html" class="nav-item" target="_blank">🔍 بوابة العملاء</a>
-  </nav>
-</div>
+<script src="scripts.js"></script>
+
+<!-- Sidebar injected by scripts.js -->
+<div id="app-sidebar"></div>
 
 <div class="main">
-  <div class="page-header" style="display:flex;justify-content:space-between;margin-bottom:20px">
-    <div><h1>نظام المرتجعات (MRA)</h1><p>إدارة استرجاع المنتجات والطلبات – يؤثر على المخزون والتقارير</p></div>
-    <button class="btn btn-primary" onclick="openNewReturn()">+ إنشاء مرتجع جديد</button>
+  <div class="page-header">
+    <div><h1>↩️ نظام المرتجعات</h1><p>إدارة استرجاع المنتجات — يؤثر على المخزون والتقارير</p></div>
+    <button class="btn btn-primary" onclick="openNewReturn()">+ إنشاء مرتجع</button>
   </div>
 
   <div class="card">
-    <table style="width:100%">
-      <thead><tr style="text-align:right;color:var(--text2);font-size:12px">
-        <th>رقم المرتجع</th><th>المرجع (الفاتورة)</th><th>العميل</th><th>المبلغ</th><th>السبب</th><th>الحالة</th><th>الإجراء</th>
-      </tr></thead>
-      <tbody id="returnsBody"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Modal إنشاء مرتجع -->
-<div class="overlay" id="m-return">
-  <div class="modal">
-    <div class="modal-head"><h3>إنشاء مرتجع</h3><button onclick="closeModal('m-return')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button></div>
-    <div class="f"><label>نوع المرتجع</label><select id="r-type"><option value="Sale">مبيعات</option><option value="Maintenance">صيانة</option></select></div>
-    <div class="f"><label>رقم الفاتورة / الطلب</label><input id="r-ref" placeholder="مثال: SALE-12345 أو LPC-001"></div>
-    <div class="f"><label>السبب</label><select id="r-reason"><option>منتج تالف</option><option>عدم مطابقة المواصفات</option><option>خطأ في الطلب</option><option>رغبة العميل</option></select></div>
-    <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="saveReturn()">حفظ الطلب</button>
-  </div>
-</div>
-
-<!-- Modal تأكيد المرتجع وعرض التفاصيل -->
-<div class="overlay" id="m-approve">
-  <div class="modal" style="max-width:600px">
-    <div class="modal-head"><h3>قبول المرتجع</h3><button onclick="closeModal('m-approve')" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button></div>
-    <div id="approveDetails"></div>
-    <div class="f" style="margin-top:12px"><label>مبلغ المرتجع (د.أ)</label><input type="number" id="returnAmount" step="0.01" placeholder="القيمة المسترجعة"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:15px">
-      <button class="btn btn-danger" onclick="closeModal('m-approve')">إلغاء</button>
-      <button class="btn btn-success" onclick="confirmApprove()">تأكيد المرتجع ✓</button>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>رقم المرتجع</th><th>المرجع</th><th>العميل</th>
+          <th>المبلغ</th><th>السبب</th><th>الحالة</th><th>إجراء</th>
+        </tr></thead>
+        <tbody id="returnsBody">
+          <tr><td colspan="7" style="text-align:center;color:var(--text2);padding:28px">جاري التحميل...</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
+<!-- Modal: إنشاء مرتجع -->
+<div class="overlay" id="m-return">
+<div class="modal sm">
+  <div class="modal-head"><div class="modal-title">↩️ إنشاء مرتجع جديد</div><button class="close-x" onclick="closeModal('m-return')">✕</button></div>
+  <div class="f mb-12"><label>نوع المرتجع</label>
+    <select id="r-type"><option value="Sale">مبيعات</option><option value="Maintenance">صيانة</option></select>
+  </div>
+  <div class="f mb-12"><label>رقم الفاتورة / الطلب</label>
+    <input id="r-ref" placeholder="مثال: SALE-12345 أو LPC-001">
+  </div>
+  <div class="f mb-16"><label>سبب الإرجاع</label>
+    <select id="r-reason">
+      <option>منتج تالف</option>
+      <option>عدم مطابقة المواصفات</option>
+      <option>خطأ في الطلب</option>
+      <option>رغبة العميل</option>
+    </select>
+  </div>
+  <div style="display:flex;gap:9px;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="closeModal('m-return')">إلغاء</button>
+    <button class="btn btn-primary" onclick="saveReturn()">حفظ الطلب ✓</button>
+  </div>
+</div></div>
+
+<!-- Modal: قبول مرتجع -->
+<div class="overlay" id="m-approve">
+<div class="modal">
+  <div class="modal-head"><div class="modal-title">✅ قبول المرتجع</div><button class="close-x" onclick="closeModal('m-approve')">✕</button></div>
+  <div id="approveDetails"></div>
+  <div class="f mt-12 mb-16"><label>مبلغ المرتجع (JOD)</label>
+    <input type="number" id="returnAmount" step="0.01" placeholder="0.00">
+  </div>
+  <div style="display:flex;gap:9px;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="closeModal('m-approve')">إلغاء</button>
+    <button class="btn btn-success" onclick="confirmApprove()">تأكيد المرتجع ✓</button>
+  </div>
+</div></div>
+
+<div id="toast" class="toast"></div>
+<div id="scanIndicator" class="scan-indicator">📡 <span id="scanCode"></span></div>
+
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, getDoc, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { initializeApp }          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signOut, onAuthStateChanged }  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc,
+         onSnapshot, getDoc, getDocs, serverTimestamp, increment }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const CFG = {
-  apiKey: "AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",
-  authDomain: "lorans-2.firebaseapp.com",
-  projectId: "lorans-2",
-  storageBucket: "lorans-2.firebasestorage.app",
-  messagingSenderId: "399952166847",
-  appId: "1:399952166847:web:ac71d3e0d9afe4be8c2b0a"
+  apiKey:'AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY',
+  authDomain:'lorans-2.firebaseapp.com',
+  projectId:'lorans-2',
+  storageBucket:'lorans-2.firebasestorage.app',
+  messagingSenderId:'399952166847',
+  appId:'1:399952166847:web:ac71d3e0d9afe4be8c2b0a',
 };
-const app = initializeApp(CFG);
+const app  = initializeApp(CFG);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
 
-let allReturns = [];
-let pendingApproveId = null;
-let saleDocRef = null;
+let allReturns = [], pendingApproveId = null;
 
-// التحقق من صلاحية admin
-onAuthStateChanged(auth, async (user) => {
+// ── AUTH ──────────────────────────────────────────────────────────
+onAuthStateChanged(auth, async user => {
   if (!user) { location.href = 'index.html'; return; }
   const u = JSON.parse(sessionStorage.getItem('lpc_user') || '{}');
   if (u.role !== 'admin') { location.href = 'technician.html'; return; }
+  renderSidebar('returns');
 });
 
-// استماع للمرتجعات
-onSnapshot(collection(db, 'returns'), (snap) => {
-  allReturns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+// ── LIVE DATA ─────────────────────────────────────────────────────
+onSnapshot(collection(db, 'returns'), snap => {
+  allReturns = snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
   renderReturnsTable();
 });
 
 function renderReturnsTable() {
   const tbody = document.getElementById('returnsBody');
+  if (!allReturns.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:28px">لا توجد مرتجعات حتى الآن</td></tr>';
+    return;
+  }
   tbody.innerHTML = allReturns.map(r => `
     <tr>
-      <td>${r.returnId || r.id.slice(0,8)}</td>
+      <td><strong style="color:var(--primary)">${r.returnId || r.id.slice(0,8)}</strong></td>
       <td>${r.refId}</td>
       <td>${r.customerName || '—'}</td>
-      <td>${(r.amount || 0).toFixed(2)} د.أ</td>
-      <td>${r.reason}</td>
+      <td><strong>${(r.amount || 0).toFixed(2)} د.أ</strong></td>
+      <td style="font-size:12px;color:var(--text2)">${r.reason}</td>
       <td><span class="badge ${r.status === 'Pending' ? 'b-pending' : 'b-approved'}">${r.status === 'Pending' ? 'قيد الانتظار' : 'مُعتمد'}</span></td>
-      <td>${r.status === 'Pending' ? `<button class="btn btn-success btn-sm" onclick="prepareApprove('${r.id}')">قبول</button> <button class="btn btn-danger btn-sm" onclick="rejectReturn('${r.id}')">رفض</button>` : '—'}</td>
+      <td style="display:flex;gap:6px">
+        ${r.status === 'Pending'
+          ? `<button class="btn btn-success btn-sm" onclick="prepareApprove('${r.id}')">✅ قبول</button>
+             <button class="btn btn-danger btn-sm" onclick="rejectReturn('${r.id}')">🗑️ رفض</button>`
+          : '<span style="color:var(--text3);font-size:12px">مُكتمل</span>'}
+      </td>
     </tr>
   `).join('');
 }
 
+// ── OPEN NEW RETURN ───────────────────────────────────────────────
 window.openNewReturn = () => {
   document.getElementById('r-ref').value = '';
   openModal('m-return');
 };
 
+// ── SAVE RETURN ───────────────────────────────────────────────────
 window.saveReturn = async () => {
-  const refId = document.getElementById('r-ref').value.trim();
-  const type = document.getElementById('r-type').value;
+  const refId  = document.getElementById('r-ref').value.trim();
+  const type   = document.getElementById('r-type').value;
   const reason = document.getElementById('r-reason').value;
-  if (!refId) { alert('الرجاء إدخال رقم الفاتورة'); return; }
+  if (!refId) { toast('⚠️ يرجى إدخال رقم الفاتورة'); return; }
 
-  // البحث عن الفاتورة في جدول المبيعات
-  const salesQuery = await getDocs(collection(db, 'sales'));
+  // البحث عن الفاتورة — ✅ استخدام getDocs الصحيح من Firebase
   let foundSale = null;
-  salesQuery.forEach(doc => {
-    const data = doc.data();
-    if (data.ticketId === refId || data.id === refId || data.saleId === refId) foundSale = { id: doc.id, ...data };
-  });
-  if (!foundSale && type === 'Sale') {
-    alert('لم يتم العثور على فاتورة بهذا الرقم');
-    return;
+  if (type === 'Sale') {
+    const salesSnap = await getDocs(collection(db, 'sales'));
+    salesSnap.forEach(docSnap => {
+      const data = docSnap.data();
+      if (data.invoiceNumber === refId || docSnap.id === refId) {
+        foundSale = { id: docSnap.id, ...data };
+      }
+    });
+    if (!foundSale) { toast('⚠️ لم يتم العثور على فاتورة بهذا الرقم'); return; }
   }
 
   const returnData = {
     returnId: 'RET-' + Date.now(),
-    refId,
-    type,
-    reason,
+    refId, type, reason,
     status: 'Pending',
-    amount: foundSale ? foundSale.total : 0,
-    customerName: foundSale?.customerName || 'غير معروف',
+    amount: foundSale?.total || 0,
+    customerName: foundSale?.customerName || 'غير محدد',
     saleId: foundSale?.id || null,
-    createdAt: serverTimestamp()
+    createdAt: serverTimestamp(),
   };
   await addDoc(collection(db, 'returns'), returnData);
   closeModal('m-return');
-  alert('تم إنشاء طلب المرتجع بنجاح');
+  toast('✅ تم إنشاء طلب المرتجع');
 };
 
+// ── PREPARE APPROVE ───────────────────────────────────────────────
 window.prepareApprove = async (returnId) => {
   const ret = allReturns.find(r => r.id === returnId);
   if (!ret) return;
   pendingApproveId = returnId;
-  // جلب تفاصيل الفاتورة
-  let saleData = null;
+
+  document.getElementById('returnAmount').value = ret.amount || 0;
+
+  const detailsDiv = document.getElementById('approveDetails');
   if (ret.saleId) {
     const saleSnap = await getDoc(doc(db, 'sales', ret.saleId));
-    if (saleSnap.exists()) saleData = { id: saleSnap.id, ...saleSnap.data() };
-  }
-  const defaultAmount = ret.amount || 0;
-  document.getElementById('returnAmount').value = defaultAmount;
-  const detailsDiv = document.getElementById('approveDetails');
-  if (saleData && saleData.cart) {
-    let itemsHtml = '<div class="invoice-items"><strong>الأصناف:</strong>';
-    saleData.cart.forEach(item => {
-      itemsHtml += `<div class="detail-row"><span>${item.name}</span><span>${item.qty} × ${item.price} = ${(item.qty*item.price).toFixed(2)} د.أ</span></div>`;
-    });
-    itemsHtml += `</div><div class="detail-row"><strong>الإجمالي الأصلي:</strong> <span>${saleData.total.toFixed(2)} د.أ</span></div>`;
-    detailsDiv.innerHTML = itemsHtml;
+    if (saleSnap.exists()) {
+      const sale = saleSnap.data();
+      let html = '<div class="invoice-items"><strong>أصناف الفاتورة:</strong>';
+      (sale.cart || []).forEach(item => {
+        html += `<div class="detail-row"><span>${item.name}</span><span>${item.qty} × ${item.price} = ${(item.qty * item.price).toFixed(2)} د.أ</span></div>`;
+      });
+      html += `</div><div class="detail-row"><strong>الإجمالي الأصلي:</strong><span>${(sale.total || 0).toFixed(2)} د.أ</span></div>`;
+      detailsDiv.innerHTML = html;
+    } else {
+      detailsDiv.innerHTML = `<p style="color:var(--text2);font-size:13px">المبلغ الافتراضي: ${ret.amount || 0} د.أ</p>`;
+    }
   } else {
-    detailsDiv.innerHTML = `<div class="detail-row">لا توجد تفاصيل للفاتورة، المبلغ التلقائي: ${defaultAmount} د.أ</div>`;
+    detailsDiv.innerHTML = `<p style="color:var(--text2);font-size:13px">مرتجع صيانة — المبلغ: ${ret.amount || 0} د.أ</p>`;
   }
   openModal('m-approve');
 };
 
+// ── CONFIRM APPROVE ───────────────────────────────────────────────
 window.confirmApprove = async () => {
   const amount = parseFloat(document.getElementById('returnAmount').value);
-  if (isNaN(amount) || amount <= 0) { alert('أدخل مبلغ صحيح'); return; }
+  if (isNaN(amount) || amount <= 0) { toast('⚠️ أدخل مبلغاً صحيحاً'); return; }
+
   const ret = allReturns.find(r => r.id === pendingApproveId);
   if (!ret) return;
 
   // 1. تحديث حالة المرتجع
-  await updateDoc(doc(db, 'returns', pendingApproveId), { status: 'Approved', approvedAmount: amount, approvedAt: serverTimestamp() });
+  await updateDoc(doc(db, 'returns', pendingApproveId), {
+    status: 'Approved', approvedAmount: amount, approvedAt: serverTimestamp(),
+  });
 
-  // 2. إرجاع الكميات إلى المخزون (إذا كانت الفاتورة تحتوي على أصناف و saleId موجود)
+  // 2. إعادة الكميات للمخزون إذا كانت فاتورة مبيعات
   if (ret.saleId) {
     const saleSnap = await getDoc(doc(db, 'sales', ret.saleId));
     if (saleSnap.exists()) {
       const sale = saleSnap.data();
       if (sale.cart && Array.isArray(sale.cart)) {
+        // ✅ استخدام getDocs الصحيح للبحث في المخزون
+        const invSnap = await getDocs(collection(db, 'inventory'));
+        const invMap  = {};
+        invSnap.forEach(d => { invMap[d.data().name] = d.id; });
+
         for (const item of sale.cart) {
-          // البحث عن الصنف في المخزون بواسطة الاسم (أو id إذا كان محفوظاً)
-          // نستخدم id إذا كان موجوداً، وإلا نبحث بالاسم
-          let invId = item.id;
-          if (!invId) {
-            const invQuery = await getDocs(collection(db, 'inventory'));
-            let found = null;
-            invQuery.forEach(d => { if (d.data().name === item.name) found = d.id; });
-            invId = found;
-          }
-          if (invId) {
-            await updateDoc(doc(db, 'inventory', invId), { qty: increment(item.qty) });
+          if (!item.isOther) {
+            const invId = item.id || invMap[item.name];
+            if (invId) await updateDoc(doc(db, 'inventory', invId), { qty: increment(item.qty) });
           }
         }
       }
-      // تحديث فاتورة المبيعات: تعليمها كمرتجعة
       await updateDoc(doc(db, 'sales', ret.saleId), {
-        returned: true,
-        returnedAmount: amount,
-        returnedDate: serverTimestamp(),
-        returnId: ret.returnId
+        returned: true, returnedAmount: amount, returnedDate: serverTimestamp(),
       });
     }
   }
 
-  // 3. تسجيل المرتجع كمصروف (مبلغ سالب أو إضافة Expense)
+  // 3. تسجيل كمصروف في التقارير
   await addDoc(collection(db, 'expenses'), {
-    name: `مرتجع فاتورة ${ret.refId}`,
-    amount: amount,  // المصروف يقلل صافي الربح (في التقارير نعتبره مصروف)
-    category: 'مرتجعات',
+    name: `مرتجع — ${ret.refId}`,
+    amount, category: 'مرتجعات',
     date: new Date().toISOString().split('T')[0],
-    returnId: ret.returnId,
-    createdAt: serverTimestamp()
+    createdAt: serverTimestamp(),
   });
 
   closeModal('m-approve');
-  alert('تم اعتماد المرتجع وتحديث المخزون والتقارير');
+  toast('✅ تم اعتماد المرتجع وتحديث المخزون');
 };
 
+// ── REJECT ────────────────────────────────────────────────────────
 window.rejectReturn = async (id) => {
-  if (confirm('هل أنت متأكد من رفض هذا المرتجع؟')) {
-    await deleteDoc(doc(db, 'returns', id));
-    alert('تم رفض المرتجع وحذفه');
-  }
+  document.getElementById('toast').textContent = '';
+  if (!confirm('هل أنت متأكد من رفض وحذف هذا المرتجع؟')) return;
+  await deleteDoc(doc(db, 'returns', id));
+  toast('🗑️ تم رفض المرتجع وحذفه');
 };
 
-function openModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-window.closeModal = closeModal;
-
-// Helper function لتكرار getDocs
-async function getDocs(collectionRef) {
-  const snapshot = await collectionRef.get();
-  return snapshot;
-}
+// Override doLogout with Firebase signOut
+window.doLogout = async function () {
+  await signOut(auth);
+  sessionStorage.removeItem('lpc_user');
+  location.href = 'index.html';
+};
 </script>
 </body>
 </html>

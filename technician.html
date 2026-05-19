@@ -1,414 +1,191 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lawrence For PC — المبيعات (POS) - الفنيين</title>
-<link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
-<script>
-  const savedTheme = localStorage.getItem('lpc_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — الفني (POS)</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
 <style>
-:root{
-  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
-  --primary:#F59E0B;--pdim:rgba(245,158,11,.12);--success:#10B981;
-  --danger:#EF4444;--text:#F1F5F9;--text2:#94A3B8;--sw:240px;
+.grid-pos { display: grid; grid-template-columns: 1fr 360px; gap: 18px; }
+.pos-search {
+  width: 100%; padding: 12px 16px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; color: var(--text);
+  font-family: 'Tajawal', sans-serif; font-size: 15px;
+  outline: none; margin-bottom: 14px;
 }
-[data-theme="light"]{--bg:#F0F4F8;--surface:#FFFFFF;--surface2:#F1F5F9;--border:#E2E8F0;--text:#0F172A;--text2:#475569}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;transition:background .3s}
-.sidebar{width:var(--sw);background:var(--surface);border-left:1px solid var(--border);position:fixed;top:0;right:0;bottom:0;z-index:100}
-.sb-brand{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.sb-nav{padding:12px 10px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;cursor:pointer;transition:all .2s;color:var(--text2);font-size:14px;font-weight:700;text-decoration:none;margin-bottom:2px}
-.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
-.nav-item.active{background:var(--pdim);color:var(--primary)}
-.main{margin-right:var(--sw);flex:1;padding:24px}
-.grid-pos{display:grid;grid-template-columns:1fr 380px;gap:20px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
-.pos-input{width:100%;padding:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:16px;margin-bottom:15px;outline:none}
-.pos-input:focus{border-color:var(--primary)}
-.cart-table{width:100%;border-collapse:collapse}
-.cart-table th{text-align:right;padding:10px;color:var(--text2);font-size:12px;border-bottom:1px solid var(--border)}
-.cart-table td{padding:12px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
-.qty-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;cursor:pointer;font-weight:bold;margin:0 4px}
-.total-box{background:var(--surface2);padding:20px;border-radius:12px;margin-top:20px;text-align:center}
-.total-val{font-size:32px;font-weight:900;color:var(--primary);margin:10px 0}
-.btn{width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:15px;margin-top:10px}
-.btn-primary{background:var(--primary);color:#000}
-.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
-.btn-sm{padding:8px 14px;font-size:13px;margin-top:5px}
-.mode-toggle{display:flex;gap:5px;background:var(--surface2);padding:4px;border-radius:10px;margin-bottom:20px}
-.mode-btn{flex:1;padding:8px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
-.mode-active{background:var(--primary);color:#000}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1A2235;padding:12px 24px;border-radius:10px;z-index:9999;display:none}
-.toast.show{display:block}
-.customer-row{display:flex;gap:10px;margin-bottom:15px}
-.customer-row input{flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text)}
-.tax-row{display:flex;gap:10px;align-items:center;margin-bottom:15px}
-.tax-row label{font-size:13px;font-weight:bold}
-.tax-row input{width:80px;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text)}
-.other-item{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.other-item input{flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px}
-.select-prod{width:100%;padding:10px;margin-top:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit}
+.pos-search:focus { border-color: var(--primary); }
+.items-grid {
+  display: grid; grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
+  gap: 8px; max-height: 380px; overflow-y: auto;
+}
+.item-card {
+  background: var(--surface2); padding: 10px; border-radius: 9px;
+  cursor: pointer; text-align: center; border: 1px solid var(--border);
+  transition: .2s;
+}
+.item-card:hover { border-color: var(--primary); background: var(--pdim); }
+.item-card .ic-name { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.item-card .ic-price { color: var(--primary); font-size: 13px; font-weight: 700; }
+.item-card .ic-qty { font-size: 11px; color: var(--text3); }
+.other-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.other-row input { flex: 1; min-width: 80px; padding: 8px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Tajawal', sans-serif; font-size: 13px; outline: none; }
+.other-row input:focus { border-color: var(--primary); }
+.total-box { background: var(--surface2); padding: 18px; border-radius: 12px; text-align: center; margin-top: 16px; }
+.total-lbl { font-size: 12px; color: var(--text2); }
+.total-val { font-size: 28px; font-weight: 900; color: var(--primary); margin: 6px 0; }
+.mode-toggle { display: flex; gap: 5px; background: var(--surface2); padding: 4px; border-radius: 10px; margin-bottom: 16px; }
+.mode-btn { flex: 1; padding: 8px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 700; background: transparent; color: var(--text2); transition: .2s; }
+.mode-btn.active { background: var(--primary); color: #000; }
+[data-theme="light"] .pos-search, [data-theme="light"] .other-row input { background: #F8FAFC; }
 @media print {
-  .sidebar, .btn, .mode-toggle, .pos-input, .mode-btn, .select-prod, .other-item, .customer-row, .tax-row, .toast, .qty-btn { display: none !important; }
-  .main { margin-right: 0 !important; padding: 0 !important; }
-  .card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+  .sidebar, #app-sidebar, .btn, .mode-toggle, .pos-search,
+  .items-grid, .other-row, #toast, #scanIndicator { display: none !important; }
+  .main { margin-right: 0 !important; }
   .grid-pos { display: block !important; }
-  .total-box { background: none !important; }
-  @page { size: A4; margin: 1.5cm; }
-  body { margin: 0; padding: 0; }
-  .print-header { text-align: center; margin-bottom: 15px; }
-  .print-logo { width: 60px; }
 }
 </style>
 </head>
 <body>
 
-<div class="sidebar">
-  <div class="sb-brand"><img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" style="width:40px;border-radius:10px"> <h2>Lawrence</h2></div>
-  <nav class="sb-nav">
-    <a href="admin.html" class="nav-item">🏠 لوحة الإدارة</a>
-    <a href="inventory.html" class="nav-item">📦 المخزون</a>
-    <a href="sales.html" class="nav-item">🛒 المبيعات</a>
-    <a href="returns.html" class="nav-item">↩️ المرتجعات</a>
-    <a href="reports.html" class="nav-item">📊 التقارير</a>
-    <a href="customer.html" class="nav-item" target="_blank">🔍 بوابة العملاء</a>
-  </nav>
-</div>
+<script src="scripts.js"></script>
+<div id="app-sidebar"></div>
 
 <div class="main">
+  <div class="page-header">
+    <div><h1>🛒 نقطة البيع</h1><p>بيع القطع والأجهزة بشكل سريع</p></div>
+  </div>
+
   <div class="grid-pos">
+    <!-- القسم الأيمن: المنتجات -->
     <div class="card">
       <div class="mode-toggle">
-        <button class="mode-btn mode-active" id="btnSale" onclick="setMode('sale')">وضع البيع</button>
+        <button class="mode-btn active" id="btnSale" onclick="setMode('sale')">وضع البيع</button>
         <button class="mode-btn" id="btnReturn" onclick="setMode('return')">وضع المرتجعات</button>
       </div>
-      
-      <!-- اسم العميل -->
-      <div class="customer-row">
-        <input type="text" id="customerName" placeholder="اسم العميل (اختياري)">
-      </div>
-      
-      <!-- قائمة منسدلة للمنتجات الموجودة -->
-      <select id="productSelect" class="select-prod" onchange="addSelectedProduct()">
-        <option value="">-- اختر منتج من المخزون --</option>
+      <input type="text" id="customerName" class="pos-search" placeholder="اسم العميل (اختياري)">
+      <select id="productSelect" class="pos-search" style="cursor:pointer" onchange="addSelectedProduct()">
+        <option value="">— اختر منتج من القائمة —</option>
       </select>
-      
-      <!-- حقل البحث -->
-      <input type="text" id="posSearch" class="pos-input" placeholder="ابحث عن صنف (اسم، كود، تصنيف)" oninput="searchItems()">
-      <div id="itemsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;max-height:400px;overflow-y:auto"></div>
-      
-      <!-- إضافة صنف خارجي -->
-      <div class="other-item">
-        <input type="text" id="otherName" placeholder="اسم صنف خارجي">
-        <input type="number" id="otherPrice" placeholder="السعر" step="0.01" style="width:100px">
-        <input type="number" id="otherQty" placeholder="الكمية" value="1" step="1" style="width:80px">
-        <button class="btn btn-primary btn-sm" onclick="addOtherItem()" style="width:auto;margin:0">+ إضافة</button>
+      <input type="text" id="posSearch" class="pos-search" placeholder="🔎 ابحث بالاسم أو امسح الباركود..." oninput="searchItems()">
+      <div class="items-grid" id="itemsGrid"></div>
+      <div class="other-row">
+        <input type="text" id="otherName" placeholder="صنف خارجي (اسم)">
+        <input type="number" id="otherPrice" placeholder="السعر" step="0.01" style="width:90px">
+        <input type="number" id="otherQty" placeholder="كمية" value="1" style="width:70px">
+        <button class="btn btn-primary btn-sm" onclick="addOtherItem()">+ إضافة</button>
       </div>
     </div>
 
+    <!-- القسم الأيسر: السلة -->
     <div class="card">
-      <h3>🛒 السلة</h3>
-      <div style="max-height:350px;overflow-y:auto;margin-top:15px">
+      <div class="card-head"><div class="card-title">🛒 السلة</div><button class="btn btn-danger btn-sm" onclick="clearCart()">تفريغ</button></div>
+      <div style="max-height:340px;overflow-y:auto">
         <table class="cart-table">
-          <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th></th></tr></thead>
+          <thead><tr><th>الصنف</th><th>الكمية</th><th>المجموع</th><th></th></tr></thead>
           <tbody id="cartBody"></tbody>
         </table>
       </div>
-      <div class="tax-row">
-        <label>الضريبة (%)</label>
-        <input type="number" id="taxRate" value="0" step="0.5" oninput="updateCart()">
-        <span style="font-size:13px;color:var(--text2)">نسبة الضريبة المضافة</span>
+      <div style="display:flex;align-items:center;gap:10px;margin:12px 0">
+        <label style="font-size:13px;font-weight:700;color:var(--text2)">ضريبة %</label>
+        <input type="number" id="taxRate" value="0" step="0.5" style="width:70px;padding:7px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;outline:none" oninput="updateCart()">
       </div>
       <div class="total-box">
-        <div style="font-size:14px;color:var(--text2)">المجموع قبل الضريبة</div>
-        <div class="total-val" id="subtotal">0.00 د.أ</div>
-        <div style="font-size:14px;color:var(--text2)">قيمة الضريبة</div>
-        <div class="total-val" id="taxAmount" style="font-size:20px">0.00 د.أ</div>
-        <div style="font-size:14px;color:var(--text2)">الإجمالي النهائي</div>
+        <div class="total-lbl">المجموع الفرعي</div>
+        <div class="total-val" id="subtotal" style="font-size:20px">0.00 د.أ</div>
+        <div class="total-lbl">الضريبة / الإجمالي</div>
         <div class="total-val" id="totalSum">0.00 د.أ</div>
-        <button class="btn btn-primary" onclick="completeSale()">إتمام العملية ✓</button>
-        <button class="btn btn-primary" style="background:var(--success)" onclick="printInvoice()">🖨️ طباعة الفاتورة</button>
-        <button class="btn btn-danger" onclick="clearCart()">تفريغ السلة</button>
+        <button class="btn btn-primary btn-block mt-8" onclick="completeSale()">✅ إتمام العملية</button>
+        <button class="btn btn-outline btn-block mt-8" onclick="printInvoice()">🖨️ طباعة الفاتورة</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
+<div id="scanIndicator" class="scan-indicator">📡 <span id="scanCode"></span></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, increment }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
-const app=initializeApp(CFG); const db=getFirestore(app);
+const CFG={apiKey:'AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY',authDomain:'lorans-2.firebaseapp.com',projectId:'lorans-2',storageBucket:'lorans-2.firebasestorage.app',messagingSenderId:'399952166847',appId:'1:399952166847:web:ac71d3e0d9afe4be8c2b0a'};
+const app=initializeApp(CFG);const auth=getAuth(app);const db=getFirestore(app);
 
-let inventory=[], cart=[], isReturnMode=false;
+let inventory=[],cart=[],isReturnMode=false;
 
-onSnapshot(collection(db,'inventory'), snap => {
-  inventory = snap.docs.map(d=>({id:d.id, ...d.data()}));
-  updateProductSelect();
-  searchItems();
+onAuthStateChanged(auth, user => {
+  if(!user){location.href='index.html';return}
+  renderSidebar('sales');
+  onSnapshot(collection(db,'inventory'),snap=>{
+    inventory=snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateProductSelect();searchItems();
+  });
 });
 
-function updateProductSelect() {
-  const select = document.getElementById('productSelect');
-  select.innerHTML = '<option value="">-- اختر منتج من المخزون --</option>' + 
-    inventory.map(p => `<option value="${p.id}">${p.name} - ${p.brand || ''} ${p.model || ''} (${p.price.toFixed(2)} د.أ)</option>`).join('');
+function updateProductSelect(){
+  const sel=document.getElementById('productSelect');
+  sel.innerHTML='<option value="">— اختر منتج من القائمة —</option>'+
+    inventory.map(p=>`<option value="${p.id}">${escapeHtml(p.name)} (${(p.price||0).toFixed(2)} د.أ) — متوفر: ${p.qty||0}</option>`).join('');
 }
+window.addSelectedProduct=function(){const id=document.getElementById('productSelect').value;if(id)addToCart(id);document.getElementById('productSelect').value=''};
 
-window.addSelectedProduct = function() {
-  const id = document.getElementById('productSelect').value;
-  if(id) addToCart(id);
-  document.getElementById('productSelect').value = '';
-};
-
-function renderItems(itemsToRender = null) {
-  const container = document.getElementById('itemsGrid');
-  const items = itemsToRender || inventory;
-  if (!items.length) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text2)">لا توجد أصناف تطابق البحث</div>';
-    return;
-  }
-  container.innerHTML = items.map(i => `
-    <div style="background:var(--surface2);padding:10px;border-radius:8px;cursor:pointer;text-align:center" onclick="addToCart('${i.id}')">
-      <div style="font-size:12px;font-weight:700">${escapeHtml(i.name)}</div>
-      <div style="font-size:11px;color:var(--text2)">${i.brand || ''} ${i.model || ''}</div>
-      <div style="color:var(--primary);font-size:13px">${(i.price||0).toFixed(2)} د.أ</div>
-    </div>
-  `).join('');
+function renderItems(list){
+  const container=document.getElementById('itemsGrid');
+  if(!list.length){container.innerHTML='<div style="text-align:center;padding:20px;color:var(--text2);grid-column:1/-1">لا توجد أصناف</div>';return}
+  container.innerHTML=list.map(i=>`
+    <div class="item-card" onclick="addToCart('${i.id}')">
+      <div class="ic-name">${escapeHtml(i.name)}</div>
+      <div class="ic-price">${(i.price||0).toFixed(2)} د.أ</div>
+      <div class="ic-qty">المتوفر: ${i.qty||0}</div>
+    </div>`).join('');
 }
+window.searchItems=function(){const q=document.getElementById('posSearch').value.trim().toLowerCase();renderItems(q?inventory.filter(i=>(i.name||'').toLowerCase().includes(q)||(i.code||'').toLowerCase().includes(q)||(i.cat||'').toLowerCase().includes(q)):inventory)};
 
-window.searchItems = function() {
-  const query = document.getElementById('posSearch').value.trim().toLowerCase();
-  if (!query) { renderItems(inventory); return; }
-  const filtered = inventory.filter(item => 
-    (item.name && item.name.toLowerCase().includes(query)) ||
-    (item.code && item.code.toLowerCase().includes(query)) ||
-    (item.cat && item.cat.toLowerCase().includes(query))
-  );
-  renderItems(filtered);
+function escapeHtml(str){if(!str)return'';return String(str).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+
+window.addToCart=function(id){const item=inventory.find(x=>x.id===id);if(!item)return;const existing=cart.find(x=>x.id===id&&!x.isOther);if(existing){if(!isReturnMode&&existing.cartQty+1>(item.qty||0)){toast('❌ الكمية غير متوفرة');return}existing.cartQty++}else{if(!isReturnMode&&1>(item.qty||0)){toast('❌ الكمية غير متوفرة');return}cart.push({...item,cartQty:1,isOther:false})}updateCart()};
+window.addOtherItem=function(){const name=document.getElementById('otherName').value.trim();const price=parseFloat(document.getElementById('otherPrice').value);let qty=parseInt(document.getElementById('otherQty').value)||1;if(!name||isNaN(price)||price<=0){toast('⚠️ أدخل اسم وسعر');return}cart.push({id:'other_'+Date.now(),name:name+' (خارجي)',price,cartQty:qty,isOther:true});document.getElementById('otherName').value='';document.getElementById('otherPrice').value='';document.getElementById('otherQty').value='1';updateCart()};
+window.updateCart=function(){let subtotal=0;const tbody=document.getElementById('cartBody');tbody.innerHTML='';cart.forEach((i,idx)=>{const total=i.price*i.cartQty;subtotal+=total;const tr=document.createElement('tr');tr.innerHTML=`<td>${escapeHtml(i.name)}</td><td><span style="display:inline-flex;align-items:center;gap:6px"><button class="qty-ctrl" style="width:22px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer" onclick="changeQty(${idx},-1)">-</button>${i.cartQty}<button class="qty-ctrl" style="width:22px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer" onclick="changeQty(${idx},1)">+</button></span></td><td><strong>${total.toFixed(2)}</strong></td><td><button onclick="remItem(${idx})" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:15px">✕</button></td>`;tbody.appendChild(tr)});const taxRate=parseFloat(document.getElementById('taxRate').value)||0;const taxAmt=subtotal*taxRate/100;const total=subtotal+taxAmt;document.getElementById('subtotal').textContent=subtotal.toFixed(2)+' د.أ';document.getElementById('totalSum').textContent=(isReturnMode?-total:total).toFixed(2)+' د.أ'};
+window.changeQty=function(idx,delta){const item=cart[idx];const newQty=item.cartQty+delta;if(newQty<1){remItem(idx);return}if(!isReturnMode&&!item.isOther){const orig=inventory.find(i=>i.id===item.id);if(orig&&newQty>orig.qty){toast(`❌ الحد الأقصى ${orig.qty}`);return}}item.cartQty=newQty;updateCart()};
+window.remItem=(idx)=>{cart.splice(idx,1);updateCart()};
+window.clearCart=()=>{cart=[];updateCart()};
+window.setMode=(m)=>{isReturnMode=m==='return';document.getElementById('btnSale').classList.toggle('active',!isReturnMode);document.getElementById('btnReturn').classList.toggle('active',isReturnMode);toast(isReturnMode?'⚠️ وضع المرتجعات':'✅ وضع البيع')};
+
+window.completeSale=async function(){
+  if(!cart.length){toast('⚠️ السلة فارغة');return}
+  if(!isReturnMode){for(const item of cart){if(!item.isOther){const orig=inventory.find(i=>i.id===item.id);if(!orig||(orig.qty||0)<item.cartQty){toast(`❌ الكمية غير كافية: ${item.name}`);return}}}}
+  const subtotal=cart.reduce((s,i)=>s+(i.price*i.cartQty),0);
+  const taxRate=parseFloat(document.getElementById('taxRate').value)||0;
+  const taxAmt=subtotal*taxRate/100;
+  const total=subtotal+taxAmt;
+  const customer=document.getElementById('customerName').value.trim()||'عميل نقدي';
+  for(const item of cart){if(!item.isOther)await updateDoc(doc(db,'inventory',item.id),{qty:increment(isReturnMode?item.cartQty:-item.cartQty)})}
+  await addDoc(collection(db,'sales'),{customerName:customer,cart:cart.map(c=>({name:c.name,price:c.price,qty:c.cartQty,isOther:c.isOther||false})),subtotal,taxRate,taxAmount:taxAmt,total:isReturnMode?-total:total,type:isReturnMode?'مرتجع':'بيع',createdAt:serverTimestamp()});
+  cart=[];updateCart();toast('✅ تمت العملية');
+  if(!isReturnMode)printInvoice();
 };
 
-function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
-
-window.addToCart = function(id) {
-  const item = inventory.find(x => x.id === id);
-  if(!item) return;
-  const existing = cart.find(x => x.id === id && !x.isOther);
-  if(existing) {
-    if(!isReturnMode && existing.cartQty + 1 > (item.qty || 0)) { toast('❌ الكمية غير متوفرة'); return; }
-    existing.cartQty++;
-  } else {
-    if(!isReturnMode && 1 > (item.qty || 0)) { toast('❌ الكمية غير متوفرة'); return; }
-    cart.push({...item, cartQty: 1, isOther: false});
-  }
-  updateCart();
+window.printInvoice=function(){
+  if(!cart.length&&!isReturnMode){toast('⚠️ لا توجد أصناف');return}
+  const customer=document.getElementById('customerName').value.trim()||'عميل نقدي';
+  const subtotal=cart.reduce((s,i)=>s+(i.price*i.cartQty),0);
+  const taxRate=parseFloat(document.getElementById('taxRate').value)||0;
+  const taxAmt=subtotal*taxRate/100;
+  const total=subtotal+taxAmt;
+  const now=new Date().toLocaleString('ar-JO');
+  const rows=cart.map(i=>`<tr><td>${escapeHtml(i.name)}</td><td>${i.cartQty}</td><td>${i.price.toFixed(2)}</td><td>${(i.price*i.cartQty).toFixed(2)}</td></tr>`).join('');
+  const w=window.open('','_blank','width=600,height=800');
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>فاتورة</title><link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet"><style>body{font-family:Tajawal,sans-serif;padding:20px;max-width:680px;margin:auto}.hdr{text-align:center;border-bottom:2px solid #F59E0B;padding-bottom:12px;margin-bottom:16px}.logo{width:70px;border-radius:12px}h1{color:#B45309;font-size:20px;margin:6px 0}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid #ddd;padding:8px;text-align:right}th{background:#f5f5f5}.tot{font-size:18px;font-weight:900;color:#F59E0B}.ftr{text-align:center;font-size:11px;color:#777;margin-top:16px}@media print{body{margin:0}}</style></head><body><div class="hdr"><img class="logo" src="logo.jpg" onerror="this.style.display='none'"><h1>Lawrence For PC</h1><div>مركز صيانة وبيع أجهزة الكمبيوتر</div></div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:12px"><div><strong>العميل:</strong> ${escapeHtml(customer)}</div><div><strong>التاريخ:</strong> ${now}</div></div><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead><tbody>${rows}</tbody></table><div style="text-align:left"><div>الفرعي: ${subtotal.toFixed(2)} د.أ</div><div>ضريبة (${taxRate}%): ${taxAmt.toFixed(2)} د.أ</div><div class="tot">الإجمالي: ${total.toFixed(2)} د.أ</div></div><div class="ftr">شكراً لثقتكم بـ Lawrence For PC</div><script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.close();
 };
 
-window.addOtherItem = function() {
-  const name = document.getElementById('otherName').value.trim();
-  const price = parseFloat(document.getElementById('otherPrice').value);
-  let qty = parseInt(document.getElementById('otherQty').value);
-  if(!name || isNaN(price) || price<=0) { toast('⚠️ أدخل اسم وسعر صحيحين'); return; }
-  if(isNaN(qty) || qty<1) qty=1;
-  cart.push({ id: 'other_'+Date.now(), name: name + ' (خارجي)', price: price, cartQty: qty, isOther: true });
-  document.getElementById('otherName').value = '';
-  document.getElementById('otherPrice').value = '';
-  document.getElementById('otherQty').value = '1';
-  updateCart();
-};
-
-window.updateCart = function() {
-  let subtotal = 0;
-  const tbody = document.getElementById('cartBody');
-  tbody.innerHTML = '';
-  cart.forEach((i, idx) => {
-    const itemTotal = i.price * i.cartQty;
-    subtotal += itemTotal;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${escapeHtml(i.name)}</td>
-      <td>
-        <button class="qty-btn" onclick="changeQty(${idx}, -1)">-</button>
-        ${i.cartQty}
-        <button class="qty-btn" onclick="changeQty(${idx}, 1)">+</button>
-      </td>
-      <td>${i.price.toFixed(2)}</td>
-      <td>${itemTotal.toFixed(2)}</td>
-      <td><button onclick="rem(${idx})" style="background:none;border:none;color:var(--danger);cursor:pointer">✕</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-  const taxAmount = subtotal * taxRate / 100;
-  const total = subtotal + taxAmount;
-  document.getElementById('subtotal').innerHTML = subtotal.toFixed(2) + ' د.أ';
-  document.getElementById('taxAmount').innerHTML = taxAmount.toFixed(2) + ' د.أ';
-  document.getElementById('totalSum').innerHTML = (isReturnMode ? -total : total).toFixed(2) + ' د.أ';
-};
-
-window.changeQty = function(idx, delta) {
-  const item = cart[idx];
-  const newQty = item.cartQty + delta;
-  if(newQty < 1) { rem(idx); return; }
-  if(!isReturnMode && !item.isOther) {
-    const original = inventory.find(i => i.id === item.id);
-    if(original && newQty > original.qty) { toast(`❌ الكمية غير متوفرة (الحد الأقصى ${original.qty})`); return; }
-  }
-  item.cartQty = newQty;
-  updateCart();
-};
-
-window.rem = (idx) => { cart.splice(idx,1); updateCart(); };
-window.clearCart = () => { cart=[]; updateCart(); };
-window.setMode = (m) => {
-  isReturnMode = (m === 'return');
-  document.getElementById('btnSale').classList.toggle('mode-active', !isReturnMode);
-  document.getElementById('btnReturn').classList.toggle('mode-active', isReturnMode);
-  toast(isReturnMode ? '⚠️ وضع المرتجعات مفعل' : '✅ وضع البيع مفعل');
-};
-
-window.completeSale = async function() {
-  if(cart.length === 0) { toast('⚠️ السلة فارغة'); return; }
-  if(!isReturnMode) {
-    for(const item of cart) {
-      if(!item.isOther) {
-        const original = inventory.find(i => i.id === item.id);
-        if(!original || (original.qty || 0) < item.cartQty) {
-          toast(`❌ الكمية غير كافية للصنف: ${item.name}`);
-          return;
-        }
-      }
-    }
-  }
-  const subtotal = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
-  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-  const taxAmount = subtotal * taxRate / 100;
-  const total = subtotal + taxAmount;
-  const customerName = document.getElementById('customerName').value.trim() || 'عميل نقدي';
-  
-  for(const item of cart) {
-    if(!item.isOther) {
-      await updateDoc(doc(db, 'inventory', item.id), {
-        qty: increment(isReturnMode ? item.cartQty : -item.cartQty)
-      });
-    }
-  }
-  
-  await addDoc(collection(db,'sales'), {
-    customerName,
-    cart: cart.map(c => ({ name: c.name, price: c.price, qty: c.cartQty, isOther: c.isOther || false })),
-    subtotal,
-    taxRate,
-    taxAmount,
-    total: isReturnMode ? -total : total,
-    type: isReturnMode ? 'مرتجع' : 'بيع',
-    createdAt: serverTimestamp()
-  });
-  
-  cart = []; updateCart();
-  toast('✅ تمت العملية بنجاح');
-  if(!isReturnMode) printInvoice();
-};
-
-window.printInvoice = function() {
-  if(cart.length === 0 && !isReturnMode) { toast('⚠️ لا توجد أصناف للطباعة'); return; }
-  const customer = document.getElementById('customerName').value.trim() || 'عميل نقدي';
-  const subtotal = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
-  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-  const taxAmount = subtotal * taxRate / 100;
-  const total = subtotal + taxAmount;
-  const now = new Date().toLocaleString('ar-JO');
-  const isReturn = isReturnMode;
-  
-  let itemsHtml = '';
-  cart.forEach(item => {
-    itemsHtml += `<tr><td>${escapeHtml(item.name)}</td><td>${item.cartQty}</td><td>${item.price.toFixed(2)}</td><td>${(item.price * item.cartQty).toFixed(2)}</td></tr>`;
-  });
-  
-  const printWindow = window.open('', '_blank', 'width=600,height=800');
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html lang="ar" dir="rtl">
-    <head><meta charset="UTF-8"><title>فاتورة المبيعات</title>
-    <style>
-      body { font-family: 'Tajawal', Arial, sans-serif; margin: 0; padding: 20px; background: white; color: black; }
-      .invoice-container { max-width: 700px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 12px; }
-      .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #F59E0B; padding-bottom: 10px; }
-      .logo { width: 80px; }
-      .title { font-size: 22px; font-weight: bold; color: #B45309; }
-      .info { display: flex; justify-content: space-between; margin: 15px 0; font-size: 14px; }
-      table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-      th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-      th { background: #f5f5f5; }
-      .totals { text-align: left; margin-top: 15px; font-weight: bold; }
-      .footer { text-align: center; margin-top: 25px; font-size: 12px; color: #777; border-top: 1px solid #ddd; padding-top: 10px; }
-      @media print { body { margin: 0; padding: 0; } .invoice-container { border: none; } }
-    </style>
-    </head>
-    <body>
-    <div class="invoice-container">
-      <div class="header">
-        <img class="logo" src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" onerror="this.style.display='none'">
-        <div class="title">Lawrence For PC</div>
-        <div>مركز صيانة وبيع أجهزة الكمبيوتر</div>
-      </div>
-      <div class="info">
-        <div><strong>العميل:</strong> ${escapeHtml(customer)}</div>
-        <div><strong>التاريخ:</strong> ${now}</div>
-        <div><strong>نوع العملية:</strong> ${isReturn ? 'مرتجع' : 'بيع'}</div>
-      </div>
-      <table>
-        <thead><tr><th>الصنف</th><th>الكمية</th><th>سعر الوحدة</th><th>الإجمالي</th></tr></thead>
-        <tbody>${itemsHtml}</tbody>
-      </table>
-      <div class="totals">
-        <div>المجموع الفرعي: ${subtotal.toFixed(2)} د.أ</div>
-        <div>الضريبة (${taxRate}%): ${taxAmount.toFixed(2)} د.أ</div>
-        <div style="font-size:18px;color:#F59E0B">الإجمالي النهائي: ${total.toFixed(2)} د.أ</div>
-      </div>
-      <div class="footer">
-        شكراً لثقتكم بـ Lawrence For PC<br>
-        هذا الفاتورة إلكترونية ولا تحتاج إلى ختم
-      </div>
-    </div>
-    <script>window.onload = function() { window.print(); setTimeout(() => window.close(), 500); }<\/script>
-    </body>
-    </html>
-  `);
-  printWindow.document.close();
-};
-
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 3000);
-}
-
-// Barcode scanner
-let _sbuf='', _stimer=null;
-document.addEventListener('keydown', e => {
-  const tag = document.activeElement?.tagName;
-  if(['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
-  if(e.key === 'Enter') {
-    clearTimeout(_stimer);
-    if(_sbuf.length >= 3) {
-      const code = _sbuf.trim();
-      document.getElementById('posSearch').value = code;
-      searchItems();
-      const item = inventory.find(x => x.code === code);
-      if(item) addToCart(item.id);
-      else toast('❌ الصنف غير موجود');
-      _sbuf = '';
-    } else { _sbuf = ''; }
-    return;
-  }
-  if(e.key.length === 1) { _sbuf += e.key; clearTimeout(_stimer); _stimer = setTimeout(()=>{_sbuf='';}, 200); }
-});
+// Override barcode from scripts.js
+window.onBarcodeInput=function(code){document.getElementById('posSearch').value=code;searchItems();const item=inventory.find(x=>x.code===code);if(item)addToCart(item.id)};
+window.doLogout=async function(){await signOut(auth);sessionStorage.removeItem('lpc_user');location.href='index.html'};
 </script>
 </body>
 </html>
