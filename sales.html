@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — المبيعات</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+/* CSS متوافق مع نظامك السابق */
+:root{--bg:#07090F;--surface:#0D1117;--primary:#F59E0B;--border:#1A2235;--text:#F1F5F9;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);padding:20px}
+.sales-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.input-scan{width:100%;padding:15px;background:var(--surface2);border:2px solid var(--primary);border-radius:12px;color:#fff;font-size:18px;margin-bottom:20px}
+.cart-item{display:flex;justify-content:between;padding:10px;border-bottom:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="sales-grid">
+  <div class="card">
+    <input type="text" id="scanInput" class="input-scan" placeholder="امسح الباركود للبيع أو المرتجع...">
+    <table id="cartTable" style="width:100%">
+      <thead><tr><th>الصنف</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th></tr></thead>
+      <tbody id="cartBody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>الإجمالي: <span id="total">0.00</span> د.أ</h2>
+    <button class="btn btn-primary" style="width:100%;margin-top:20px" onclick="checkout()">إتمام عملية البيع</button>
+    <button class="btn btn-danger" style="width:100%;margin-top:10px" onclick="processReturn()">إجراء مرتجع</button>
+  </div>
+</div>
+<script type="module">
+// دالة البيع والباركود ستقوم بالبحث في جدول Inventory 
+// وإذا وجد الصنف تضيفه للفاتورة أو تنقصه (في حال المرتجع)
+</script>
+</body>
+</html>
