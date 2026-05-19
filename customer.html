@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lawrence For PC — استعلام عن حالة الجهاز</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090F;--surface:#0D1117;--surface2:#13181F;--border:#1A2235;
+  --primary:#F59E0B;--text:#F1F5F9;--text2:#94A3B8;--success:#10B981;
+}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:20px;display:flex;justify-content:center}
+.container{max-width:800px;width:100%}
+.header{text-align:center;margin-bottom:40px}
+.search-box{background:var(--surface);padding:30px;border-radius:20px;border:1px solid var(--border);text-align:center}
+.phone-input{width:100%;max-width:400px;padding:15px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-size:18px;text-align:center;margin-bottom:15px;outline:none}
+.phone-input:focus{border-color:var(--primary)}
+.btn-search{padding:15px 40px;background:var(--primary);border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px}
+
+/* Device Card */
+.device-card{background:var(--surface);border:1px solid var(--border);padding:20px;border-radius:16px;margin-top:20px}
+.status-tag{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:var(--surface2)}
+.grid-info{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:15px}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <img src="https://raw.githubusercontent.com/BaselGhanem/Lawrence/refs/heads/main/logo.jpg" style="width:80px;border-radius:20px;margin-bottom:10px">
+    <h1>استعلام عن حالة أجهزتك</h1>
+    <p style="color:var(--text2)">أدخل رقم هاتفك لعرض حالة كافة أجهزتك لدينا</p>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="phoneInput" class="phone-input" placeholder="رقم الهاتف (مثال: 07xxxxxxxx)">
+    <br>
+    <button class="btn-search" onclick="searchDevices()">بحث عن الأجهزة</button>
+  </div>
+
+  <div id="results"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const CFG={apiKey:"AIzaSyA6xALG_Z-FHMClMSw9GnDey7mJYibnXhY",authDomain:"lorans-2.firebaseapp.com",projectId:"lorans-2",storageBucket:"lorans-2.firebasestorage.app",messagingSenderId:"399952166847",appId:"1:399952166847:web:ac71d3e0d9afe4be8c2b0a"};
+const app=initializeApp(CFG); const db=getFirestore(app);
+
+window.searchDevices = async () => {
+  const phone = document.getElementById('phoneInput').value.trim();
+  const resDiv = document.getElementById('results');
+  if(!phone) { alert('يرجى إدخال رقم الهاتف'); return; }
+
+  resDiv.innerHTML = '<p style="text-align:center">جاري البحث...</p>';
+
+  const q = query(collection(db, 'tickets'), where('customerPhone', '==', phone));
+  const snap = await getDocs(q);
+
+  if(snap.empty) {
+    resDiv.innerHTML = '<div class="device-card" style="text-align:center">❌ لم يتم العثور على أجهزة مرتبطة بهذا الرقم</div>';
+    return;
+  }
+
+  resDiv.innerHTML = snap.docs.map(doc => {
+    const d = doc.data();
+    return `
+      <div class="device-card">
+        <div style="display:flex;justify-content:between;align-items:center">
+          <h3>${d.deviceName || 'جهاز غير معروف'}</h3>
+          <span class="status-tag">${statusLabel(d.status)}</span>
+        </div>
+        <div class="grid-info">
+          <div><small style="color:var(--text2)">تاريخ الاستلام</small><br>${d.date?.toDate().toLocaleDateString('ar-JO') || '—'}</div>
+          <div><small style="color:var(--text2)">رقم الطلب</small><br>${doc.id.substring(0,8)}</div>
+          <div style="grid-column:span 2"><small style="color:var(--text2)">ملاحظات الفني</small><br>${d.technicianNotes || 'لا توجد ملاحظات حالياً'}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+function statusLabel(s) {
+  return {pending:'انتظار',inspecting:'فحص',in_repair:'تصليح',ready:'جاهز',delivered:'مُسلَّم'}[s]||s;
+}
+</script>
+</body>
+</html>
